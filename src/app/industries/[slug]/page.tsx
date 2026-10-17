@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { getIndustry, industries } from "@/content/industries";
 import { LiquidButton } from "@/components/liquid/LiquidButton";
 import { PageShell } from "@/components/layout/PageShell";
-import { IndustryArt } from "@/components/sections/IndustryArt";
+import { DisciplineMark } from "@/components/sections/DisciplineMark";
 
 export function generateStaticParams() {
   return industries.map((i) => ({ slug: i.slug }));
@@ -47,11 +47,11 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
       title={ind.name}
       accent={ind.accent}
       lede={<><span className="display block text-3xl italic text-white sm:text-4xl">{ind.tagline}</span><span className="mt-4 block">{ind.represents}</span></>}
-      actions={<LiquidButton href={`/register/student?industry=${ind.slug}`} variant="primary" size="lg">Apply in this arena</LiquidButton>}
+      actions={<LiquidButton href={`/register/candidate?industry=${ind.slug}`} variant="primary" size="lg">Apply in this discipline</LiquidButton>}
     >
       <div style={{ ["--accent" as string]: "#8a6d3b", ["--ia" as string]: ind.accent }}>
         <div aria-hidden className="mb-12 rounded-[2rem] bg-graphite p-6 sm:p-10" style={{ background: `radial-gradient(70% 90% at 70% 10%, color-mix(in srgb, ${ind.accent} 28%, #0d0f13), #0d0f13)` }}>
-          <IndustryArt slug={ind.slug} className="mx-auto w-full max-w-[560px]" />
+          <DisciplineMark slug={ind.slug} className="mx-auto w-full max-w-[420px] text-[#cbae76]" />
         </div>
         <Block title="Who should apply"><Bullets items={ind.whoShouldApply} /></Block>
         <Block title="Skills on show">
@@ -72,10 +72,10 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
         </Block>
         <Block title="Ready?">
           <div className="flex flex-wrap gap-3">
-            <LiquidButton href={`/register/student?industry=${ind.slug}`} variant="primary" size="lg">Apply to pitch</LiquidButton>
+            <LiquidButton href={`/register/candidate?industry=${ind.slug}`} variant="primary" size="lg">Apply to pitch</LiquidButton>
             <LiquidButton href="/register/audience" size="lg">Attend as audience</LiquidButton>
           </div>
-          <p className="mt-10 eyebrow">Other arenas</p>
+          <p className="mt-10 eyebrow">Other disciplines</p>
           <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-2">{others.map((o) => <li key={o.slug}><LiquidButton href={`/industries/${o.slug}`} variant="quiet">{o.name}</LiquidButton></li>)}</ul>
         </Block>
       </div>

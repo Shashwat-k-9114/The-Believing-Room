@@ -65,6 +65,8 @@ export const studentApplications = pgTable(
     /** submitted | screening | shortlisted | waitlisted | declined | withdrawn */
     status: text("status").notNull().default("submitted"),
     adminNotes: text("admin_notes"),
+    /** Unguessable token for the candidate's private payment/status link. */
+    payToken: text("pay_token"),
     // Consents are separate and individually recorded.
     consentTerms: boolean("consent_terms").notNull(),
     consentPrivacy: boolean("consent_privacy").notNull(),
@@ -86,6 +88,9 @@ export const audienceOrders = pgTable(
   {
     id: id(),
     ref: text("ref").notNull().unique(),
+    /** audience | candidate (a candidate ticket paid after or at application) */
+    kind: text("kind").notNull().default("audience"),
+    applicationId: uuid("application_id").references(() => studentApplications.id, { onDelete: "set null" }),
     eventId: uuid("event_id").references(() => events.id),
     name: text("name").notNull(),
     email: text("email").notNull(),

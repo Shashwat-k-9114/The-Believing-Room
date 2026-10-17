@@ -7,6 +7,8 @@ import { z } from "zod";
 import { getDb, schema } from "@/db/client";
 import { destroySession, requireAdmin } from "@/lib/admin-auth";
 import { audit } from "@/lib/audit";
+import { brand } from "@/config/site";
+import { sendMail, shortlistedMail } from "@/lib/email";
 import { storage } from "@/lib/storage";
 import { PUBLICATION_STATES, STUDENT_STATUSES, ORDER_STATUSES } from "@/db/schema";
 
@@ -39,6 +41,11 @@ export async function setStudentStatus(f: FormData) {
   const db = await getDb();
   await db.update(schema.studentApplications).set({ status }).where(eq(schema.studentApplications.id, id));
   await audit("student.status", "student_application", id, { status });
+  if (status === "shortlisted") {
+    const [a] = await db.select().from(schema.studentApplications).where(eq(schema.studentApplications.id, id));
+    // Best effort; if email is not configured the organiser shares the private pay link shown in the admin.
+    if (a?.payToken) await sendMail(shortlistedMail(a.fullName, a.ref, `${brand.url}/pay/${a.ref}?k=${a.payToken}`, a.email));
+  }
   revalidatePath("/admin");
   back("/admin?tab=students", "Status updated");
 }

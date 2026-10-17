@@ -33,7 +33,7 @@ export async function POST(req: Request) {
   // Price is always computed on the server from config. Client amounts are ignored.
   const { total } = priceBreakdown("audience", d.quantity);
   const db = await getDb();
-  const ref = makeRef("ARN-A");
+  const ref = makeRef("TBR-A");
   const accessToken = makeToken();
 
   let providerOrder;

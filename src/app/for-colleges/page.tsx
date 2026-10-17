@@ -19,7 +19,7 @@ export default function ForColleges() {
         <div>
           <ListRows
             items={[
-              { title: "Student participation", body: "Students apply individually, in any of the four arenas. A college can encourage and coordinate, not select on their behalf." },
+              { title: "Student participation", body: "Students apply individually, in any of the four disciplines. A college can encourage and coordinate, not select on their behalf." },
               { title: "Industry interaction", body: "Direct exposure to hiring managers and founders, in a format that rewards preparation." },
               { title: "Coordinated registrations", body: "We can discuss group arrangements for audience attendance. Terms are agreed per edition." },
               { title: "Campus outreach", body: "Briefing sessions for interested students, if your institution would like one." },

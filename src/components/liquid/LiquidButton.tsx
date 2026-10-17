@@ -26,7 +26,7 @@ const sizes: Record<Size, string> = {
 };
 const variants: Record<Variant, string> = {
   primary: "glass glass-solid",
-  glass: "glass text-[var(--fg)]",
+  glass: "glass btn-ghost text-[var(--fg)]",
   quiet: "text-[var(--fg)] underline-offset-4 hover:underline [--r:999px]",
 };
 
@@ -76,5 +76,5 @@ export function LiquidButton(props: ButtonProps | AnchorProps) {
 
 /** Primary CTA that is gently drawn toward the pointer before it arrives. */
 export function MagneticCTA(props: ButtonProps | AnchorProps) {
-  return <LiquidButton variant="primary" size="lg" {...props} jelly={{ pull: 4, magnetRadius: 90, magnetStrength: 9 }} />;
+  return <LiquidButton variant="primary" size="lg" {...props} jelly={{ pull: 2, magnetRadius: 70, magnetStrength: 5 }} />;
 }

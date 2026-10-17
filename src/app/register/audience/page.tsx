@@ -7,7 +7,7 @@ import { PageShell } from "@/components/layout/PageShell";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Audience tickets",
-  description: `Audience Pass ${formatINR(pricing.audience.amount)}, food included. Watch live student pitches and industry panels.`,
+  description: `Audience ticket ${formatINR(pricing.audience.amount)}, food included. Watch live student pitches and industry panels.`,
   alternates: { canonical: "/register/audience" },
 };
 

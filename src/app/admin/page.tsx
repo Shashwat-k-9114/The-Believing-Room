@@ -58,7 +58,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
     if (tab === "students") {
       const rows = await db.select().from(s.studentApplications).orderBy(desc(s.studentApplications.createdAt)).limit(300);
       return (
-        <Table head={["Ref / applicant", "Study", "Arena & pitch", "Consents", "Status", ""]}>
+        <Table head={["Ref / applicant", "Study", "Discipline & pitch", "Consents", "Status", ""]}>
           {rows.map((r) => (
             <tr key={r.id}>
               <Td><p className="mono">{r.ref}</p><p className="font-medium">{r.fullName}</p><p className="text-[var(--fg-faint)]">{r.email}<br />{r.phone}</p><p className="text-[var(--fg-faint)]">{fmt(r.createdAt)}</p></Td>
@@ -66,7 +66,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
               <Td className="max-w-md"><p className="font-medium">{industries.find((i) => i.slug === r.industry)?.short}</p><p className="text-[var(--fg-faint)]">{r.skills}</p><p className="mt-1">{r.pitchSummary}</p>
                 <p className="mt-1 flex flex-wrap gap-3">{[r.portfolioUrl, r.githubUrl, r.linkedinUrl].filter(Boolean).map((u) => <a key={u} className="underline" href={u!} target="_blank" rel="noopener noreferrer nofollow">{new URL(u!).hostname}</a>)}{r.resumeKey && <a className="underline" href={`/api/admin/resume/${r.id}`}>Résumé (PDF)</a>}</p></Td>
               <Td className="text-xs">{[["Record", r.consentFilming], ["Publish pitch", r.consentPublishPitch], ["Name+college", r.consentShowNameCollege], ["Promo clips", r.consentPromoClips]].map(([k, v]) => <p key={String(k)}>{v ? "✓" : "✗"} {k}</p>)}</Td>
-              <Td><StatusSelect action={A.setStudentStatus} id={r.id} value={r.status} options={STUDENT_STATUSES} /></Td>
+              <Td><StatusSelect action={A.setStudentStatus} id={r.id} value={r.status} options={STUDENT_STATUSES} />{r.status === "shortlisted" && r.payToken && <p className="mt-2 text-xs"><a className="underline" href={`/pay/${r.ref}?k=${r.payToken}`}>Candidate payment link</a><br /><span className="text-[var(--fg-faint)]">Private. Share only with this candidate.</span></p>}</Td>
               <Td><form action={A.eraseStudent}><input type="hidden" name="id" value={r.id} /><button className="text-sm text-red-700 underline">Erase</button></form></Td>
             </tr>
           ))}
@@ -132,7 +132,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
           <label className="field"><span className="label">Rules (one per line)</span><textarea className="input" name="rules" defaultValue={(r?.rules ?? []).join("\n")} /></label>
           <div className="flex flex-wrap gap-5 sm:col-span-2">
             <label className="check"><input type="checkbox" name="showCapacity" defaultChecked={r?.showCapacity} /> Show capacity publicly</label>
-            <label className="check"><input type="checkbox" name="studentTicketsOpen" defaultChecked={r?.studentTicketsOpen} /> Student tickets open</label>
+            <label className="check"><input type="checkbox" name="studentTicketsOpen" defaultChecked={r?.studentTicketsOpen} /> Candidate tickets open</label>
             <label className="check"><input type="checkbox" name="audienceTicketsOpen" defaultChecked={r?.audienceTicketsOpen} /> Audience tickets open</label>
           </div>
           <div className="sm:col-span-2"><button className="rounded-full bg-[var(--fg)] px-6 py-3 text-[var(--bg)]">{r ? "Update event" : "Create event"}</button></div>

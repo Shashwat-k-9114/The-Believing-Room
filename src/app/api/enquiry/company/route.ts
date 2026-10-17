@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   if (blocked) return blocked;
   const parsed = companySchema.safeParse(await readJson(req));
   if (!parsed.success) return json({ error: "validation", fields: fieldErrors(parsed.error) }, 422);
-  const ref = makeRef("ARN-C");
+  const ref = makeRef("TBR-R");
   const db = await getDb();
   await db.insert(schema.companyEnquiries).values({ ...parsed.data, ref });
   return json({ ok: true, ref }, 201);

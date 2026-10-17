@@ -61,7 +61,7 @@ describe("audienceSchema and pricing", () => {
   });
   it("computes totals from config only", () => {
     expect(priceBreakdown("audience", 2).total).toBe(pricing.audience.amount * 2);
-    expect(priceBreakdown("student").total).toBe(pricing.student.amount);
+    expect(priceBreakdown("candidate").total).toBe(pricing.candidate.amount);
   });
 });
 

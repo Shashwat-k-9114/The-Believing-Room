@@ -30,6 +30,13 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  async redirects() {
+    return [
+      { source: "/register/student", destination: "/register/candidate", permanent: true },
+      { source: "/for-companies", destination: "/for-recruiters", permanent: true },
+      { source: "/industries/finance", destination: "/industries/finance-accounting", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

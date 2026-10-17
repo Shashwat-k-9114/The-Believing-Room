@@ -17,7 +17,7 @@ async function People() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3 lg:justify-end">
-          <LiquidButton href="/for-companies" variant="primary" size="lg">Become a hiring partner</LiquidButton>
+          <LiquidButton href="/for-recruiters" variant="primary" size="lg">Apply as a Recruiter</LiquidButton>
           <LiquidButton href="/for-colleges" variant="glass" size="lg">Bring your college</LiquidButton>
         </div>
       </div>
@@ -54,7 +54,7 @@ export function PeopleBlock() {
   );
 }
 
-const FORMATS = ["Full episodes", "Student pitches", "Panel conversations", "Behind the scenes", "Podcast", "Short clips"];
+const FORMATS = ["Full episodes", "Candidate pitches", "Panel conversations", "Behind the scenes", "Podcast", "Short clips"];
 
 async function Shelf() {
   const eps = (await publicEpisodes()).slice(0, 3);

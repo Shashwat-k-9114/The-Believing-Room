@@ -25,7 +25,7 @@ export function PageShell({
           aria-hidden
           className="absolute inset-0 -z-10"
           style={{
-            background: `radial-gradient(60% 80% at 80% 0%, color-mix(in srgb, ${accent ?? "#d7c09a"} 18%, transparent), transparent 70%), radial-gradient(50% 60% at 0% 100%, rgb(156 200 240 / 0.08), transparent 70%), #08090b`,
+            background: `radial-gradient(60% 80% at 82% 0%, color-mix(in srgb, ${accent ?? "#8c7a9b"} 26%, transparent), transparent 70%), radial-gradient(50% 60% at 0% 100%, rgb(203 174 118 / 0.1), transparent 70%), #160f1c`,
           }}
         />
         <div className="wrap">

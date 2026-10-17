@@ -4,15 +4,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
-import { brand } from "@/config/site";
+import { brand, socialLinks } from "@/config/site";
 import { menuGroups, primaryNav } from "@/config/nav";
 import { LiquidButton } from "../liquid/LiquidButton";
 import { MorphingModal } from "../liquid/MorphingModal";
 import { Wordmark } from "./Wordmark";
 
 /**
- * Floating glass navigation. Compacts after scrolling; the full site map lives
- * in a native-dialog menu so the bar itself stays uncluttered.
+ * Slim glass navigation (one of the few places optical glass is used).
+ * It narrows slightly after scrolling. The full site map lives in a native-dialog
+ * menu so the bar itself stays quiet.
  */
 export function GlassNavigation() {
   const pathname = usePathname();
@@ -22,8 +23,8 @@ export function GlassNavigation() {
 
   useEffect(() => {
     const on = () => setScrolled(window.scrollY > 40);
-    on();
     window.addEventListener("scroll", on, { passive: true });
+    on();
     return () => window.removeEventListener("scroll", on);
   }, []);
 
@@ -31,9 +32,9 @@ export function GlassNavigation() {
     <header data-theme="dark" className="pointer-events-none fixed inset-x-0 top-0 z-50 !bg-transparent px-3 pt-3 sm:px-5 sm:pt-4">
       <nav
         aria-label="Primary"
-        className={`glass glass-frost glass-lens pointer-events-auto mx-auto flex max-w-[1180px] items-center justify-between gap-3 py-2 pl-5 pr-2 transition-[padding,max-width] duration-500 [--r:999px] ${scrolled ? "max-w-[980px]" : ""}`}
+        className={`glass glass-nav pointer-events-auto mx-auto flex max-w-[1180px] items-center justify-between gap-3 py-2 pl-5 pr-2 transition-[max-width] duration-700 [--r:999px] ${scrolled ? "max-w-[960px]" : ""}`}
       >
-        <Link href="/" aria-label={`${brand.shortName}, home`} className="shrink-0">
+        <Link href="/" aria-label={`${brand.name}, home`} className="shrink-0">
           <Wordmark compact />
         </Link>
 
@@ -45,9 +46,10 @@ export function GlassNavigation() {
                 <Link
                   href={l.href}
                   aria-current={active ? "page" : undefined}
-                  className={`inline-flex min-h-11 items-center rounded-full px-4 text-sm transition-colors hover:text-white ${active ? "bg-white/10 text-white" : "text-white/70"}`}
+                  className={`inline-flex min-h-11 items-center rounded-full px-4 text-[0.92rem] tracking-wide transition-colors hover:text-white ${active ? "text-white" : "text-white/70"}`}
                 >
                   {l.label}
+                  {active && <span aria-hidden className="ml-2 size-1 rounded-full bg-[#cbae76]" />}
                 </Link>
               </li>
             );
@@ -55,8 +57,8 @@ export function GlassNavigation() {
         </ul>
 
         <div className="flex items-center gap-2">
-          <LiquidButton href="/register/student" variant="primary" className="!min-h-11 !px-5 !text-sm max-sm:hidden">
-            Enter the Arena
+          <LiquidButton href="/register/candidate" variant="primary" className="!min-h-11 !px-5 !text-sm max-sm:hidden">
+            Apply as a Candidate
           </LiquidButton>
           <button
             type="button"
@@ -68,7 +70,7 @@ export function GlassNavigation() {
               setOrigin({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
               setOpen(true);
             }}
-            className="glass grid size-12 place-items-center text-white [--r:999px]"
+            className="grid size-12 place-items-center rounded-full text-white transition-colors hover:bg-white/10"
           >
             <Menu size={20} aria-hidden />
           </button>
@@ -76,19 +78,15 @@ export function GlassNavigation() {
       </nav>
 
       <MorphingModal open={open} onClose={() => setOpen(false)} title="Site menu" origin={origin} full>
-        <div data-theme="dark" className="wrap pointer-events-auto grid min-h-dvh content-center gap-10 py-24 !bg-transparent">
+        <div data-theme="dark" className="wrap pointer-events-auto grid min-h-dvh content-center gap-12 py-24 !bg-transparent">
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {menuGroups.map((g) => (
               <div key={g.title}>
-                <p className="eyebrow mb-4">{g.title}</p>
+                <p className="eyebrow mb-5">{g.title}</p>
                 <ul className="grid gap-1">
                   {g.links.map((l) => (
                     <li key={l.href + l.label}>
-                      <Link
-                        href={l.href}
-                        onClick={() => setOpen(false)}
-                        className="display block py-1.5 text-3xl text-white/90 transition-colors hover:text-[var(--accent)] sm:text-4xl"
-                      >
+                      <Link href={l.href} onClick={() => setOpen(false)} className="display block py-1.5 text-3xl text-white/90 transition-colors hover:text-[#cbae76] sm:text-4xl">
                         {l.label}
                       </Link>
                     </li>
@@ -97,13 +95,12 @@ export function GlassNavigation() {
               </div>
             ))}
           </div>
-          <div className="flex flex-wrap gap-3">
-            <LiquidButton href="/register/student" variant="primary" size="lg" onClick={() => setOpen(false)}>
-              Enter the Arena
-            </LiquidButton>
-            <LiquidButton href="/register/audience" variant="glass" size="lg" onClick={() => setOpen(false)}>
-              Attend the Show
-            </LiquidButton>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-white/10 pt-6">
+            {socialLinks.map((s) => (
+              <a key={s.key} href={s.href} target="_blank" rel="noopener noreferrer" className="link-u text-sm text-white/70 hover:text-white">
+                {s.label}
+              </a>
+            ))}
           </div>
         </div>
       </MorphingModal>

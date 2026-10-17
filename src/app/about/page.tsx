@@ -1,43 +1,51 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { brand } from "@/config/site";
 import { LiquidButton } from "@/components/liquid/LiquidButton";
+import { Lines, Reveal } from "@/components/liquid/Reveal";
 import { ListRows, PageShell, Prose, TwoCol } from "@/components/layout/PageShell";
 
 export const metadata: Metadata = {
-  title: "About",
-  description: `Why ${brand.name} exists: a stage where student talent is seen, heard and challenged by the people who hire.`,
+  title: "Our belief",
+  description: `Why ${brand.name} exists: real people, real opportunities and a fair chance to be heard.`,
   alternates: { canonical: "/about" },
 };
 
 export default function About() {
   return (
     <PageShell
-      eyebrow="Vision"
-      title={<>Talent deserves <em>an audience.</em></>}
-      lede="Most internship applications end in silence. We think a student who can explain what they built, and defend it under questions, should get to do exactly that, in front of people with the power to say yes."
-      actions={<><LiquidButton href="/register/student" variant="primary" size="lg">Enter the Arena</LiquidButton><LiquidButton href="/how-it-works" size="lg">How it works</LiquidButton></>}
+      eyebrow="Our belief"
+      title={<>Talent is everywhere. <em>Opportunity shouldn’t be hidden.</em></>}
+      lede="Real people. Real opportunities. A fair chance to be heard."
+      actions={<><LiquidButton href="/register/candidate" variant="primary" size="lg">Apply as a Candidate</LiquidButton><LiquidButton href="/how-it-works" size="lg">See How It Works</LiquidButton></>}
     >
       <TwoCol
-        left={<><p className="eyebrow">The idea</p><h2 className="display h-lg mt-4">Not just another application.</h2></>}
+        left={<><p className="eyebrow">Not another job portal</p><Lines as="h2" className="display h-lg mt-4" lines={["Put a face", <em key="e">to the opportunity.</em>]} /></>}
         right={
           <Prose>
-            <p>The model is familiar from televised pitching shows: a candidate, a panel, a few minutes, real questions. We have taken that format and pointed it at something more useful than spectacle, the first rung of a career.</p>
-            <p>The Internship Arena is two things at once. It is a live event where students pitch to industry panels across four fields. And it is a media project: selected sessions become episodes on YouTube, alongside a podcast of long-form conversations about how careers actually begin.</p>
-            <p>It is an independent project. It is not affiliated with, licensed by or endorsed by any television programme, and it will never imply otherwise.</p>
+            <p>Traditional recruitment happens behind closed doors. A résumé opens the door; it cannot show who is standing behind it. The Believing Room brings the conversation into one room, so candidates can demonstrate their skills, show their potential and receive honest feedback.</p>
+            <p>Every candidate deserves a fair opportunity to be heard, and a constructive next step regardless of the result. Recruiters meet motivated early-career talent without weeks of screening. Viewers learn what hiring actually looks like.</p>
+            <p>It is also a media project. The event is filmed for YouTube, with a podcast alongside it, always with participants’ permission. It is an independent project and is not affiliated with any television programme.</p>
           </Prose>
         }
       />
-      <div className="mt-24">
-        <p className="eyebrow mb-6">What we hold ourselves to</p>
-        <ListRows
-          items={[
-            { title: "Say only what’s true", body: "No invented companies, panelists, testimonials or placement numbers. If something isn’t confirmed, the site says so." },
-            { title: "Be clear about money", body: "Fixed, visible prices. Food included. A pass is never presented as buying selection or a job." },
-            { title: "Respect the student", body: "Filming and publication are separate, optional choices. Saying no never counts against anyone." },
-            { title: "Keep companies in charge of hiring", body: "Hiring decisions belong to the companies. We introduce; we do not promise outcomes for them." },
-          ]}
-        />
-      </div>
+      <Reveal className="mx-auto my-24 max-w-3xl">
+        <figure>
+          <div className="img-reveal aspect-[21/9] w-full overflow-hidden rounded-[0.5rem]">
+            <Image src="/images/concept-stage.jpg" alt="Conceptual image: a candidate facing a seated audience under stage lights" width={751} height={314} className="size-full object-cover" sizes="(min-width: 768px) 768px, 100vw" />
+          </div>
+          <figcaption className="eyebrow mt-3">Conceptual imagery · not footage from an event</figcaption>
+        </figure>
+      </Reveal>
+      <p className="eyebrow mb-6">What we hold ourselves to</p>
+      <ListRows
+        items={[
+          { title: "Say only what’s true", body: "No invented companies, panelists, testimonials or placement numbers. If something isn’t confirmed, the site says so." },
+          { title: "Be clear about money", body: "Fixed, visible prices. Food included. A ticket is never presented as buying selection or an offer." },
+          { title: "Respect the candidate", body: "Filming and publication are separate, optional choices. Saying no never counts against anyone." },
+          { title: "Keep companies in charge of hiring", body: "Offers are the company’s decision. We introduce; we never promise outcomes on a company’s behalf." },
+        ]}
+      />
     </PageShell>
   );
 }

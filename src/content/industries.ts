@@ -1,6 +1,6 @@
 export type IndustrySlug =
   | "it-technology"
-  | "finance"
+  | "finance-accounting"
   | "sales-marketing"
   | "animation-multimedia";
 
@@ -31,11 +31,11 @@ export const industries: Industry[] = [
     short: "Technology",
     index: "01",
     motif: "Architecture",
-    accent: "#9CC8F0",
+    accent: "#B7A9C4",
     tagline: "Show them how you build.",
     blurb: "Software, AI, security, cloud and data. Demonstrated, not described.",
     represents:
-      "Everything built with code and systems: software engineering, web and full-stack development, artificial intelligence and machine learning, cybersecurity, cloud and DevOps, data science and product development. The Technology arena rewards people who ship, and who can explain why they made the choices they did.",
+      "Everything built with code and systems: software engineering, web and full-stack development, artificial intelligence and machine learning, cybersecurity, cloud and DevOps, data science and product development. The Technology discipline rewards people who ship, and who can explain why they made the choices they did.",
     whoShouldApply: [
       "Students who have built something real, however small: an app, a model, a tool, a security write-up.",
       "Self-taught developers whose GitHub tells a better story than their transcript.",
@@ -56,16 +56,16 @@ export const industries: Industry[] = [
     ],
   },
   {
-    slug: "finance",
-    name: "Finance",
-    short: "Finance",
+    slug: "finance-accounting",
+    name: "Finance & Accounting",
+    short: "Finance & Accounting",
     index: "02",
     motif: "Structure",
-    accent: "#D7C09A",
+    accent: "#CBAE76",
     tagline: "Make the numbers speak.",
     blurb: "Analysis, markets, accounting and fintech, argued with evidence.",
     represents:
-      "Financial analysis, accounting, investment research, banking, fintech, business finance and risk. The Finance arena rewards disciplined reasoning: a clear thesis, honest assumptions and the ability to defend a number when someone pushes on it.",
+      "Financial analysis, accounting, investment research, banking, fintech, business finance and risk. The Finance & Accounting discipline rewards disciplined reasoning: a clear thesis, honest assumptions and the ability to defend a number when someone pushes on it.",
     whoShouldApply: [
       "Commerce, economics, BBA, MBA, CA and CFA-track students with a point of view on a company or market.",
       "Students who build models, track markets or write research for fun.",
@@ -91,11 +91,11 @@ export const industries: Industry[] = [
     short: "Sales & Marketing",
     index: "03",
     motif: "Narrative",
-    accent: "#E9C4B0",
+    accent: "#D9B7A6",
     tagline: "Sell the idea. Starting with yourself.",
     blurb: "Persuasion, growth and brand, performed live.",
     represents:
-      "Sales, business development, digital and growth marketing, creative strategy, brand management, advertising and market research. This is the most performative arena: you are judged on how well you land a message with a room that is not obliged to agree.",
+      "Sales, business development, digital and growth marketing, creative strategy, brand management, advertising and market research. This is the most performative discipline: you are judged on how well you land a message with a room that is not obliged to agree.",
     whoShouldApply: [
       "Students who have run a campaign, a page, a club, a small business or a community.",
       "Natural communicators who can turn a product into a story and a story into a result.",
@@ -121,11 +121,11 @@ export const industries: Industry[] = [
     short: "Animation & Multimedia",
     index: "04",
     motif: "Motion",
-    accent: "#C9B8F0",
+    accent: "#9C86B0",
     tagline: "Let the work move them.",
     blurb: "2D, 3D, VFX, motion, design and film: on a screen, not a PDF.",
     represents:
-      "2D and 3D animation, VFX, motion graphics, graphic design, video editing, filmmaking, digital media, UI/UX and creative production. The Multimedia arena is a screening room: your reel plays on a large display and the panel responds to what they see and to how you talk about making it.",
+      "2D and 3D animation, VFX, motion graphics, graphic design, video editing, filmmaking, digital media, UI/UX and creative production. The Multimedia discipline is a screening room: your reel plays on a large display and the panel responds to what they see and to how you talk about making it.",
     whoShouldApply: [
       "Animators, motion designers, editors, filmmakers and designers with a reel or portfolio.",
       "UI/UX designers who can defend decisions, not just show screens.",

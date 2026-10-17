@@ -1,7 +1,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-const PAGES = ["/", "/industries/finance", "/register/student", "/register/audience", "/for-companies", "/faq", "/contact", "/podcast", "/privacy", "/events"];
+const PAGES = ["/", "/industries/finance", "/register/candidate", "/register/audience", "/for-recruiters", "/faq", "/contact", "/podcast", "/privacy", "/events"];
 
 for (const scheme of ["dark", "light"] as const) {
   test.describe(`axe WCAG 2.x A/AA (${scheme} scheme)`, () => {

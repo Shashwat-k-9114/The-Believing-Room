@@ -1,31 +1,35 @@
-export const dynamic = "force-dynamic";
-
 import { Hero } from "@/components/sections/Hero";
 import {
-  ActArenas,
-  ActAtmosphere,
-  ActFinale,
-  ActJourney,
-  ActOldNew,
-  ActPeople,
+  ActCompanies,
+  ActDisciplines,
+  ActInside,
+  ActManifesto,
+  ActPhilosophy,
+  ActPlace,
+  ActPodcast,
+  ActProcess,
+  ActRoom,
+  ActSeason,
   ActShow,
-  ActTickets,
-  ActTrust,
-} from "@/components/sections/HomeActs";
+} from "@/components/sections/Acts";
+
+export const dynamic = "force-dynamic";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <ActOldNew />
-      <ActArenas />
-      <ActJourney />
-      <ActAtmosphere />
-      <ActPeople />
-      <ActTickets />
+      <ActPhilosophy />
+      <ActRoom />
+      <ActProcess />
+      <ActDisciplines />
+      <ActInside />
+      <ActPlace />
+      <ActSeason />
+      <ActCompanies />
       <ActShow />
-      <ActTrust />
-      <ActFinale />
+      <ActPodcast />
+      <ActManifesto />
     </>
   );
 }

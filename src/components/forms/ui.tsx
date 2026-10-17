@@ -14,6 +14,7 @@ export interface ApiData {
   providerOrderId?: string;
   amountPaise?: number;
   emailSent?: boolean;
+  payUrl?: string;
 }
 
 export async function postJson(url: string, body: unknown): Promise<{ ok: boolean; status: number; data: ApiData }> {

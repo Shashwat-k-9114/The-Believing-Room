@@ -7,24 +7,8 @@ import { formatINR, inclusions, priceBreakdown, pricing } from "@/config/site";
 import { LiquidButton } from "../liquid/LiquidButton";
 import { LiquidSegmentedControl } from "../liquid/controls";
 import { WaitlistForm } from "./WaitlistForm";
+import { loadCheckout, type CheckoutResponse } from "./checkout";
 import { Check, FormAlert, postJson, TextField, type Errors } from "./ui";
-
-declare global {
-  interface Window {
-    Razorpay?: new (opts: Record<string, unknown>) => { open(): void; on(evt: string, cb: (r: unknown) => void): void };
-  }
-}
-
-function loadCheckout(): Promise<boolean> {
-  if (window.Razorpay) return Promise.resolve(true);
-  return new Promise((resolve) => {
-    const s = document.createElement("script");
-    s.src = "https://checkout.razorpay.com/v1/checkout.js";
-    s.onload = () => resolve(true);
-    s.onerror = () => resolve(false);
-    document.body.appendChild(s);
-  });
-}
 
 /**
  * `available` reflects the server: payments configured AND an event with audience sales open.
@@ -52,7 +36,7 @@ export function AudienceForm({ available, unavailableReason }: { available: bool
         {price.gst > 0 && <div className="flex justify-between"><dt>GST</dt><dd>{formatINR(price.gst)}</dd></div>}
         <div className="flex items-baseline justify-between border-t border-[var(--line)] pt-4"><dt className="font-medium">Total</dt><dd className="display text-4xl">{formatINR(price.total)}</dd></div>
       </dl>
-      <ul className="mt-5 grid gap-1 text-sm text-[var(--fg-dim)]">{inclusions.map((i) => <li key={i}>✓ {i}</li>)}</ul>
+      <ul className="mt-5 grid gap-1 text-sm text-[var(--fg-dim)]">{inclusions.both.map((i) => <li key={i}>✓ {i}</li>)}</ul>
       <p className="mt-5 text-xs text-[var(--fg-faint)]">Entry and food only. Not a guarantee of selection, an internship or any hiring outcome. <Link className="underline" href="/refund-policy">Refund policy</Link>.</p>
     </aside>
   );
@@ -95,10 +79,10 @@ export function AudienceForm({ available, unavailableReason }: { available: bool
       order_id: data.providerOrderId,
       amount: data.amountPaise,
       currency: "INR",
-      name: "The Internship Arena",
-      description: `${q} × Audience Pass`,
+      name: "The Believing Room",
+      description: `${q} × Audience ticket`,
       prefill: { name: v.name, email: v.email, contact: v.phone },
-      handler: async (resp: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => {
+      handler: async (resp: CheckoutResponse) => {
         const r = await postJson("/api/audience/verify", {
           providerOrderId: resp.razorpay_order_id,
           providerPaymentId: resp.razorpay_payment_id,

@@ -1,25 +1,33 @@
 export const primaryNav = [
-  { href: "/events", label: "Events" },
-  { href: "/industries", label: "Industries" },
+  { href: "/how-it-works", label: "How it works" },
+  { href: "/industries", label: "Disciplines" },
   { href: "/the-show", label: "The Show" },
   { href: "/podcast", label: "Podcast" },
-  { href: "/for-companies", label: "For Companies" },
+  { href: "/for-recruiters", label: "Recruiters" },
 ];
 
 export const menuGroups = [
   {
-    title: "Take part",
+    title: "Take your place",
     links: [
-      { href: "/register/student", label: "Pitch as a student" },
-      { href: "/register/audience", label: "Attend as audience" },
-      { href: "/how-it-works", label: "How it works" },
-      { href: "/events", label: "Events" },
+      { href: "/register/candidate", label: "Apply as a candidate" },
+      { href: "/register/audience", label: "Audience tickets" },
+      { href: "/for-recruiters", label: "Hire with us" },
+      { href: "/for-colleges", label: "For colleges" },
     ],
   },
   {
-    title: "Explore",
+    title: "The Room",
     links: [
-      { href: "/industries", label: "Four industries" },
+      { href: "/about", label: "Our belief" },
+      { href: "/how-it-works", label: "How it works" },
+      { href: "/industries", label: "Four disciplines" },
+      { href: "/events", label: "Season 01" },
+    ],
+  },
+  {
+    title: "Watch & listen",
+    links: [
       { href: "/the-show", label: "The Show" },
       { href: "/episodes", label: "Episodes" },
       { href: "/podcast", label: "Podcast" },
@@ -27,17 +35,9 @@ export const menuGroups = [
     ],
   },
   {
-    title: "Partner",
+    title: "Help",
     links: [
-      { href: "/for-companies", label: "For companies" },
-      { href: "/for-colleges", label: "For colleges" },
-    ],
-  },
-  {
-    title: "About",
-    links: [
-      { href: "/about", label: "Vision" },
-      { href: "/faq", label: "FAQ" },
+      { href: "/faq", label: "Questions" },
       { href: "/contact", label: "Contact" },
     ],
   },
@@ -46,6 +46,6 @@ export const menuGroups = [
 export const legalNav = [
   { href: "/privacy", label: "Privacy" },
   { href: "/terms", label: "Terms" },
-  { href: "/refund-policy", label: "Refunds" },
-  { href: "/media-consent", label: "Media consent" },
+  { href: "/refund-policy", label: "Refunds & transfers" },
+  { href: "/media-consent", label: "Filming & media consent" },
 ];

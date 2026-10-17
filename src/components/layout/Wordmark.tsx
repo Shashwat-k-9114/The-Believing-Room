@@ -1,31 +1,34 @@
 import { brand } from "@/config/site";
 
-/** Temporary typographic wordmark. Replace via brand config or swap this component for a logo. */
+/** A small arch: the doorway of the hero, reduced to a mark. */
+export function ArchMark({ size = 26, className = "" }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size * 1.15} viewBox="0 0 26 30" aria-hidden className={className} fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round">
+      <path d="M3 29V12a10 10 0 0 1 20 0v17" />
+      <path d="M8 29V13a5 5 0 0 1 10 0v16" opacity="0.5" />
+      <path d="M-1 22C7 20 12 27 27 18" strokeWidth="1.1" />
+    </svg>
+  );
+}
+
+/** Typographic wordmark. Swap this component for a logo file once final artwork exists. */
 export function Wordmark({ compact = false, className = "" }: { compact?: boolean; className?: string }) {
-  const [a, b] = brand.wordmark;
   if (compact) {
     return (
-      <span className={`flex items-center gap-2.5 ${className}`}>
-        <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden className="shrink-0">
-          <defs>
-            <linearGradient id="wm" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stopColor="#f7f7f5" />
-              <stop offset="1" stopColor="#d7c09a" />
-            </linearGradient>
-          </defs>
-          <path d="M13 2 24 22H2Z" fill="none" stroke="url(#wm)" strokeWidth="1.6" strokeLinejoin="round" />
-          <path d="M13 9v6" stroke="url(#wm)" strokeWidth="1.6" strokeLinecap="round" />
-        </svg>
-        <span className="display text-[1.15rem] leading-none tracking-tight text-white">
-          {brand.shortName}
-        </span>
+      <span className={`flex items-center gap-2.5 text-[#f4eee4] ${className}`}>
+        <ArchMark size={20} className="text-[#cbae76]" />
+        <span className="display text-[1.3rem] leading-none tracking-tight">{brand.name}</span>
       </span>
     );
   }
   return (
-    <span className={`block leading-none ${className}`}>
-      <span className="mono block text-[0.68rem] text-[var(--fg-faint)]">{a}</span>
-      <span className="display block text-4xl">{b}</span>
+    <span className={`block ${className}`}>
+      <ArchMark size={30} className="mb-4 text-[var(--accent)]" />
+      <span className="display block text-4xl leading-none sm:text-5xl">
+        The Believing
+        <br />
+        <em>Room</em>
+      </span>
     </span>
   );
 }

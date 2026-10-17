@@ -56,7 +56,7 @@ function run(e: Engine, now: number) {
   e.raf = requestAnimationFrame((t) => run(e, t));
 }
 
-export function useJelly<T extends HTMLElement>({ pull = 3, magnetRadius = 0, magnetStrength = 10, ripple = true }: JellyOptions = {}) {
+export function useJelly<T extends HTMLElement>({ pull = 2, magnetRadius = 0, magnetStrength = 10, ripple = true }: JellyOptions = {}) {
   const ref = useRef<T | null>(null);
   const eng = useRef<Engine | null>(null);
   const reduce = useRef(false);
@@ -94,7 +94,7 @@ export function useJelly<T extends HTMLElement>({ pull = 3, magnetRadius = 0, ma
     wake();
   };
 
-  const settle = () => (hovering.current ? target(eng.current?.x.target ?? 0, eng.current?.y.target ?? 0, 1.02, 1.02) : target(0, 0, 1, 1));
+  const settle = () => (hovering.current ? target(eng.current?.x.target ?? 0, eng.current?.y.target ?? 0, 1.012, 1.012) : target(0, 0, 1, 1));
 
   const spawnRipple = (el: HTMLElement, px: number, py: number) => {
     if (reduce.current || !ripple || !el.animate) return;
@@ -105,10 +105,10 @@ export function useJelly<T extends HTMLElement>({ pull = 3, magnetRadius = 0, ma
     el.appendChild(r);
     const a = r.animate(
       [
-        { transform: "scale(0.15)", opacity: 0.9 },
+        { transform: "scale(0.2)", opacity: 0.7 },
         { transform: "scale(1.6)", opacity: 0 },
       ],
-      { duration: 720, easing: "cubic-bezier(0.22, 1, 0.36, 1)" },
+      { duration: 900, easing: "cubic-bezier(0.22, 1, 0.36, 1)" },
     );
     a.onfinish = () => r.remove();
   };
@@ -117,7 +117,7 @@ export function useJelly<T extends HTMLElement>({ pull = 3, magnetRadius = 0, ma
     pressed.current = true;
     el.dataset.hot = "true";
     const e = engine();
-    target(e.x.target, e.y.target, 1.035, 0.94);
+    target(e.x.target, e.y.target, 1.02, 0.97);
     spawnRipple(el, px, py);
   };
 
@@ -138,8 +138,8 @@ export function useJelly<T extends HTMLElement>({ pull = 3, magnetRadius = 0, ma
     hovering.current = true;
     const nx = (px / r.width - 0.5) * 2;
     const ny = (py / r.height - 0.5) * 2;
-    if (pressed.current) target(nx * pull, ny * pull * 0.8 - 1.5, 1.035, 0.94);
-    else target(nx * pull, ny * pull * 0.8 - 1.5, 1.02 + Math.abs(nx) * 0.012, 1.02 - Math.abs(nx) * 0.006);
+    if (pressed.current) target(nx * pull, ny * pull * 0.8 - 1, 1.02, 0.97);
+    else target(nx * pull, ny * pull * 0.8 - 1, 1.012 + Math.abs(nx) * 0.006, 1.012 - Math.abs(nx) * 0.003);
   };
 
   const onPointerEnter = (e: PointerEvent<T>) => {

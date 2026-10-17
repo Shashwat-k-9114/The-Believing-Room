@@ -1,59 +1,67 @@
 /**
- * Single source of truth for brand, pricing, event state and external links.
- * Anything `null` is UNCONFIRMED. UI must render a truthful "coming soon"
+ * Single source of truth for brand, pricing, season details and external links.
+ * Anything `null` is UNCONFIRMED: the UI must show a truthful "to be announced"
  * state for it, never an invented value.
  */
 
 export const brand = {
-  /** Provisional name. Change here to rebrand. */
-  name: "The Internship Arena",
-  shortName: "The Arena",
-  wordmark: ["THE INTERNSHIP", "ARENA"] as const,
-  tagline: "Your potential. In full view.",
+  name: "The Believing Room",
+  shortName: "The Believing Room",
+  tagline: "Where Opportunity Meets Belief.",
   description:
-    "A live pitching stage where ambitious students present their abilities to industry panels and compete for real internship conversations. Four industries. One stage.",
+    "A live recruitment show where students pitch their abilities to industry professionals, and hiring companies meet early-career talent in person. Filmed for YouTube.",
   locale: "en-IN",
   /** Set NEXT_PUBLIC_SITE_URL in production. */
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-  contactEmail: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? null,
+  contactEmail: "thebelievingroom@gmail.com",
+  /** Owner-supplied channels. Edit here only. */
   social: {
-    youtube: process.env.NEXT_PUBLIC_YOUTUBE_CHANNEL_URL ?? null,
+    youtube: "https://youtube.com/@thebelievingroom",
+    instagram: "https://www.instagram.com/the.believing.room/",
+    linkedin: "https://www.linkedin.com/in/the-believing-room-521503427/",
+    x: "https://x.com/thbelievingroom",
+    reddit: "https://www.reddit.com/user/thebelievingroom/",
   },
   podcast: {
-    /** Provisional series title. Not a confirmed identity. */
-    name: "Before the Offer",
+    /** The podcast identity has not been supplied; this is a working title. */
+    name: "The Believing Room Podcast",
     youtubePlaylistUrl: process.env.NEXT_PUBLIC_PODCAST_PLAYLIST_URL ?? null,
     spotifyUrl: null as string | null,
     applePodcastsUrl: null as string | null,
   },
 };
 
-/** Whole-rupee prices. Never hardcode a price anywhere else. */
+export const socialLinks = [
+  { key: "youtube", label: "YouTube", handle: "@thebelievingroom", href: brand.social.youtube },
+  { key: "instagram", label: "Instagram", handle: "@the.believing.room", href: brand.social.instagram },
+  { key: "linkedin", label: "LinkedIn", handle: "The Believing Room", href: brand.social.linkedin },
+  { key: "x", label: "X", handle: "@thbelievingroom", href: brand.social.x },
+  { key: "reddit", label: "Reddit", handle: "u/thebelievingroom", href: brand.social.reddit },
+] as const;
+
+/** Owner-confirmed prices, whole rupees. Never hardcode a price anywhere else. */
 export const pricing = {
   currency: "INR",
-  student: { label: "Student Pass", amount: 500 },
-  audience: { label: "Audience Pass", amount: 300 },
+  candidate: { label: "Candidate ticket", amount: 500 },
+  audience: { label: "Audience ticket", amount: 300 },
   foodIncluded: true,
   /** Percentages applied on top of the base amount. */
   gstPercent: 0,
   platformFeePercent: 0,
   maxAudienceQuantity: 6,
   /**
-   * Business rule awaiting organiser confirmation: the Student Pass is
-   * collected only after a student is shortlisted, so nobody pays for a
-   * stage that has not been confirmed. Applying is free.
+   * OPEN OWNER DECISION. The reference page says registration is complete only
+   * after payment, while its process lists Shortlist before Pitch. Default:
+   * collect the candidate ticket only after shortlisting, so nobody pays for a
+   * place that is not confirmed. Set to "at_application" to collect at sign-up.
    */
-  studentPaymentStage: "after_shortlist" as "after_shortlist" | "at_application",
+  candidatePaymentStage: "after_shortlist" as "after_shortlist" | "at_application",
 };
 
-export type PassKind = "student" | "audience";
+export type PassKind = "candidate" | "audience";
 
 export function formatINR(amount: number): string {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(amount);
+  return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(amount);
 }
 
 export function priceBreakdown(kind: PassKind, quantity = 1) {
@@ -63,6 +71,25 @@ export function priceBreakdown(kind: PassKind, quantity = 1) {
   const gst = Math.round(((subtotal + fee) * pricing.gstPercent) / 100);
   return { unit, quantity, subtotal, fee, gst, total: subtotal + fee + gst };
 }
+
+/**
+ * Season 01 as described by the reference page. These are PLANNED numbers,
+ * not bookings or confirmed participation. Real inventory comes from the
+ * events table once ticketing is live.
+ */
+export const season = {
+  label: "Season 01",
+  planned: {
+    candidatePlaces: 40,
+    audiencePlaces: 20,
+    candidatesPerEpisode: 10,
+    /** Target set by the organiser; companies are named only once verified. */
+    hiringCompanies: 16,
+  },
+  /** Not announced. Do not invent. */
+  date: null as string | null,
+  venue: null as string | null,
+};
 
 export type EventStatus =
   | "draft"
@@ -74,16 +101,7 @@ export type EventStatus =
   | "completed"
   | "cancelled";
 
-/** Statuses visible on the public site. Others stay hidden. */
-export const PUBLIC_EVENT_STATUSES: EventStatus[] = [
-  "announced",
-  "registration_open",
-  "registration_closed",
-  "upcoming",
-  "live",
-  "completed",
-  "cancelled",
-];
+export const PUBLIC_EVENT_STATUSES: EventStatus[] = ["announced", "registration_open", "registration_closed", "upcoming", "live", "completed", "cancelled"];
 
 export function paymentsConfigured(): boolean {
   return Boolean(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET);
@@ -93,10 +111,16 @@ export function emailConfigured(): boolean {
   return Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_FROM);
 }
 
-export const inclusions = [
-  "Meals included",
-  "Entry to the live pitching floor",
-  "A seat for every panel round",
-];
+/**
+ * Inclusions are taken from the reference page's terms ("lunch and goodies for
+ * all attendees"). FLAGGED: operational confirmation required before publishing
+ * anything beyond food.
+ */
+export const inclusions = {
+  both: ["Food included"],
+  candidate: ["Panel review and guidance for every candidate"],
+  /** Reference mentions goodies; unconfirmed, so it is not shown publicly. */
+  unconfirmed: ["Goodies for all attendees"],
+};
 
-export const studentApplicationsOpen = true;
+export const candidateApplicationsOpen = true;

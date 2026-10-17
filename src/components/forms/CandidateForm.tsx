@@ -22,18 +22,18 @@ type Values = typeof initial;
 
 const STEPS = [
   { title: "You", fields: ["fullName", "email", "phone", "college", "course", "gradYear"] },
-  { title: "Your arena", fields: ["industry", "skills", "portfolioUrl", "githubUrl", "linkedinUrl"] },
+  { title: "Your discipline", fields: ["industry", "skills", "portfolioUrl", "githubUrl", "linkedinUrl"] },
   { title: "Your pitch", fields: ["pitchSummary", "experience", "resume"] },
   { title: "Consent & send", fields: ["consentTerms", "consentPrivacy"] },
 ] as const;
 
-export function StudentForm({ defaultIndustry }: { defaultIndustry?: string }) {
+export function CandidateForm({ defaultIndustry }: { defaultIndustry?: string }) {
   const [v, setV] = useState<Values>({ ...initial, industry: industries.some((i) => i.slug === defaultIndustry) ? defaultIndustry! : "" });
   const [step, setStep] = useState(0);
   const [errors, setErrors] = useState<Errors>({});
   const [sending, setSending] = useState(false);
   const [fail, setFail] = useState("");
-  const [done, setDone] = useState<{ ref: string; emailSent: boolean } | null>(null);
+  const [done, setDone] = useState<{ ref: string; emailSent: boolean; payUrl?: string } | null>(null);
   const [resumed, setResumed] = useState(false);
   const file = useRef<File | null>(null);
   const [fileName, setFileName] = useState("");
@@ -97,11 +97,11 @@ export function StudentForm({ defaultIndustry }: { defaultIndustry?: string }) {
     fd.set("data", JSON.stringify(v));
     if (file.current) fd.set("resume", file.current);
     try {
-      const res = await fetch("/api/student", { method: "POST", body: fd });
+      const res = await fetch("/api/candidate", { method: "POST", body: fd });
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
         try { localStorage.removeItem(DRAFT_KEY); } catch {}
-        setDone({ ref: data.ref, emailSent: !!data.emailSent });
+        setDone({ ref: data.ref!, emailSent: !!data.emailSent, payUrl: data.payUrl });
         return;
       }
       if (data.fields) {
@@ -129,9 +129,10 @@ export function StudentForm({ defaultIndustry }: { defaultIndustry?: string }) {
         </p>
         <p>
           <strong className="text-[var(--fg)]">What happens next:</strong> organisers screen applications against the published criteria for your industry. Being received is not
-          being selected. Applying costs nothing; the {formatINR(pricing.student.amount)} Student Pass (food included) is requested only if you are shortlisted.
+          being selected. Applying costs nothing; the {formatINR(pricing.candidate.amount)} Candidate ticket (food included) is requested only if you are shortlisted.
         </p>
-        <div className="mt-2 flex gap-3">
+        <div className="mt-2 flex flex-wrap gap-3">
+          {done.payUrl && <LiquidButton href={done.payUrl} variant="primary">Confirm your place</LiquidButton>}
           <LiquidButton href="/how-it-works" variant="glass">How it works</LiquidButton>
           <LiquidButton href="/" variant="quiet">Back home</LiquidButton>
         </div>
@@ -167,7 +168,7 @@ export function StudentForm({ defaultIndustry }: { defaultIndustry?: string }) {
 
       {step === 1 && (
         <div className="grid gap-5">
-          <SelectField name="industry" label="Which arena will you pitch in?" required options={industryOptions} value={v.industry} onChange={set("industry")} error={errors.industry} />
+          <SelectField name="industry" label="Which discipline will you pitch in?" required options={industryOptions} value={v.industry} onChange={set("industry")} error={errors.industry} />
           <TextField name="skills" label="Key skills" required hint="Comma-separated, e.g. React, Python, financial modelling" value={v.skills} onChange={set("skills")} error={errors.skills} />
           <div className="grid gap-5 sm:grid-cols-3">
             <TextField name="portfolioUrl" label="Portfolio / Behance" type="url" inputMode="url" placeholder="https://" value={v.portfolioUrl} onChange={set("portfolioUrl")} error={errors.portfolioUrl} />
@@ -215,7 +216,7 @@ export function StudentForm({ defaultIndustry }: { defaultIndustry?: string }) {
             <Check name="consentPromoClips" checked={v.consentPromoClips} onChange={set("consentPromoClips")}>You may use short clips of me in promotion and social media.</Check>
           </fieldset>
           <p className="text-sm text-[var(--fg-dim)]">
-            Cost: applying is free. If shortlisted, the Student Pass is {formatINR(pricing.student.amount)}, food included, requested only then.
+            Cost: applying is free. If shortlisted, the Candidate ticket is {formatINR(pricing.candidate.amount)}, food included, requested only then.
           </p>
         </div>
       )}

@@ -1,7 +1,8 @@
 import { getDb, schema } from "@/db/client";
-import { studentApplicationsOpen } from "@/config/site";
+import { candidateApplicationsOpen } from "@/config/site";
 import { applicationReceivedMail, sendMail } from "@/lib/email";
-import { guard, json, makeRef } from "@/lib/security";
+import { brand, paymentsConfigured, pricing } from "@/config/site";
+import { guard, json, makeRef, makeToken } from "@/lib/security";
 import { storage, validateResume } from "@/lib/storage";
 import { fieldErrors, studentSchema } from "@/lib/validation";
 
@@ -11,7 +12,7 @@ export const runtime = "nodejs";
 export async function POST(req: Request) {
   const blocked = guard(req, "student", 6);
   if (blocked) return blocked;
-  if (!studentApplicationsOpen) return json({ error: "closed", message: "Applications are not open right now." }, 403);
+  if (!candidateApplicationsOpen) return json({ error: "closed", message: "Applications are not open right now." }, 403);
 
   let form: FormData;
   try {
@@ -43,9 +44,10 @@ export async function POST(req: Request) {
   }
 
   const db = await getDb();
-  const ref = makeRef("ARN-S");
+  const ref = makeRef("TBR-C");
+  const payToken = makeToken();
   try {
-    await db.insert(schema.studentApplications).values({ ...d, ref, resumeKey, resumeName });
+    await db.insert(schema.studentApplications).values({ ...d, ref, payToken, resumeKey, resumeName });
   } catch (e) {
     if (resumeKey) await storage.remove(resumeKey);
     console.error("[student] insert failed", (e as Error).message);
@@ -53,5 +55,8 @@ export async function POST(req: Request) {
   }
 
   const mail = await sendMail(applicationReceivedMail(d.fullName, ref, d.email));
-  return json({ ok: true, ref, emailSent: mail.sent }, 201);
+  // Only offered immediately when the owner has chosen to collect payment at application.
+  const payUrl = pricing.candidatePaymentStage === "at_application" && paymentsConfigured() ? `/pay/${ref}?k=${payToken}` : undefined;
+  void brand;
+  return json({ ok: true, ref, emailSent: mail.sent, payUrl }, 201);
 }

@@ -1,34 +1,49 @@
 import type { Metadata } from "next";
 import { formatINR, pricing } from "@/config/site";
-import { DraftNotice, PageShell, Prose } from "@/components/layout/PageShell";
+import { registrationTerms } from "@/content/policies";
+import { DraftNotice, PageShell } from "@/components/layout/PageShell";
 
-export const metadata: Metadata = { title: "Terms", description: "Participation and ticket terms, including what a pass does and does not include.", alternates: { canonical: "/terms" } };
+export const metadata: Metadata = {
+  title: "Registration terms",
+  description: "Registration terms for candidates and audience: seat lock, transfers, eligibility, conduct and what a ticket does and does not include.",
+  alternates: { canonical: "/terms" },
+};
 
 export default function Terms() {
   return (
-    <PageShell eyebrow="Legal" title={<>Participation <em>terms.</em></>} lede="Plain statements of what registration, screening, passes and hiring each mean.">
-      <DraftNotice />
-      <Prose>
-        <h2>1. What this is</h2>
-        <p>An independent live pitching event and media project. It is not affiliated with any television programme. The organisers’ legal name and address will be added before launch.</p>
-        <h2>2. Registration, screening, participation and hiring are different</h2>
-        <ul>
-          <li><strong>Registration</strong> (applying) is free and gives no right to a slot.</li>
-          <li><strong>Screening</strong> is decided by the organisers on published criteria. Their decision on who pitches is final for that edition.</li>
-          <li><strong>Participation</strong> follows shortlisting and confirmation of the Student Pass.</li>
-          <li><strong>Hiring</strong> is solely the decision of each company. The organisers make no promise of an internship, offer, stipend or placement.</li>
-        </ul>
-        <h2>3. Prices</h2>
-        <p>Student Pass {formatINR(pricing.student.amount)}; Audience Pass {formatINR(pricing.audience.amount)}. Food is included in both. Prices are shown inclusive of the taxes and fees configured at the time of purchase. A pass buys a place and meals only. It does not buy selection, a pitching slot or any outcome.</p>
-        <h2>4. Eligibility and conduct</h2>
-        <p>Pitchers must be enrolled students or recent graduates as specified for the edition, and must present their own work accurately. Misrepresenting work or conduct that disrupts the event may lead to removal without refund.</p>
-        <h2>5. Filming</h2>
-        <p>The event may be recorded. Publication of a participant’s pitch, name, college and promotional clips each require that participant’s separate consent. See <a href="/media-consent">media consent</a>.</p>
-        <h2>6. Changes and cancellation</h2>
-        <p>Dates, venues and formats may change. See the <a href="/refund-policy">refund policy</a>.</p>
-        <h2>7. Governing law</h2>
-        <p>To be confirmed with legal counsel (expected: laws of India, with a stated jurisdiction).</p>
-      </Prose>
+    <PageShell eyebrow="Legal" title={<>Registration <em>terms.</em></>} lede="Plain statements of what registration, screening and a ticket each mean.">
+      <DraftNotice>These terms carry over the wording from the original registration page. They have not been reviewed by a lawyer and must be before ticket sales open.</DraftNotice>
+
+      <div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr]">
+        <aside className="lg:sticky lg:top-32 lg:self-start">
+          <p className="eyebrow">Four things, kept apart</p>
+          <dl className="mt-5 border-t border-[var(--fg)]">
+            {[
+              ["Registration", "You tell us about yourself."],
+              ["Shortlisting", "The team selects candidates for panel fit."],
+              ["Participation", "You pitch, if shortlisted and confirmed."],
+              ["Hiring", "Entirely each company’s decision. No offer is guaranteed."],
+            ].map(([t, d]) => (
+              <div key={t} className="border-b border-[var(--line)] py-4"><dt className="display text-2xl">{t}</dt><dd className="mt-1 text-sm text-[var(--fg-dim)]">{d}</dd></div>
+            ))}
+          </dl>
+          <p className="mt-6 text-sm text-[var(--fg-dim)]">
+            Candidate ticket {formatINR(pricing.candidate.amount)} · Audience ticket {formatINR(pricing.audience.amount)} · Food included. A ticket buys a place and a meal, not selection or an offer.
+          </p>
+        </aside>
+        <ol className="divide-y divide-[var(--line)] border-y border-[var(--line)]">
+          {registrationTerms.map((t, i) => (
+            <li key={t.id} className="grid gap-2 py-6 sm:grid-cols-[3rem_1fr]">
+              <span className="eyebrow pt-2">{String(i + 1).padStart(2, "0")}</span>
+              <div>
+                <h2 className="display text-2xl">{t.title}</h2>
+                <p className="mt-1 max-w-[60ch] text-[var(--fg-dim)]">{t.body}</p>
+                {t.needsDecision && <p className="mt-3 max-w-[60ch] rounded-md border border-[var(--accent)]/50 p-3 text-xs text-[var(--fg-dim)]"><strong className="text-[var(--fg)]">Pending owner decision:</strong> {t.needsDecision}</p>}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
     </PageShell>
   );
 }

@@ -1,26 +1,32 @@
 import type { Metadata } from "next";
-import { DraftNotice, PageShell, Prose } from "@/components/layout/PageShell";
+import { registrationTerms } from "@/content/policies";
+import { DraftNotice, PageShell } from "@/components/layout/PageShell";
 
-export const metadata: Metadata = { title: "Refund and cancellation policy", description: "When tickets can be refunded, and what happens if an event is changed or cancelled.", alternates: { canonical: "/refund-policy" } };
+export const metadata: Metadata = {
+  title: "Refunds and transfers",
+  description: "When fees are refundable, how registrations can be transferred, and what happens if an event is cancelled or postponed.",
+  alternates: { canonical: "/refund-policy" },
+};
+
+const IDS = ["no-refunds", "transfers", "candidate-transfers", "cancel-postpone", "arrival", "gateway"];
 
 export default function Refunds() {
+  const items = IDS.map((id) => registrationTerms.find((t) => t.id === id)!);
   return (
-    <PageShell eyebrow="Legal" title={<>Refunds and <em>cancellations.</em></>} lede="A draft policy, published early so you can see the intent before any ticket is sold.">
-      <DraftNotice>The specific windows below are proposals and must be confirmed by the organisers and reviewed by counsel before ticket sales open.</DraftNotice>
-      <Prose>
-        <h2>If we cancel</h2>
-        <p>If the organisers cancel an event, every ticket for it is refunded in full to the original payment method.</p>
-        <h2>If we reschedule</h2>
-        <p>If the date changes materially, you may keep your ticket for the new date or request a full refund within 7 days of the announcement.</p>
-        <h2>If you can’t attend</h2>
-        <p>Proposed: refunds are available up to 7 days before the event; after that, tickets are non-refundable but may be transferred to another person by writing to us.</p>
-        <h2>Student Pass</h2>
-        <p>The Student Pass is requested only after shortlisting. If you decline a confirmed place within the window stated in your shortlisting email, it is refunded in full. A pass is not refunded because a panel or company did not offer an internship, since the pass never promised one.</p>
-        <h2>Failed or duplicate payments</h2>
-        <p>If a payment fails, you aren’t charged for tickets. Duplicate payments for the same order are refunded. Payment confirmation is verified with the payment provider before tickets are issued.</p>
+    <PageShell eyebrow="Legal" title={<>Refunds and <em>transfers.</em></>} lede="Stated plainly, before any ticket is sold.">
+      <DraftNotice>This is the policy from the original registration page, unchanged. It has not been legally reviewed. No refund conditions have been added or softened in this redesign.</DraftNotice>
+      <ol className="divide-y divide-[var(--line)] border-y border-[var(--line)]">
+        {items.map((t) => (
+          <li key={t.id} className="grid gap-2 py-7 md:grid-cols-[1fr_1.6fr] md:gap-12">
+            <h2 className="display text-3xl">{t.title}</h2>
+            <p className="max-w-[58ch] text-[var(--fg-dim)]">{t.body}</p>
+          </li>
+        ))}
+      </ol>
+      <div className="prose-arena mt-12">
         <h2>How to ask</h2>
-        <p>Use the <a href="/contact">contact page</a> with your order reference.</p>
-      </Prose>
+        <p>Use the <a href="/contact">contact page</a> with your registration reference. Payments are verified with the payment provider before a registration is confirmed, so a failed payment does not create one, and a duplicate payment for the same order is returned.</p>
+      </div>
     </PageShell>
   );
 }

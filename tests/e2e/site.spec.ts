@@ -2,7 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 
 const ROUTES = [
   "/", "/about", "/how-it-works", "/industries", "/industries/it-technology", "/industries/finance", "/industries/sales-marketing",
-  "/industries/animation-multimedia", "/events", "/register/student", "/register/audience", "/for-companies", "/for-colleges",
+  "/industries/animation-multimedia", "/events", "/register/candidate", "/register/audience", "/for-recruiters", "/for-colleges",
   "/the-show", "/episodes", "/podcast", "/stories", "/faq", "/contact", "/privacy", "/terms", "/refund-policy", "/media-consent",
 ];
 
@@ -32,7 +32,7 @@ test.describe("public site", () => {
     await expect(hero).toContainText("₹500");
     await expect(hero).toContainText("₹300");
     await expect(hero).toContainText(/food included/i);
-    await page.getByRole("link", { name: "Enter the Arena" }).first().click();
+    await page.getByRole("link", { name: "Apply as a Candidate" }).first().click();
     await expect(page).toHaveURL(/\/register\/student/);
   });
 
@@ -112,7 +112,7 @@ test.describe("public site", () => {
 test.describe("student application", () => {
   test("validation, multi-step flow, persistence, and honest confirmation", async ({ page }) => {
     await skipIntro(page);
-    await page.goto("/register/student?industry=finance");
+    await page.goto("/register/candidate?industry=finance");
     await page.getByRole("button", { name: "Continue" }).click();
     await expect(page.getByRole("alert").first()).toBeVisible(); // inline errors, step does not advance
     await expect(page.getByRole("heading", { level: 2, name: "You" })).toBeVisible();
@@ -124,7 +124,7 @@ test.describe("student application", () => {
     await page.getByLabel(/Course or degree/).fill("B.Com Honours");
     await page.getByRole("button", { name: "Continue" }).click();
 
-    await expect(page.getByLabel(/Which arena/)).toHaveValue("finance"); // prefilled from the arena page
+    await expect(page.getByLabel(/Which discipline/)).toHaveValue("finance"); // prefilled from the arena page
     await page.getByLabel(/Key skills/).fill("Financial modelling, Excel");
     await page.getByRole("button", { name: "Continue" }).click();
 
@@ -148,20 +148,20 @@ test.describe("student application", () => {
     const base = { fullName: "Test User", email: "t@example.com", phone: "9876543210", college: "X College", course: "BCA", gradYear: new Date().getFullYear() + 1, industry: "it-technology", skills: "Go, SQL", pitchSummary: "A short but sufficiently long pitch summary for the validator to accept.", consentTerms: true, consentPrivacy: true };
     const origin = { origin: "http://localhost:3217" };
 
-    const noOrigin = await request.post("/api/student", { multipart: { data: JSON.stringify(base) } });
+    const noOrigin = await request.post("/api/candidate", { multipart: { data: JSON.stringify(base) } });
     expect(noOrigin.status()).toBe(403);
 
-    const bad = await request.post("/api/student", { headers: origin, multipart: { data: JSON.stringify({ ...base, consentPrivacy: false, email: "nope" }) } });
+    const bad = await request.post("/api/candidate", { headers: origin, multipart: { data: JSON.stringify({ ...base, consentPrivacy: false, email: "nope" }) } });
     expect(bad.status()).toBe(422);
     const body = await bad.json();
     expect(body.fields.consentPrivacy).toBeTruthy();
     expect(body.fields.email).toBeTruthy();
 
-    const fake = await request.post("/api/student", { headers: origin, multipart: { data: JSON.stringify(base), resume: { name: "cv.pdf", mimeType: "application/pdf", buffer: Buffer.from("MZ not a pdf") } } });
+    const fake = await request.post("/api/candidate", { headers: origin, multipart: { data: JSON.stringify(base), resume: { name: "cv.pdf", mimeType: "application/pdf", buffer: Buffer.from("MZ not a pdf") } } });
     expect(fake.status()).toBe(422);
     expect((await fake.json()).fields.resume).toMatch(/PDF/);
 
-    const pdf = await request.post("/api/student", { headers: origin, multipart: { data: JSON.stringify({ ...base, email: "pdf.e2e@example.com" }), resume: { name: "cv.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4\n1 0 obj<<>>endobj\n%%EOF") } } });
+    const pdf = await request.post("/api/candidate", { headers: origin, multipart: { data: JSON.stringify({ ...base, email: "pdf.e2e@example.com" }), resume: { name: "cv.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4\n1 0 obj<<>>endobj\n%%EOF") } } });
     expect(pdf.status()).toBe(201);
     expect((await pdf.json()).ref).toMatch(/^ARN-S-/);
   });

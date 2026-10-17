@@ -34,7 +34,7 @@ export default async function TicketPage({ params, searchParams }: { params: Pro
             <div className="shrink-0 rounded-xl bg-white p-2" role="img" aria-label={`QR code for ticket ${t.code}`} dangerouslySetInnerHTML={{ __html: svgs[i] }} />
             <div>
               <p className="eyebrow">{brand.name}</p>
-              <p className="display mt-2 text-3xl">Audience Pass</p>
+              <p className="display mt-2 text-3xl">{order.kind === "candidate" ? "Candidate ticket" : "Audience ticket"}</p>
               <p className="mt-1 text-[var(--fg-dim)]">{t.holderName}</p>
               <p className="mono mt-3">{t.code}</p>
               <p className="mt-1 text-xs text-[var(--fg-faint)]">Food included · Ticket {i + 1} of {tix.length}</p>

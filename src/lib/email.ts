@@ -44,6 +44,17 @@ export function applicationReceivedMail(name: string, ref: string, to: string): 
   return { to, subject, text, html };
 }
 
+export function shortlistedMail(name: string, ref: string, payUrl: string, to: string): Mail {
+  const subject = `You have been shortlisted for ${brand.name} (${ref})`;
+  const text = `Hi ${name},
+
+Your application ${ref} has been shortlisted. Please confirm your place using your private link: ${payUrl}
+
+Shortlisting is not a guarantee of an offer. Selection depends entirely on the panel's decision.`;
+  const html = `<p>Hi ${esc(name)},</p><p>Your application <strong>${esc(ref)}</strong> has been shortlisted. <a href="${esc(payUrl)}">Confirm your place</a> using your private link.</p><p>Shortlisting is not a guarantee of an offer. Selection depends entirely on the panel's decision.</p>`;
+  return { to, subject, text, html };
+}
+
 export function ticketMail(name: string, ref: string, url: string, to: string): Mail {
   const subject = `Your ${brand.name} tickets (${ref})`;
   const text = `Hi ${name},\n\nPayment confirmed. Your tickets are here: ${url}\n\nShow the QR code at entry. Food is included.`;
