@@ -1,9 +1,9 @@
 export const primaryNav = [
   { href: "/how-it-works", label: "How it works" },
   { href: "/industries", label: "Disciplines" },
+  { href: "/partners", label: "Partners" },
   { href: "/the-show", label: "The Show" },
-  { href: "/podcast", label: "Podcast" },
-  { href: "/for-recruiters", label: "Recruiters" },
+  { href: "/sponsors", label: "Sponsors" },
 ];
 
 export const menuGroups = [
@@ -14,6 +14,7 @@ export const menuGroups = [
       { href: "/register/audience", label: "Audience tickets" },
       { href: "/for-recruiters", label: "Hire with us" },
       { href: "/for-colleges", label: "For colleges" },
+      { href: "/sponsors", label: "Sponsor the room" },
     ],
   },
   {
@@ -22,6 +23,7 @@ export const menuGroups = [
       { href: "/about", label: "Our belief" },
       { href: "/how-it-works", label: "How it works" },
       { href: "/industries", label: "Four disciplines" },
+      { href: "/partners", label: "Partners" },
       { href: "/events", label: "Season 01" },
     ],
   },

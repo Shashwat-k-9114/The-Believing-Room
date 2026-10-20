@@ -38,7 +38,7 @@ export function GlassNavigation() {
           <Wordmark compact />
         </Link>
 
-        <ul className="hidden items-center gap-1 lg:flex">
+        <ul className="hidden items-center gap-1 xl:flex">
           {primaryNav.map((l) => {
             const active = pathname === l.href || pathname.startsWith(l.href + "/");
             return (

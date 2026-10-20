@@ -15,6 +15,13 @@
       "when": 1792261245027,
       "tag": "0001_sad_maximus",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792494499542,
+      "tag": "0002_high_spirit",
+      "breakpoints": true
     }
   ]
 }

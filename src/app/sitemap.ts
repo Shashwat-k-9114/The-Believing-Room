@@ -5,7 +5,7 @@ import { publicEpisodes, publicEvents } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
-const STATIC = ["", "/about", "/how-it-works", "/industries", "/events", "/register/candidate", "/register/audience", "/for-recruiters", "/for-colleges", "/the-show", "/episodes", "/podcast", "/stories", "/faq", "/contact", "/privacy", "/terms", "/refund-policy", "/media-consent"];
+const STATIC = ["", "/about", "/how-it-works", "/industries", "/partners", "/sponsors", "/events", "/register/candidate", "/register/audience", "/for-recruiters", "/for-colleges", "/the-show", "/episodes", "/podcast", "/stories", "/faq", "/contact", "/privacy", "/terms", "/refund-policy", "/media-consent"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [events, eps] = await Promise.all([publicEvents(), publicEpisodes()]);

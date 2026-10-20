@@ -1,58 +1,8 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { publicEpisodes, publicPanelists, publicPartners } from "@/lib/queries";
+import { publicEpisodes } from "@/lib/queries";
 import { LiquidButton } from "../liquid/LiquidButton";
 import { EpisodeCard } from "../media/EpisodeCard";
-
-/** Only confirmed + published people and companies are ever shown. Otherwise: an honest invitation. */
-async function People() {
-  const [panelists, partners] = await Promise.all([publicPanelists(), publicPartners()]);
-  if (panelists.length === 0 && partners.length === 0) {
-    return (
-      <div className="grid gap-8 border-t border-[var(--line)] pt-10 lg:grid-cols-[1.2fr_1fr] lg:items-end">
-        <div>
-          <p className="display text-3xl sm:text-4xl">Panelists and hiring companies will be named here once they have confirmed.</p>
-          <p className="mt-4 max-w-[58ch] text-[var(--fg-dim)]">
-            We don’t list logos or names in advance. If you hire, mentor or lead a team and want to meet students who can show you what they can do, we would like to hear from you.
-          </p>
-        </div>
-        <div className="flex flex-wrap gap-3 lg:justify-end">
-          <LiquidButton href="/for-recruiters" variant="primary" size="lg">Apply as a Recruiter</LiquidButton>
-          <LiquidButton href="/for-colleges" variant="glass" size="lg">Bring your college</LiquidButton>
-        </div>
-      </div>
-    );
-  }
-  return (
-    <div className="grid gap-10">
-      {panelists.length > 0 && (
-        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {panelists.map((p) => (
-            <li key={p.id} className="border-t border-[var(--line)] pt-4">
-              <p className="display text-2xl">{p.name}</p>
-              <p className="text-[var(--fg-dim)]">{p.title}, {p.organization}</p>
-            </li>
-          ))}
-        </ul>
-      )}
-      {partners.length > 0 && (
-        <ul className="flex flex-wrap gap-x-10 gap-y-4">
-          {partners.map((p) => (
-            <li key={p.id} className="display text-2xl">{p.name}</li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
-
-export function PeopleBlock() {
-  return (
-    <Suspense fallback={<div className="h-40" aria-hidden />}>
-      <People />
-    </Suspense>
-  );
-}
 
 const FORMATS = ["Full episodes", "Candidate pitches", "Panel conversations", "Behind the scenes", "Podcast", "Short clips"];
 

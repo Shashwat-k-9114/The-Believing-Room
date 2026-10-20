@@ -61,3 +61,21 @@ export function ticketMail(name: string, ref: string, url: string, to: string): 
   const html = `<p>Hi ${esc(name)},</p><p>Payment confirmed. <a href="${esc(url)}">Open your tickets</a>. Show the QR code at entry. Food is included.</p>`;
   return { to, subject, text, html };
 }
+
+type SponsorMailInput = { organization: string; contactName: string; role: string; email: string; phone?: string; interest: string; category: string; budgetRange?: string; message?: string };
+
+export function sponsorEnquiryOrganiserMail(d: SponsorMailInput, ref: string, to: string): Mail {
+  const subject = `New partnership enquiry: ${d.organization} (${ref})`;
+  const lines = [
+    `Reference: ${ref}`, `Organisation: ${d.organization}`, `Contact: ${d.contactName}, ${d.role}`, `Email: ${d.email}`, `Phone: ${d.phone ?? "not given"}`,
+    `Interest: ${d.interest}`, `Type: ${d.category}`, `Indicative budget: ${d.budgetRange ?? "not given"}`, "", d.message ?? "(no message)",
+  ];
+  return { to, subject, text: lines.join("\n"), html: lines.map((l) => `<p>${esc(l)}</p>`).join("") };
+}
+
+export function sponsorEnquiryReceiptMail(name: string, ref: string, to: string): Mail {
+  const subject = `We received your partnership enquiry (${ref})`;
+  const text = `Hi ${name},\n\nThank you for your interest in partnering with ${brand.name}. Your reference is ${ref}.\n\nThis is a receipt, not an agreement. A member of the team will review your enquiry and reply by email. Sponsorship formats are proposals until agreed in writing, and no audience reach or recruitment outcome is promised.\n\n${brand.name}`;
+  const html = `<p>Hi ${esc(name)},</p><p>Thank you for your interest in partnering with ${esc(brand.name)}. Your reference is <strong>${esc(ref)}</strong>.</p><p>This is a receipt, not an agreement. A member of the team will review your enquiry and reply by email. Sponsorship formats are proposals until agreed in writing, and no audience reach or recruitment outcome is promised.</p>`;
+  return { to, subject, text, html };
+}

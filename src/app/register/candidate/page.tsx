@@ -2,12 +2,15 @@ import type { Metadata } from "next";
 import { formatINR, pricing } from "@/config/site";
 import { CandidateForm } from "@/components/forms/CandidateForm";
 import { PageShell } from "@/components/layout/PageShell";
+import { EducationNote } from "@/components/partners/Education";
 
 export const metadata: Metadata = {
   title: "Apply as a candidate",
   description: "Apply to pitch to industry panels at The Believing Room. Applying is free; the candidate ticket (₹500, food included) is requested on shortlisting.",
   alternates: { canonical: "/register/candidate" },
 };
+
+export const dynamic = "force-dynamic";
 
 export default async function CandidateRegistration({ searchParams }: { searchParams: Promise<{ industry?: string }> }) {
   const { industry } = await searchParams;
@@ -19,6 +22,7 @@ export default async function CandidateRegistration({ searchParams }: { searchPa
       lede={`${after ? "Applying is free. If you are shortlisted you will be asked to confirm your place" : "You will be asked to confirm your place"} with the candidate ticket (${formatINR(pricing.candidate.amount)}, food included). A ticket does not guarantee an offer: selection depends entirely on the panel’s decision.`}
     >
       <div className="mx-auto max-w-3xl">
+        <EducationNote />
         <CandidateForm defaultIndustry={industry} />
       </div>
     </PageShell>

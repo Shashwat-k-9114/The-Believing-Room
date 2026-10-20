@@ -89,6 +89,13 @@ export const season = {
   /** Not announced. Do not invent. */
   date: null as string | null,
   venue: null as string | null,
+  /**
+   * PROPOSED run of show for one candidate slot. Shown publicly only as "proposed"; keep configurable
+   * until the final run of show is confirmed.
+   */
+  slot: { pitchMinutes: 3, panelMinutes: 5, transitionMinutes: 2 },
+  /** Four industry blocks of roughly ten candidates is the broader plan; a smaller pilot is also under consideration. */
+  industryBlocks: 4,
 };
 
 export type EventStatus =

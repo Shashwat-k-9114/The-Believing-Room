@@ -1,16 +1,16 @@
 import { Hero } from "@/components/sections/Hero";
 import {
-  ActCompanies,
   ActDisciplines,
+  ActEcosystem,
+  ActEducation,
   ActInside,
   ActManifesto,
   ActPhilosophy,
   ActPlace,
   ActPodcast,
   ActProcess,
-  ActRoom,
-  ActSeason,
   ActShow,
+  ActSponsor,
 } from "@/components/sections/Acts";
 
 export const dynamic = "force-dynamic";
@@ -20,15 +20,15 @@ export default function Home() {
     <>
       <Hero />
       <ActPhilosophy />
-      <ActRoom />
+      <ActEcosystem />
       <ActProcess />
       <ActDisciplines />
       <ActInside />
+      <ActEducation />
       <ActPlace />
-      <ActSeason />
-      <ActCompanies />
       <ActShow />
       <ActPodcast />
+      <ActSponsor />
       <ActManifesto />
     </>
   );

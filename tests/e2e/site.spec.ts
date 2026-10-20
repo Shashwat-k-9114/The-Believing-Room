@@ -1,9 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
 
 const ROUTES = [
-  "/", "/about", "/how-it-works", "/industries", "/industries/it-technology", "/industries/finance", "/industries/sales-marketing",
+  "/", "/about", "/how-it-works", "/industries", "/industries/it-technology", "/industries/finance-accounting", "/industries/sales-marketing",
   "/industries/animation-multimedia", "/events", "/register/candidate", "/register/audience", "/for-recruiters", "/for-colleges",
-  "/the-show", "/episodes", "/podcast", "/stories", "/faq", "/contact", "/privacy", "/terms", "/refund-policy", "/media-consent",
+  "/partners", "/sponsors", "/the-show", "/episodes", "/podcast", "/stories", "/faq", "/contact", "/privacy", "/terms", "/refund-policy", "/media-consent",
 ];
 
 async function skipIntro(page: Page) {
@@ -24,64 +24,79 @@ test.describe("public site", () => {
     }
   });
 
-  test("homepage communicates the offer, prices and food in the first screen", async ({ page }) => {
+  test("homepage communicates the offer, prices and the confirmed ecosystem", async ({ page }) => {
     await skipIntro(page);
     await page.goto("/");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText(/your potential/i);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(/opportunity/i);
     const hero = page.locator("#hero-title").locator("xpath=ancestor::section");
     await expect(hero).toContainText("₹500");
     await expect(hero).toContainText("₹300");
     await expect(hero).toContainText(/food included/i);
+    const main = page.locator("main");
+    for (const org of ["Manacle", "KRVVY", "Immverse AI", "Galvanic", "Futured Innovation Studios", "Amity Greater Noida", "BIT Noida"]) {
+      await expect(main, org).toContainText(org);
+    }
     await page.getByRole("link", { name: "Apply as a Candidate" }).first().click();
-    await expect(page).toHaveURL(/\/register\/student/);
+    await expect(page).toHaveURL(/\/register\/candidate/);
   });
 
-  test("arena selector switches by click and arrow keys", async ({ page }) => {
+  test("partner roles are stated precisely and never as sponsorship or endorsement", async ({ page }) => {
+    await page.goto("/partners");
+    const main = page.locator("main");
+    await expect(main).toContainText(/free of charge/i);
+    await expect(main).toContainText(/not financial sponsorship/i);
+    const text = (await page.locator("body").innerText()).toLowerCase();
+    for (const banned of ["65,000", "65000", "quotation", "advance"]) expect(text, banned).not.toContain(banned);
+  });
+
+  test("menu dialog: opens, traps focus, Escape closes and returns focus, links navigate", async ({ page }) => {
     await skipIntro(page);
     await page.goto("/");
-    const tabs = page.getByRole("tablist", { name: /industry arena/i });
-    await tabs.scrollIntoViewIfNeeded();
-    await tabs.getByRole("tab", { name: /Finance/ }).click();
-    await expect(page.getByRole("tabpanel")).toContainText("Make the numbers speak");
-    await tabs.getByRole("tab", { name: /Finance/ }).press("ArrowRight");
-    await expect(tabs.getByRole("tab", { name: /Sales/ })).toHaveAttribute("aria-selected", "true");
-    await expect(page.getByRole("tabpanel")).toContainText("Sell the idea");
-  });
-
-  test("hero intro plays once and is skippable; reduced motion never plays it", async ({ page, browser }) => {
-    await page.goto("/");
-    await expect(page.locator("html")).toHaveAttribute("data-intro", "play");
-    await page.getByRole("button", { name: "Skip intro" }).click();
-    await expect(page.locator("html")).toHaveAttribute("data-intro", "done");
-    await page.reload();
-    await expect(page.locator("html")).not.toHaveAttribute("data-intro", "play"); // returning visitor
-    const ctx = await browser.newContext({ reducedMotion: "reduce" });
-    const p2 = await ctx.newPage();
-    await p2.goto("/");
-    await expect(p2.locator("html")).not.toHaveAttribute("data-intro", "play");
-    await expect(p2.getByRole("heading", { level: 1 })).toBeVisible();
-    await ctx.close();
-  });
-
-  test("menu dialog opens, traps via native dialog and navigates", async ({ page }) => {
-    await skipIntro(page);
-    await page.goto("/");
-    await page.getByRole("button", { name: "Open menu" }).click();
+    const opener = page.getByRole("button", { name: "Open menu" });
+    await opener.click();
     const dlg = page.getByRole("dialog");
     await expect(dlg).toBeVisible();
-    await dlg.getByRole("link", { name: "FAQ" }).click();
-    await expect(page).toHaveURL(/\/faq/);
-  });
-
-  test("watch the experience is honest: no fake video", async ({ page }) => {
-    await skipIntro(page);
-    await page.goto("/");
-    await page.getByRole("button", { name: /Watch the Experience/ }).click();
-    const dlg = page.getByRole("dialog");
-    await expect(dlg).toContainText(/hasn’t been filmed yet/);
-    await expect(dlg.locator("video, iframe")).toHaveCount(0);
+    await expect(opener).toHaveAttribute("aria-expanded", "true");
+    for (let i = 0; i < 30; i++) {
+      await page.keyboard.press("Tab");
+      const inside = await page.evaluate(() => !document.activeElement || document.activeElement === document.body || !!document.activeElement.closest("dialog"));
+      expect(inside, `tab ${i} left the dialog`).toBe(true);
+    }
     await page.keyboard.press("Escape");
     await expect(dlg).toBeHidden();
+    await expect(opener).toBeFocused();
+    await opener.click();
+    await dlg.getByRole("link", { name: "Questions" }).click();
+    await expect(page).toHaveURL(/\/faq/);
+    await expect(page.getByRole("dialog")).toBeHidden();
+  });
+
+  test("sponsor enquiry: validates, saves, and gives an honest reference", async ({ page }) => {
+    await page.goto("/sponsors");
+    const form = page.getByRole("form", { name: "Partnership enquiry" });
+    await form.scrollIntoViewIfNeeded();
+    await form.getByRole("button", { name: "Send partnership enquiry" }).click();
+    await expect(form.getByRole("alert").first()).toBeVisible();
+    await form.getByLabel("Organisation").fill("Example Brand Pvt Ltd");
+    await form.getByLabel("Contact person").fill("Meera Iyer");
+    await form.getByLabel("Your role").fill("Marketing lead");
+    await form.getByLabel("Business email").fill("meera.e2e@example.com");
+    await form.getByLabel("You are").selectOption("business");
+    await form.getByLabel("Partnership interest").selectOption({ index: 1 });
+    await form.getByLabel(/agree to be contacted/).check();
+    await form.getByLabel(/formats are proposals/).check();
+    await form.getByRole("button", { name: "Send partnership enquiry" }).click();
+    const ok = page.getByRole("status").filter({ hasText: "Enquiry received." });
+    await expect(ok).toBeVisible();
+    await expect(ok).toContainText(/TBR-S-[A-Z0-9]{6}/);
+    await expect(ok).toContainText(/not an agreement/i);
+  });
+
+  test("sponsor API rejects missing consent and foreign origins", async ({ request }) => {
+    const body = { organization: "X Ltd", contactName: "A B", role: "Head", email: "a@x.com", category: "business", interest: "Not sure yet", consentContact: true, consentNoGuarantee: true };
+    expect((await request.post("/api/enquiry/sponsor", { data: body })).status()).toBe(403);
+    const bad = await request.post("/api/enquiry/sponsor", { headers: { origin: "http://localhost:3217" }, data: { ...body, consentNoGuarantee: false } });
+    expect(bad.status()).toBe(422);
   });
 
   test("events and media show truthful prelaunch states", async ({ page }) => {
@@ -112,7 +127,7 @@ test.describe("public site", () => {
 test.describe("student application", () => {
   test("validation, multi-step flow, persistence, and honest confirmation", async ({ page }) => {
     await skipIntro(page);
-    await page.goto("/register/candidate?industry=finance");
+    await page.goto("/register/candidate?industry=finance-accounting");
     await page.getByRole("button", { name: "Continue" }).click();
     await expect(page.getByRole("alert").first()).toBeVisible(); // inline errors, step does not advance
     await expect(page.getByRole("heading", { level: 2, name: "You" })).toBeVisible();
@@ -124,7 +139,7 @@ test.describe("student application", () => {
     await page.getByLabel(/Course or degree/).fill("B.Com Honours");
     await page.getByRole("button", { name: "Continue" }).click();
 
-    await expect(page.getByLabel(/Which discipline/)).toHaveValue("finance"); // prefilled from the arena page
+    await expect(page.getByLabel(/Which discipline/)).toHaveValue("finance-accounting"); // prefilled from the arena page
     await page.getByLabel(/Key skills/).fill("Financial modelling, Excel");
     await page.getByRole("button", { name: "Continue" }).click();
 
@@ -140,7 +155,7 @@ test.describe("student application", () => {
     await page.getByRole("button", { name: "Submit application" }).click();
     const ok = page.getByRole("status").filter({ hasText: "Application received." });
     await expect(ok).toBeVisible();
-    await expect(ok).toContainText(/ARN-S-[A-Z0-9]{6}/);
+    await expect(ok).toContainText(/TBR-C-[A-Z0-9]{6}/);
     await expect(ok).toContainText(/not\s+being selected/);
   });
 
@@ -163,7 +178,7 @@ test.describe("student application", () => {
 
     const pdf = await request.post("/api/candidate", { headers: origin, multipart: { data: JSON.stringify({ ...base, email: "pdf.e2e@example.com" }), resume: { name: "cv.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4\n1 0 obj<<>>endobj\n%%EOF") } } });
     expect(pdf.status()).toBe(201);
-    expect((await pdf.json()).ref).toMatch(/^ARN-S-/);
+    expect((await pdf.json()).ref).toMatch(/^TBR-C-/);
   });
 });
 

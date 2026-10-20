@@ -40,8 +40,8 @@
   --bg: #f6f1e9;
   --bg-raised: #ede6da;
   --fg: #1c1820;
-  --fg-dim: rgb(28 24 32 / 0.76);
-  --fg-faint: rgb(28 24 32 / 0.66);
+  --fg-dim: rgb(28 24 32 / 0.84);
+  --fg-faint: rgb(28 24 32 / 0.76);
   --line: rgb(28 24 32 / 0.16);
   --accent: #7a5f2e;
   --focus: #1c1820;
@@ -160,8 +160,9 @@ header[data-theme] {
 /* ------------------------------ Optical glass ----------------------------- */
 /* Reserved for: navigation, selected buttons, the featured ticket. */
 
+/* Default positioning lives in a layer so utilities (absolute, sticky, fixed) can override it. */
+@layer base { .glass { position: relative; } }
 .glass {
-  position: relative;
   isolation: isolate;
   background: linear-gradient(180deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.03)), rgb(255 255 255 / 0.04);
   -webkit-backdrop-filter: blur(16px) saturate(1.4);

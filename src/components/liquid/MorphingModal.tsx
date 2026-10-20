@@ -53,7 +53,7 @@ export function MorphingModal({
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="glass !absolute right-3 top-3 z-20 grid size-11 place-items-center [--r:999px]"
+          className="glass absolute right-3 top-3 z-20 grid size-11 place-items-center [--r:999px]"
         >
           <X size={18} aria-hidden />
         </button>

@@ -1,13 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { brand, formatINR, inclusions, pricing, season, socialLinks } from "@/config/site";
+import { brand, formatINR, inclusions, pricing, socialLinks } from "@/config/site";
 import { industries } from "@/content/industries";
 import { LiquidButton, MagneticCTA } from "../liquid/LiquidButton";
 import { Lines, Reveal } from "../liquid/Reveal";
 import { COLOR, Curve } from "./Curve";
 import { DisciplineMark } from "./DisciplineMark";
-import { PeopleBlock, ShowShelf } from "./HomeDynamic";
+import { ShowShelf } from "./HomeDynamic";
+import { EcosystemHome } from "../partners/Ecosystem";
+import { EducationBenefit } from "../partners/Education";
+import { Journey } from "./Journey";
 import { ArchMark } from "../layout/Wordmark";
 
 const Eyebrow = ({ children }: { children: React.ReactNode }) => (
@@ -57,100 +60,19 @@ export function ActPhilosophy() {
   );
 }
 
-/* --------------------------- Act III: The room ----------------------------- */
-const VIEWPOINTS = [
-  ["01", "Candidates", "More than a resume", "Tell your story, demonstrate your skills, answer real questions and get a genuine chance at an internship."],
-  ["02", "Recruiters", "See talent in action", "Meet a shortlisted pool of motivated candidates without spending weeks screening hundreds of applications."],
-  ["03", "Viewers", "Learn from real hiring", "Watch recruiters evaluate candidates, and turn every interview into an interview masterclass."],
-];
-
-export function ActRoom() {
-  return (
-    <section data-theme="light" aria-labelledby="act-room" className="section cv-auto !bg-[var(--bg-raised)]" style={{ ["--bg" as string]: COLOR.pearl }}>
-      <div className="wrap grid items-center gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
-        <Reveal className="mx-auto w-full max-w-md lg:max-w-none">
-          <figure>
-            <div className="img-reveal mask-arch aspect-[4/5] w-full">
-              <Image src="/images/concept-room.jpg" alt="Conceptual image: a panel of three seen from behind, facing a seated audience beneath a lit screen" width={780} height={314} className="size-full object-cover object-[60%_50%]" sizes="(min-width: 1024px) 40vw, 90vw" />
-            </div>
-            <figcaption className="eyebrow mt-4">Conceptual imagery · not footage from an event</figcaption>
-          </figure>
-        </Reveal>
-        <div>
-          <Reveal><Eyebrow>The Room</Eyebrow></Reveal>
-          <Lines id="act-room" as="h2" className="display h-xl mt-8" lines={["Hiring should", <em key="e">feel human.</em>]} />
-          <Reveal delay={0.15}>
-            <p className="lede mt-8">
-              Traditional recruitment happens behind closed doors. We bring the conversation into the room: candidates gain visibility, recruiters gain better access to talent, and viewers get a real education in hiring.
-            </p>
-          </Reveal>
-          <ol className="mt-12 border-t border-[var(--fg)]">
-            {VIEWPOINTS.map(([n, who, t, d], i) => (
-              <Reveal as="li" key={n} delay={0.1 + i * 0.08} className="grid gap-x-8 gap-y-1 border-b border-[var(--line)] py-6 sm:grid-cols-[7rem_1fr]">
-                <span className="eyebrow pt-2">{n} · {who}</span>
-                <div>
-                  <h3 className="display text-2xl sm:text-3xl">{t}</h3>
-                  <p className="mt-1 max-w-[46ch] text-[var(--fg-dim)]">{d}</p>
-                </div>
-              </Reveal>
-            ))}
-          </ol>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* -------------------------- Act IV: The process ---------------------------- */
-const STAGES = [
-  ["01", "Apply", "Tell us about your skills and ambitions."],
-  ["02", "Shortlist", "Our team reviews applications."],
-  ["03", "Pitch", "Introduce yourself and answer the panel."],
-  ["04", "Decision", "Companies evaluate candidates’ skills, communication and potential."],
-  ["05", "The Result", "Selected candidates may receive an internship offer. Others receive constructive guidance."],
-];
-
+/* -------------------------- Scene IV: The candidate journey ---------------- */
 export function ActProcess() {
   return (
     <>
       <Curve from={COLOR.pearl} to={COLOR.aubergine} shape="tide" flip />
       <section data-theme="dark" aria-labelledby="act-process" className="section cv-auto !pt-16 sm:!pt-24">
         <div className="wrap">
-          <Reveal><Eyebrow>The process</Eyebrow></Reveal>
+          <Reveal><Eyebrow>The candidate journey</Eyebrow></Reveal>
           <Lines id="act-process" as="h2" className="display h-xl mt-8 max-w-[14ch]" lines={["From application", <em key="e">to opportunity.</em>]} />
-
-          {/* Desktop: five stages strung along one flowing line */}
-          <Reveal className="relative mt-20 hidden lg:block" delay={0.1}>
-            <svg viewBox="0 0 1000 100" preserveAspectRatio="none" className="absolute inset-x-0 top-0 h-[100px] w-full" aria-hidden>
-              <path className="path-draw" pathLength={1} d="M0 50C50 20 60 20 100 20S250 80 300 80 450 20 500 20 650 80 700 80 850 20 900 20 980 40 1000 50" fill="none" stroke="#cbae76" strokeWidth="1.2" vectorEffect="non-scaling-stroke" />
-            </svg>
-            <ol className="relative grid grid-cols-5">
-              {STAGES.map(([n, t, d], i) => (
-                <li key={n} className="relative px-4" style={{ paddingTop: i % 2 ? 128 : 68 }}>
-                  <span aria-hidden className="absolute left-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-[#cbae76] bg-[#160f1c]" style={{ top: i % 2 ? 80 : 20 }} />
-                  <p className="eyebrow">{n}</p>
-                  <h3 className="display mt-2 text-3xl">{t}</h3>
-                  <p className="mt-2 text-sm text-[var(--fg-dim)]">{d}</p>
-                </li>
-              ))}
-            </ol>
-          </Reveal>
-
-          {/* Mobile: one vertical thread */}
-          <ol className="relative mt-14 border-l border-[var(--line)] pl-8 lg:hidden">
-            {STAGES.map(([n, t, d], i) => (
-              <Reveal as="li" key={n} delay={i * 0.05} className="relative pb-10 last:pb-0">
-                <span aria-hidden className="absolute -left-[2.45rem] top-2 size-3 rounded-full border border-[#cbae76] bg-[#160f1c]" />
-                <p className="eyebrow">{n}</p>
-                <h3 className="display mt-1 text-3xl">{t}</h3>
-                <p className="mt-1 text-[var(--fg-dim)]">{d}</p>
-              </Reveal>
-            ))}
-          </ol>
-
+          <Reveal delay={0.1}><Journey /></Reveal>
           <Reveal delay={0.1}>
-            <p className="mt-16 max-w-[56ch] text-sm text-[var(--fg-faint)]">
-              Registration and payment do not guarantee an offer. Selection depends entirely on the panel’s decision. <Link href="/how-it-works" className="link-u text-[var(--fg)]">The full process</Link>
+            <p className="mt-16 max-w-[60ch] text-sm text-[var(--fg-faint)]">
+              Employment decisions remain with the participating employers. Registration and payment do not guarantee an offer. <Link href="/how-it-works" className="link-u text-[var(--fg)]">The full process</Link>
             </p>
           </Reveal>
         </div>
@@ -253,7 +175,7 @@ export function ActPlace() {
   const afterShortlist = pricing.candidatePaymentStage === "after_shortlist";
   return (
     <>
-      <Curve from={COLOR.aubergine} to={COLOR.ivory} shape="swell" flip />
+      <Curve from={COLOR.champagne} to={COLOR.ivory} shape="swell" flip />
       <section data-theme="light" aria-labelledby="act-place" className="section cv-auto !pt-16 sm:!pt-24">
         <div className="wrap">
           <Reveal><Eyebrow>Three ways in</Eyebrow></Reveal>
@@ -304,60 +226,6 @@ export function ActPlace() {
   );
 }
 
-/* ------------------------- Act VIII: Season 01 ----------------------------- */
-export function ActSeason() {
-  const p = season.planned;
-  const rows: [string, string][] = [
-    ["Candidate places", `${p.candidatePlaces} planned`],
-    ["Audience places", `${p.audiencePlaces} planned`],
-    ["Candidates per episode", `${p.candidatesPerEpisode} planned`],
-    ["Categories", "Four"],
-    ["Date", season.date ?? "To be announced"],
-    ["Venue", season.venue ?? "To be announced"],
-  ];
-  return (
-    <section data-theme="light" aria-labelledby="act-season" className="section cv-auto !bg-[var(--bg-raised)]" style={{ ["--bg" as string]: COLOR.pearl }}>
-      <div className="wrap grid gap-14 lg:grid-cols-[1fr_1fr] lg:gap-24">
-        <div>
-          <Reveal><Eyebrow>{season.label} · Recruitment experience</Eyebrow></Reveal>
-          <Lines id="act-season" as="h2" className="display h-xl mt-8" lines={["The first season,", <em key="e">as planned.</em>]} />
-          <Reveal delay={0.15}>
-            <p className="lede mt-8">Candidate registration closes once all places are filled. These are planned numbers, not confirmed bookings; real availability is shown on the event page once registration opens.</p>
-            <div className="mt-8"><LiquidButton href="/events" variant="glass">Season 01 details</LiquidButton></div>
-          </Reveal>
-        </div>
-        <Reveal delay={0.1} className="self-center">
-          <dl className="border-t border-[var(--fg)]">
-            {rows.map(([k, v]) => (
-              <div key={k} className="flex items-baseline justify-between gap-6 border-b border-[var(--line)] py-4">
-                <dt className="text-[var(--fg-dim)]">{k}</dt>
-                <dd className="display text-3xl">{v}</dd>
-              </div>
-            ))}
-          </dl>
-          <p className="eyebrow mt-4">Planned · subject to organiser confirmation</p>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* ---------------------- Act IX: Companies ---------------------------------- */
-export function ActCompanies() {
-  return (
-    <section data-theme="light" aria-labelledby="act-companies" className="section cv-auto">
-      <div className="wrap">
-        <Reveal><Eyebrow>Hiring partners</Eyebrow></Reveal>
-        <Lines id="act-companies" as="h2" className="display h-xl mt-8 max-w-[18ch]" lines={["Meet the people looking for", <em key="e">the next generation.</em>]} />
-        <Reveal delay={0.1}>
-          <p className="lede mt-8">Companies meet a shortlisted pool of motivated candidates, watch them present, ask their own questions and decide on their own terms. No weeks of screening. No hiring outcome is promised on anyone’s behalf.</p>
-        </Reveal>
-        <div className="mt-14"><PeopleBlock /></div>
-      </div>
-    </section>
-  );
-}
-
 /* ------------------------ Act X: The show ---------------------------------- */
 export function ActShow() {
   return (
@@ -395,6 +263,7 @@ export function ActPodcast() {
             <Lines id="act-podcast" as="h2" className="display h-xl mt-8" lines={["Conversations before", <em key="e">the first job.</em>]} />
             <Reveal delay={0.15}>
               <p className="lede mt-8">Long-form interviews with founders, hiring managers, interns and mentors about ambition, recruitment and how careers actually begin. Intelligent and conversational, not motivational.</p>
+              <p className="mt-6 max-w-[56ch] text-sm text-[var(--fg-faint)]">Recordings are planned for the podcast room made available through Amity Greater Noida. Recording equipment and production are arranged separately by The Believing Room.</p>
               <p className="eyebrow mt-6">Coming soon · no episodes published yet</p>
               <div className="mt-8"><LiquidButton href="/podcast" variant="glass" size="lg">The podcast</LiquidButton></div>
             </Reveal>
@@ -414,12 +283,77 @@ export function ActPodcast() {
   );
 }
 
+/* ------------------------ Scene III: The confirmed ecosystem ---------------- */
+export function ActEcosystem() {
+  return (
+    <section data-theme="light" aria-labelledby="act-ecosystem" className="section cv-auto !bg-[var(--bg-raised)] !pt-16 sm:!pt-24" style={{ ["--bg" as string]: COLOR.pearl }}>
+      <div className="wrap">
+        <Reveal><Eyebrow>The confirmed ecosystem</Eyebrow></Reveal>
+        <Lines id="act-ecosystem" as="h2" className="display h-xl mt-8 max-w-[24ch]" lines={["The people and organisations", <em key="e">helping bring the room to life.</em>]} />
+        <div className="mt-16"><EcosystemHome /></div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------ Scene VII: The educational contribution ---------- */
+export function ActEducation() {
+  return (
+    <>
+      <Curve from={COLOR.aubergine} to={COLOR.champagne} shape="ribbon" />
+      <section data-theme="light" aria-labelledby="act-education" className="section cv-auto !pb-24 !pt-16 sm:!pb-32 sm:!pt-24" style={{ ["--bg" as string]: COLOR.champagne, background: COLOR.champagne }}>
+        <div className="wrap">
+          <Reveal><Eyebrow>The educational contribution</Eyebrow></Reveal>
+          <Lines id="act-education" as="h2" className="display h-xl mt-8 max-w-[16ch]" lines={["Learning, beyond", <em key="e">the hiring decision.</em>]} />
+          <div className="mt-14"><EducationBenefit /></div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+/* ------------------------ Scene XI: Sponsor the room ----------------------- */
+export function ActSponsor() {
+  return (
+    <>
+      <Curve from={COLOR.pearl} to={COLOR.aubergine} shape="veil" />
+      <section data-theme="dark" aria-labelledby="act-sponsor" className="section cv-auto !pt-16 sm:!pt-24">
+        <div className="wrap grid gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-24">
+          <div>
+            <Reveal><Eyebrow>Sponsor the room</Eyebrow></Reveal>
+            <Lines id="act-sponsor" as="h2" className="display h-xl mt-8" lines={["Help make", <em key="e">opportunity visible.</em>]} />
+            <Reveal delay={0.15}>
+              <p className="lede mt-8">
+                The venue is provided. Filming, audio, lighting, postproduction, hospitality and event operations still need support. Founding partners are being invited to help produce a first season that is honest, well made and useful to students.
+              </p>
+              <div className="mt-9 flex flex-wrap gap-3">
+                <LiquidButton href="/sponsors" variant="primary" size="lg">Explore partnership</LiquidButton>
+                <LiquidButton href="/sponsors#enquiry" variant="glass" size="lg">Start a conversation</LiquidButton>
+              </div>
+            </Reveal>
+          </div>
+          <Reveal delay={0.1}>
+            <ul className="border-t border-[var(--fg)]">
+              {["Professional filming and audio", "Candidate and guest hospitality", "Educational content", "Responsible media production"].map((t, i) => (
+                <li key={t} className="display flex items-baseline gap-5 border-b border-[var(--line)] py-4 text-2xl sm:text-3xl">
+                  <span className="eyebrow w-6">{String(i + 1).padStart(2, "0")}</span>{t}
+                </li>
+              ))}
+            </ul>
+            <p className="eyebrow mt-4">Proposed formats · subject to agreement</p>
+          </Reveal>
+        </div>
+      </section>
+    </>
+  );
+}
+
 /* ------------------------ Act XII: Manifesto ------------------------------- */
 export function ActManifesto() {
   return (
     <>
-      <Curve from={COLOR.pearl} to={COLOR.aubergine} shape="arc" />
-      <section data-theme="dark" aria-labelledby="act-manifesto" className="relative isolate overflow-hidden">
+      <Curve from={COLOR.aubergine} to={COLOR.ivory} shape="arc" />
+      <section data-theme="light" aria-labelledby="act-manifesto" className="relative isolate overflow-hidden">
         <div aria-hidden className="absolute inset-0 -z-10 bg-[radial-gradient(60%_70%_at_50%_100%,rgb(203_174_118/0.2),transparent_70%)]" />
         <div className="wrap section grid min-h-[88svh] content-center justify-items-center text-center !pt-12">
           <ArchMark size={44} className="text-[#cbae76]" />

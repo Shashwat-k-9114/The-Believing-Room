@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { industries } from "@/content/industries";
 import { pricing } from "@/config/site";
+import { BUDGET_RANGES, SPONSOR_INTERESTS } from "@/config/ecosystem";
 
 /** Strip control characters and collapse stray whitespace. React escapes on output. */
 export const clean = (s: string) =>
@@ -145,6 +146,23 @@ export const collegeSchema = z.object({
     .transform((v) => (typeof v === "number" ? v : undefined)),
   interests: z.array(z.string().max(60)).max(8).default([]),
   message: optionalText(2000, "Message"),
+});
+
+export const sponsorSchema = z.object({
+  organization: text(2, 160, "Organisation"),
+  contactName: text(2, 120, "Contact person"),
+  role: text(2, 120, "Your role"),
+  email,
+  phone: phone.optional().or(z.literal("").transform(() => undefined)),
+  interest: z.enum(SPONSOR_INTERESTS, { error: "Choose the kind of partnership you are interested in" }),
+  category: z.enum(["business", "recruitment_company", "education", "media_brand", "individual", "other"], { error: "Choose the option that describes you" }),
+  budgetRange: z
+    .enum(BUDGET_RANGES)
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  message: optionalText(3000, "Message"),
+  consentContact: mustAgree("Please agree to be contacted about this enquiry"),
+  consentNoGuarantee: mustAgree("Please acknowledge that no reach or outcome is guaranteed"),
 });
 
 export const contactSchema = z.object({

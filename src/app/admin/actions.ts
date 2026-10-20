@@ -10,7 +10,9 @@ import { audit } from "@/lib/audit";
 import { brand } from "@/config/site";
 import { sendMail, shortlistedMail } from "@/lib/email";
 import { storage } from "@/lib/storage";
-import { PUBLICATION_STATES, STUDENT_STATUSES, ORDER_STATUSES } from "@/db/schema";
+import { PUBLICATION_STATES, STUDENT_STATUSES, ORDER_STATUSES, ORG_CATEGORIES, CONFIRMATION_STATES, LOGO_PERMISSIONS, SPONSOR_ENQUIRY_STATUSES } from "@/db/schema";
+import { SEASON_PHASES } from "@/config/ecosystem";
+import { industries } from "@/content/industries";
 
 /**
  * Every action re-checks the admin session on the server. Hiding a button is never
@@ -183,4 +185,131 @@ export async function deletePerson(f: FormData) {
   else await db.delete(schema.partners).where(eq(schema.partners.id, id));
   await audit(`${kind}.delete`, kind, id);
   back("/admin?tab=people", "Removed");
+}
+
+/* ------------------------ Ecosystem: organisations & contributions ------------------------ */
+
+const LOGO_PATH = /^\/partners\/[\w.-]+\.(svg|png|webp)$/i;
+const industryOrNull = (v: string | null) => (v && industries.some((i) => i.slug === v) ? v : null);
+
+export async function saveOrganization(f: FormData) {
+  await requireAdmin();
+  const p = z
+    .object({
+      slug, name: z.string().trim().min(2).max(120), category: z.enum(ORG_CATEGORIES),
+      confirmationStatus: z.enum(CONFIRMATION_STATES), logoPermission: z.enum(LOGO_PERMISSIONS), publication: z.enum(PUBLICATION_STATES),
+    })
+    .safeParse({ slug: str(f, "slug"), name: str(f, "name"), category: str(f, "category"), confirmationStatus: str(f, "confirmationStatus"), logoPermission: str(f, "logoPermission"), publication: str(f, "publication") });
+  if (!p.success) return back("/admin?tab=ecosystem", p.error.issues[0].message);
+  const website = opt(f, "websiteUrl");
+  if (website && !/^https:\/\//.test(website)) return back("/admin?tab=ecosystem", "Website must start with https://");
+  const logoPath = opt(f, "logoPath");
+  if (logoPath && !LOGO_PATH.test(logoPath)) return back("/admin?tab=ecosystem", "Logo path must look like /partners/name.svg (svg, png or webp placed in public/partners)");
+  if (p.data.logoPermission === "approved" && !logoPath) return back("/admin?tab=ecosystem", "Approved logo permission needs a logo path");
+  const data = {
+    ...p.data, role: opt(f, "role"), description: opt(f, "description"), websiteUrl: website, industry: industryOrNull(opt(f, "industry")),
+    evidenceRef: opt(f, "evidenceRef"), announcementApproved: f.get("announcementApproved") === "on", logoPath,
+    sortOrder: num(f, "sortOrder") ?? 100, updatedAt: new Date(),
+  };
+  const db = await getDb();
+  await db.insert(schema.organizations).values(data).onConflictDoUpdate({ target: schema.organizations.slug, set: data });
+  await audit("organization.save", "organization", data.slug, { publication: data.publication, announcementApproved: data.announcementApproved, logoPermission: data.logoPermission });
+  revalidatePath("/", "layout");
+  back("/admin?tab=ecosystem", data.publication === "published" && !data.announcementApproved ? "Saved. It will not appear publicly until announcement approval is ticked" : "Saved");
+}
+
+export async function deleteOrganization(f: FormData) {
+  await requireAdmin();
+  const id = z.uuid().parse(str(f, "id"));
+  const db = await getDb();
+  await db.delete(schema.organizations).where(eq(schema.organizations.id, id));
+  await audit("organization.delete", "organization", id);
+  revalidatePath("/", "layout");
+  back("/admin?tab=ecosystem", "Removed");
+}
+
+export async function saveOpportunity(f: FormData) {
+  await requireAdmin();
+  const p = z.object({ organizationId: z.uuid(), roleTitle: z.string().trim().min(2).max(160), publication: z.enum(PUBLICATION_STATES) })
+    .safeParse({ organizationId: str(f, "organizationId"), roleTitle: str(f, "roleTitle"), publication: str(f, "publication") });
+  if (!p.success) return back("/admin?tab=ecosystem", p.error.issues[0].message);
+  const mode = opt(f, "workMode");
+  const data = {
+    ...p.data, industry: industryOrNull(opt(f, "industry")), openings: num(f, "openings"), stipend: opt(f, "stipend"), location: opt(f, "location"),
+    duration: opt(f, "duration"), workMode: mode && ["onsite", "remote", "hybrid"].includes(mode) ? mode : null,
+    eligibility: opt(f, "eligibility"), selectionProcess: opt(f, "selectionProcess"), approvedByCompany: f.get("approvedByCompany") === "on",
+  };
+  const db = await getDb();
+  await db.insert(schema.opportunities).values(data);
+  await audit("opportunity.create", "opportunity", data.roleTitle, { publication: data.publication, approvedByCompany: data.approvedByCompany });
+  revalidatePath("/partners");
+  back("/admin?tab=ecosystem", "Role added. It is public only when published AND approved by the company");
+}
+
+export async function deleteOpportunity(f: FormData) {
+  await requireAdmin();
+  const id = z.uuid().parse(str(f, "id"));
+  const db = await getDb();
+  await db.delete(schema.opportunities).where(eq(schema.opportunities.id, id));
+  await audit("opportunity.delete", "opportunity", id);
+  revalidatePath("/partners");
+  back("/admin?tab=ecosystem", "Removed");
+}
+
+export async function saveEducation(f: FormData) {
+  await requireAdmin();
+  const p = z.object({ id: z.uuid(), publication: z.enum(PUBLICATION_STATES) }).safeParse({ id: str(f, "id"), publication: str(f, "publication") });
+  if (!p.success) return back("/admin?tab=ecosystem", p.error.issues[0].message);
+  const data = {
+    course: opt(f, "course"), eligibility: opt(f, "eligibility"), accessPeriod: opt(f, "accessPeriod"), certificateTerms: opt(f, "certificateTerms"),
+    quantity: opt(f, "quantity"), termsConfirmed: f.get("termsConfirmed") === "on", publication: p.data.publication,
+  };
+  const db = await getDb();
+  await db.update(schema.educationContributions).set(data).where(eq(schema.educationContributions.id, p.data.id));
+  await audit("education.save", "education_contribution", p.data.id, { termsConfirmed: data.termsConfirmed });
+  revalidatePath("/", "layout");
+  back("/admin?tab=ecosystem", "Saved. Terms are public only when marked confirmed");
+}
+
+/* ------------------------------------ Sponsorship ----------------------------------- */
+
+export async function savePackage(f: FormData) {
+  await requireAdmin();
+  const p = z.object({ slug, name: z.string().trim().min(2).max(120), summary: z.string().trim().min(10).max(600), publication: z.enum(PUBLICATION_STATES) })
+    .safeParse({ slug: str(f, "slug"), name: str(f, "name"), summary: str(f, "summary"), publication: str(f, "publication") });
+  if (!p.success) return back("/admin?tab=sponsors", p.error.issues[0].message);
+  const data = {
+    ...p.data, deliverables: str(f, "deliverables").split("\n").map((l) => l.trim()).filter(Boolean).slice(0, 12),
+    publicPrice: opt(f, "publicPrice"), priceApproved: f.get("priceApproved") === "on", sortOrder: num(f, "sortOrder") ?? 100,
+  };
+  const db = await getDb();
+  await db.insert(schema.sponsorshipPackages).values(data).onConflictDoUpdate({ target: schema.sponsorshipPackages.slug, set: data });
+  await audit("package.save", "sponsorship_package", data.slug, { publication: data.publication, priceApproved: data.priceApproved });
+  revalidatePath("/sponsors");
+  back("/admin?tab=sponsors", "Saved. A price is public only when approved");
+}
+
+export async function setSponsorEnquiry(f: FormData) {
+  await requireAdmin();
+  const id = z.uuid().parse(str(f, "id"));
+  const status = z.enum(SPONSOR_ENQUIRY_STATUSES).parse(str(f, "status"));
+  const db = await getDb();
+  await db.update(schema.sponsorEnquiries).set({ status, internalNotes: opt(f, "internalNotes") }).where(eq(schema.sponsorEnquiries.id, id));
+  await audit("sponsor_enquiry.update", "sponsor_enquiry", id, { status });
+  back("/admin?tab=sponsors", "Enquiry updated");
+}
+
+/* ------------------------------------- Settings ------------------------------------- */
+
+export async function saveSeason(f: FormData) {
+  await requireAdmin();
+  const phase = z.enum(SEASON_PHASES.map((p) => p.key) as [string, ...string[]]).parse(str(f, "phase"));
+  const db = await getDb();
+  await db.insert(schema.settings).values({ key: "season", value: { phase } }).onConflictDoUpdate({ target: schema.settings.key, set: { value: { phase }, updatedAt: new Date() } });
+  // Internal-only planning note. Never rendered on public pages.
+  const note = { window: str(f, "internalWindow").slice(0, 300) };
+  await db.insert(schema.settings).values({ key: "internal.planning", value: note }).onConflictDoUpdate({ target: schema.settings.key, set: { value: note, updatedAt: new Date() } });
+  await audit("season.save", "settings", "season", { phase });
+  revalidatePath("/", "layout");
+  back("/admin?tab=settings", "Saved");
 }

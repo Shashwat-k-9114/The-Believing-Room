@@ -12,6 +12,8 @@ export default defineConfig({
       RAZORPAY_WEBHOOK_SECRET: "unit_webhook_secret",
     },
     testTimeout: 30000,
+    // Each worker boots its own in-memory PostgreSQL (wasm); running them in parallel exhausts memory on small machines.
+    fileParallelism: false,
   },
   resolve: {
     alias: {

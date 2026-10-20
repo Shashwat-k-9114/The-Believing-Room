@@ -251,6 +251,122 @@ export const partners = pgTable("partners", {
   createdAt: createdAt(),
 });
 
+/* ------------------- Ecosystem: organisations & their contributions ------------------- */
+
+/**
+ * Every organisation shown publicly. Three independent gates must pass before anything appears:
+ * `publication = published` (the organiser chose to show it), `announcementApproved` (the
+ * organisation has approved being named) and, separately, `logoPermission = approved` before a logo
+ * is rendered. Until then the name is set in type.
+ */
+export const organizations = pgTable(
+  "organizations",
+  {
+    id: id(),
+    slug: text("slug").notNull().unique(),
+    name: text("name").notNull(),
+    /** recruitment | venue | education | outreach */
+    category: text("category").notNull(),
+    /** Their specific contribution, in plain words. Only what has been confirmed. */
+    role: text("role"),
+    description: text("description"),
+    websiteUrl: text("website_url"),
+    /** Internship category (industry slug) for recruitment participants, when known. */
+    industry: text("industry"),
+    /** owner_confirmed | documented | pending */
+    confirmationStatus: text("confirmation_status").notNull().default("pending"),
+    /** Internal pointer to the evidence (email, signed letter). Never rendered publicly. */
+    evidenceRef: text("evidence_ref"),
+    announcementApproved: boolean("announcement_approved").notNull().default(false),
+    /** Path under /public/partners, e.g. /partners/acme.svg. Rendered only when logoPermission = approved. */
+    logoPath: text("logo_path"),
+    /** none | pending | approved */
+    logoPermission: text("logo_permission").notNull().default("none"),
+    publication: text("publication").notNull().default("draft"),
+    sortOrder: integer("sort_order").notNull().default(100),
+    createdAt: createdAt(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("org_category_idx").on(t.category, t.publication)],
+);
+
+/** Internship roles. Nothing here is public until an organiser marks it approved by the company. */
+export const opportunities = pgTable("opportunities", {
+  id: id(),
+  organizationId: uuid("organization_id").notNull().references(() => organizations.id, { onDelete: "cascade" }),
+  industry: text("industry"),
+  roleTitle: text("role_title").notNull(),
+  openings: integer("openings"),
+  stipend: text("stipend"),
+  location: text("location"),
+  duration: text("duration"),
+  /** onsite | remote | hybrid */
+  workMode: text("work_mode"),
+  eligibility: text("eligibility"),
+  selectionProcess: text("selection_process"),
+  approvedByCompany: boolean("approved_by_company").notNull().default(false),
+  publication: text("publication").notNull().default("draft"),
+  createdAt: createdAt(),
+});
+
+/** Free-of-charge learning offered to candidates. Course names, values and terms stay blank until supplied. */
+export const educationContributions = pgTable("education_contributions", {
+  id: id(),
+  organizationId: uuid("organization_id").notNull().references(() => organizations.id, { onDelete: "cascade" }),
+  course: text("course"),
+  eligibility: text("eligibility"),
+  accessPeriod: text("access_period"),
+  certificateTerms: text("certificate_terms"),
+  quantity: text("quantity"),
+  termsConfirmed: boolean("terms_confirmed").notNull().default(false),
+  publication: text("publication").notNull().default("draft"),
+  createdAt: createdAt(),
+});
+
+/* ------------------------------- Sponsorship ----------------------------------- */
+
+export const sponsorshipPackages = pgTable("sponsorship_packages", {
+  id: id(),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  summary: text("summary").notNull(),
+  /** Proposed inventory, not signed commitments. */
+  deliverables: jsonb("deliverables").$type<string[]>().notNull().default([]),
+  /** Shown only when priceApproved. Free text so a range or "on request" is possible. */
+  publicPrice: text("public_price"),
+  priceApproved: boolean("price_approved").notNull().default(false),
+  publication: text("publication").notNull().default("draft"),
+  sortOrder: integer("sort_order").notNull().default(100),
+  createdAt: createdAt(),
+});
+
+export const sponsorEnquiries = pgTable("sponsor_enquiries", {
+  id: id(),
+  ref: text("ref").notNull().unique(),
+  organization: text("organization").notNull(),
+  contactName: text("contact_name").notNull(),
+  role: text("role").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  interest: text("interest").notNull(),
+  category: text("category").notNull(),
+  budgetRange: text("budget_range"),
+  message: text("message"),
+  consentContact: boolean("consent_contact").notNull(),
+  consentNoGuarantee: boolean("consent_no_guarantee").notNull(),
+  /** new | contacted | proposal_sent | agreed | declined | closed */
+  status: text("status").notNull().default("new"),
+  internalNotes: text("internal_notes"),
+  createdAt: createdAt(),
+});
+
+/** Small key/value store for organiser-controlled public state (e.g. the season phase). */
+export const settings = pgTable("settings", {
+  key: text("key").primaryKey(),
+  value: jsonb("value").notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const auditLog = pgTable("audit_log", {
   id: id(),
   actor: text("actor").notNull(),
@@ -264,3 +380,8 @@ export const auditLog = pgTable("audit_log", {
 export const STUDENT_STATUSES = ["submitted", "screening", "shortlisted", "waitlisted", "declined", "withdrawn"] as const;
 export const ORDER_STATUSES = ["pending", "paid", "failed", "cancelled", "refunded"] as const;
 export const PUBLICATION_STATES = ["draft", "scheduled", "published", "archived"] as const;
+
+export const ORG_CATEGORIES = ["recruitment", "venue", "education", "outreach"] as const;
+export const CONFIRMATION_STATES = ["owner_confirmed", "documented", "pending"] as const;
+export const LOGO_PERMISSIONS = ["none", "pending", "approved"] as const;
+export const SPONSOR_ENQUIRY_STATUSES = ["new", "contacted", "proposal_sent", "agreed", "declined", "closed"] as const;

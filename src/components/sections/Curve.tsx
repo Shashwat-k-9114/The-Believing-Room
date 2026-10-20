@@ -6,6 +6,10 @@ const SHAPES = {
   swell: "M0 0H1440V30C1100 100 760 110 420 80C240 64 100 40 0 62Z",
   tide: "M0 0H1440V70C1260 20 1080 20 900 56C720 92 560 100 380 64C230 34 110 40 0 74Z",
   arc: "M0 0H1440V0C1440 0 1100 110 720 110C340 110 0 0 0 0Z",
+  // a single silk fold, rising on the right
+  ribbon: "M0 0H1440V20C1180 20 1010 104 760 92C520 80 330 8 0 44Z",
+  // a veil lifting from the left
+  veil: "M0 0H1440V44C1160 18 960 14 740 54C520 94 250 110 0 62Z",
 } as const;
 
 export function Curve({ from, to, shape = "swell", flip = false }: { from: string; to: string; shape?: keyof typeof SHAPES; flip?: boolean }) {
@@ -18,4 +22,4 @@ export function Curve({ from, to, shape = "swell", flip = false }: { from: strin
   );
 }
 
-export const COLOR = { aubergine: "#160f1c", ivory: "#f6f1e9", pearl: "#ede6da" };
+export const COLOR = { aubergine: "#160f1c", ivory: "#f6f1e9", pearl: "#ede6da", champagne: "#eadfc6" };

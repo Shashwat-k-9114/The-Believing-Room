@@ -1,8 +1,9 @@
 import "server-only";
-import { mkdirSync } from "node:fs";
+import { existsSync, mkdirSync, renameSync } from "node:fs";
 import path from "node:path";
 import { drizzle as drizzlePglite } from "drizzle-orm/pglite";
 import { migrate as migratePglite } from "drizzle-orm/pglite/migrator";
+import { seedEcosystem } from "./seed";
 import * as schema from "./schema";
 
 type Db = ReturnType<typeof drizzlePglite<typeof schema>>;
@@ -23,16 +24,37 @@ async function create(): Promise<Db> {
     const pool = new Pool({ connectionString: url, max: 5 });
     const db = drizzle(pool, { schema });
     await migrate(db, { migrationsFolder: MIGRATIONS });
+    await seedEcosystem(db as unknown as Db);
     return db as unknown as Db;
   }
   const { PGlite } = await import("@electric-sql/pglite");
   const dir = process.env.PGLITE_DIR ?? path.join(process.cwd(), ".data", "pglite");
   const inMemory = process.env.PGLITE_DIR === "memory://";
   if (!inMemory) mkdirSync(path.dirname(dir), { recursive: true }); // PGlite creates only the leaf folder
-  const client = new PGlite(inMemory ? undefined : dir);
-  const db = drizzlePglite(client, { schema });
-  await migratePglite(db, { migrationsFolder: MIGRATIONS });
-  return db;
+  const open = async () => {
+    const client = new PGlite(inMemory ? undefined : dir);
+    const db = drizzlePglite(client, { schema });
+    try {
+      await migratePglite(db, { migrationsFolder: MIGRATIONS });
+      await seedEcosystem(db);
+    } catch (e) {
+      await client.close().catch(() => {});
+      throw e;
+    }
+    return db;
+  };
+  try {
+    return await open();
+  } catch (e) {
+    // A process killed mid-write (out of memory, power loss, a synced folder) leaves a data directory PGlite
+    // cannot open ("PGlite failed to initialize properly"). This embedded database is for local development
+    // only, so move the broken directory aside (never delete it) and start clean, loudly.
+    if (inMemory || !existsSync(dir)) throw e;
+    const aside = `${dir}.corrupt-${Date.now()}`;
+    renameSync(dir, aside);
+    console.warn(`[db] Could not open the embedded database at ${dir}. Moved it to ${aside} and created a fresh one.`, e);
+    return await open();
+  }
 }
 
 const g = globalThis as unknown as { __arenaDb?: Promise<Db> };

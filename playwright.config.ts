@@ -12,6 +12,11 @@ function loadEnv(file: string) {
 }
 loadEnv(".env.local");
 
+// Every run starts from an empty embedded database so tests never depend on a previous run's data. This must happen
+// at config load (the web server opens the database during its readiness probe, before globalSetup would run), and
+// only in the main process: workers re-evaluate this file and must not wipe the database mid-run.
+if (process.env.TEST_WORKER_INDEX === undefined) fs.rmSync(".data/pglite-e2e", { recursive: true, force: true });
+
 const PORT = 3217;
 
 export default defineConfig({
