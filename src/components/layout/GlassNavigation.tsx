@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Menu } from "lucide-react";
 import { brand, socialLinks } from "@/config/site";
 import { menuGroups, primaryNav } from "@/config/nav";
@@ -19,6 +19,7 @@ export function GlassNavigation() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const openerRef = useRef<HTMLButtonElement>(null);
   const [origin, setOrigin] = useState<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
@@ -34,7 +35,7 @@ export function GlassNavigation() {
         aria-label="Primary"
         className={`glass glass-nav pointer-events-auto mx-auto flex max-w-[1180px] items-center justify-between gap-3 py-2 pl-5 pr-2 transition-[max-width] duration-700 [--r:999px] ${scrolled ? "max-w-[960px]" : ""}`}
       >
-        <Link href="/" aria-label={`${brand.name}, home`} className="shrink-0">
+        <Link href="/" aria-label={`${brand.name}, home`} className="inline-flex min-h-11 shrink-0 items-center">
           <Wordmark compact />
         </Link>
 
@@ -61,6 +62,7 @@ export function GlassNavigation() {
             Apply as a Candidate
           </LiquidButton>
           <button
+            ref={openerRef}
             type="button"
             aria-label="Open menu"
             aria-haspopup="dialog"
@@ -77,7 +79,7 @@ export function GlassNavigation() {
         </div>
       </nav>
 
-      <MorphingModal open={open} onClose={() => setOpen(false)} title="Site menu" origin={origin} full>
+      <MorphingModal open={open} onClose={() => setOpen(false)} title="Site menu" origin={origin} returnFocus={openerRef} full>
         <div data-theme="dark" className="wrap pointer-events-auto grid min-h-dvh content-center gap-12 py-24 !bg-transparent">
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {menuGroups.map((g) => (

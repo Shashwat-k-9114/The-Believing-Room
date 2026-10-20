@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { publicEvents, publicOrganizations, seasonPhase } from "@/lib/queries";
+import { publicEvents, publicOrganizations, seasonPhase, targetWindow } from "@/lib/queries";
 import { phaseMeta } from "@/config/ecosystem";
 import { formatINR, inclusions, pricing, season } from "@/config/site";
 import { industries } from "@/content/industries";
@@ -20,12 +20,13 @@ export const metadata: Metadata = {
 };
 
 async function SeasonOverview() {
-  const [phaseKey, venue] = await Promise.all([seasonPhase(), publicOrganizations("venue")]);
+  const [phaseKey, venue, target] = await Promise.all([seasonPhase(), publicOrganizations("venue"), targetWindow()]);
   const phase = phaseMeta(phaseKey);
   const slot = season.slot;
   const rows: [string, string][] = [
     ["Status", phase.label],
     ["Date", season.date ?? "To be announced"],
+    ...(target && !season.date ? ([["Target window", `${target} · a target, not a confirmed date`]] as [string, string][]) : []),
     ["Location", "Greater Noida"],
     ["Industries", industries.map((i) => i.short).join(" · ")],
     ["Candidate ticket", `${formatINR(pricing.candidate.amount)} · food included · planned`],

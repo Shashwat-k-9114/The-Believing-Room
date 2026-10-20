@@ -74,5 +74,13 @@ export const SPONSOR_INTERESTS = [
 
 export const BUDGET_RANGES = ["Prefer to discuss", "Under ₹50,000", "₹50,000 – ₹1,50,000", "₹1,50,000 – ₹3,00,000", "Above ₹3,00,000", "In-kind contribution only"] as const;
 
-/** A prospectus is offered only if a reviewed, send-ready PDF has been placed here. */
-export const PROSPECTUS_PUBLIC_PATH = "/prospectus/the-believing-room-sponsorship.pdf";
+/**
+ * The prospectus is NOT in /public (anything there is world-readable the moment it exists). It lives in /private and is
+ * served only by the /sponsors/prospectus route, and only while the organiser has ticked "reviewed and externally
+ * approved" in the admin. A draft, template or internal document can therefore never be downloaded by accident.
+ */
+export const PROSPECTUS_FILE = ["private", "prospectus", "the-believing-room-sponsorship.pdf"] as const;
+export const PROSPECTUS_ROUTE = "/sponsors/prospectus";
+
+/** Public, clearly labelled target. Not an event date. The organiser can edit or clear it in the admin (Settings). */
+export const DEFAULT_TARGET_WINDOW = "First week of November";

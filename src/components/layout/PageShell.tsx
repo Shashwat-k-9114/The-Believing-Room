@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { COLOR, Curve } from "../sections/Curve";
+import { RibbonArt } from "../sections/RibbonArt";
 
 /** Dark cinematic title block followed by a luminous (or dark) content body. */
 export function PageShell({
@@ -25,9 +27,18 @@ export function PageShell({
           aria-hidden
           className="absolute inset-0 -z-10"
           style={{
-            background: `radial-gradient(60% 80% at 82% 0%, color-mix(in srgb, ${accent ?? "#8c7a9b"} 26%, transparent), transparent 70%), radial-gradient(50% 60% at 0% 100%, rgb(203 174 118 / 0.1), transparent 70%), #160f1c`,
+            // The last layer fades every tint back to the page colour so the header never ends in a visible band.
+            background: `linear-gradient(to bottom, transparent 62%, #160f1c 100%), radial-gradient(60% 80% at 82% 0%, color-mix(in srgb, ${accent ?? "#8c7a9b"} 26%, transparent), transparent 70%), radial-gradient(50% 60% at 0% 100%, rgb(203 174 118 / 0.1), transparent 70%), #160f1c`,
           }}
         />
+        {/* A quiet, static fragment of the homepage sculpture: identity without competing with the title. Wide screens only. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-y-0 right-0 -z-10 hidden w-[46%] opacity-[0.42] lg:block"
+          style={{ maskImage: "linear-gradient(to right, transparent 0%, #000 42%), linear-gradient(to bottom, #000 55%, transparent 100%)", maskComposite: "intersect", WebkitMaskComposite: "source-in" }}
+        >
+          <RibbonArt still className="h-full w-full" />
+        </div>
         <div className="wrap">
           <div className="enter">
             <p className="eyebrow flex items-center gap-3">
@@ -40,6 +51,7 @@ export function PageShell({
           </div>
         </div>
       </section>
+      {children && body === "light" && <Curve from={COLOR.aubergine} to={COLOR.ivory} shape="swell" />}
       {children && (
         <section data-theme={body} className="section !pt-16 sm:!pt-24">
           <div className="wrap">{children}</div>

@@ -347,7 +347,7 @@ html:not(.js) .reveal { opacity: 1; transform: none; }
 .skip-link:focus { top: 1rem; }
 
 /* Underlined editorial link */
-.link-u { background-image: linear-gradient(currentColor, currentColor); background-size: 100% 1px; background-position: 0 100%; background-repeat: no-repeat; padding-bottom: 2px; transition: background-size 0.5s var(--ease-cinema); }
+.link-u { background-image: linear-gradient(currentColor, currentColor); background-size: 100% 1px; background-position: 0 100%; background-repeat: no-repeat; background-origin: content-box; padding-block: 0.65rem; /* hit area only: vertical padding on an inline link does not move the lines around it */ transition: background-size 0.5s var(--ease-cinema); }
 .link-u:hover { background-size: 0 1px; background-position: 100% 100%; }
 
 /* Discipline gallery: panels widen on hover/focus; stacked on small screens */

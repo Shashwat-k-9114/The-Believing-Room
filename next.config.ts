@@ -22,6 +22,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // PGlite loads its wasm via file URLs; it must run as a native Node module, not be bundled.
   serverExternalPackages: ["@electric-sql/pglite", "pg"],
+  // The prospectus is read from disk at request time, so it must be shipped with the server bundle.
+  outputFileTracingIncludes: { "/sponsors/prospectus": ["./private/prospectus/**/*.pdf"] },
   turbopack: {
     rules: {
       "*.css": {

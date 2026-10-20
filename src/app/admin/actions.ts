@@ -309,7 +309,13 @@ export async function saveSeason(f: FormData) {
   // Internal-only planning note. Never rendered on public pages.
   const note = { window: str(f, "internalWindow").slice(0, 300) };
   await db.insert(schema.settings).values({ key: "internal.planning", value: note }).onConflictDoUpdate({ target: schema.settings.key, set: { value: note, updatedAt: new Date() } });
-  await audit("season.save", "settings", "season", { phase });
+  // Public, clearly labelled target window (not an event date). Empty hides it.
+  const target = { text: str(f, "targetWindow").slice(0, 80) };
+  await db.insert(schema.settings).values({ key: "public.targetWindow", value: target }).onConflictDoUpdate({ target: schema.settings.key, set: { value: target, updatedAt: new Date() } });
+  // The prospectus is downloadable only while this is ticked AND the PDF exists in /private/prospectus.
+  const prospectus = { approved: f.get("prospectusApproved") === "on" };
+  await db.insert(schema.settings).values({ key: "public.prospectus", value: prospectus }).onConflictDoUpdate({ target: schema.settings.key, set: { value: prospectus, updatedAt: new Date() } });
+  await audit("season.save", "settings", "season", { phase, targetWindow: target.text, prospectusApproved: prospectus.approved });
   revalidatePath("/", "layout");
   back("/admin?tab=settings", "Saved");
 }

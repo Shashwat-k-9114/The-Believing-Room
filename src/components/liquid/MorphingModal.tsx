@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode, type RefObject } from "react";
 import { X } from "lucide-react";
 
 /**
@@ -16,6 +16,7 @@ export function MorphingModal({
   children,
   origin,
   full = false,
+  returnFocus,
 }: {
   open: boolean;
   onClose: () => void;
@@ -23,6 +24,11 @@ export function MorphingModal({
   children: ReactNode;
   origin?: { x: number; y: number } | null;
   full?: boolean;
+  /**
+   * The control that opened the dialog. Focus goes back here on close. Passed explicitly because Safari does not focus a
+   * button when it is clicked, so "the element that was focused when we opened" is <body> there and cannot be restored.
+   */
+  returnFocus?: RefObject<HTMLElement | null>;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const prev = useRef<HTMLElement | null>(null);
@@ -36,15 +42,19 @@ export function MorphingModal({
       d.showModal();
     } else if (!open && d.open) {
       d.close();
-      prev.current?.focus?.();
+      (returnFocus?.current ?? prev.current)?.focus?.();
     }
-  }, [open, origin]);
+  }, [open, origin, returnFocus]);
 
   return (
     <dialog
       ref={ref}
       aria-label={title}
-      onClose={onClose}
+      onClose={() => {
+        onClose();
+        // Escape closes the dialog natively, before React knows: put focus back on the opener ourselves.
+        requestAnimationFrame(() => (returnFocus?.current ?? prev.current)?.focus?.());
+      }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
       className={`arena-modal ${full ? "arena-modal-full" : ""}`}
     >

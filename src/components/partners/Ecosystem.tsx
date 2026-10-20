@@ -69,13 +69,48 @@ export async function PartnerProfiles() {
   const groups = group(orgs);
   return (
     <div className="grid gap-24">
-      {groups.map((g, gi) => (
+      {groups.map((g, gi) => {
+        const sharedRole = g.orgs.length > 1 && g.orgs.every((o) => o.role && o.role === g.orgs[0].role) ? g.orgs[0].role : null;
+        return (
         <section key={g.category} aria-labelledby={`cat-${g.category}`}>
           <Reveal>
             <p className="eyebrow">{String(gi + 1).padStart(2, "0")} · {g.meta.label}</p>
             <h2 id={`cat-${g.category}`} className="display h-lg mt-4 max-w-[16ch]">{g.meta.heading}</h2>
             <p className="lede mt-5">{g.meta.blurb}</p>
           </Reveal>
+          {sharedRole ? (
+            // Several organisations, one role: state it once, then give each its own plate. The logo slot has a fixed
+            // height, so an approved logo replaces the typeset name without moving anything.
+            <>
+              <Reveal>
+                <p className="mt-8 text-[var(--fg-dim)]"><span className="eyebrow mr-3">Role</span>{sharedRole}</p>
+              </Reveal>
+              <ul className="mt-10 grid border-t border-[var(--fg)] sm:grid-cols-2">
+                {g.orgs.map((o, i) => (
+                  <Reveal
+                    as="li"
+                    key={o.id}
+                    delay={i * 0.07}
+                    className="flex flex-col justify-between gap-6 border-b border-[var(--line)] py-7 sm:min-h-[13rem] sm:gap-10 sm:px-9 sm:py-9 sm:[&:nth-child(odd)]:border-r sm:[&:nth-child(odd)]:pl-0"
+                  >
+                    <div className="flex items-end sm:min-h-[4.5rem]">
+                      <OrgMark name={o.name} logo={o.logoPath} size="lg" />
+                    </div>
+                    <div>
+                      <p className="eyebrow">Participation confirmed by the organiser</p>
+                      {o.description && <p className="mt-3 text-[var(--fg-dim)]">{o.description}</p>}
+                      {o.industry && <p className="mt-3 text-sm text-[var(--fg-faint)]">Internship category: {industryName(o.industry)}</p>}
+                      {o.websiteUrl && (
+                        <a href={o.websiteUrl} target="_blank" rel="noopener noreferrer" className="link-u mt-3 inline-flex items-center gap-1 text-sm">
+                          Official website <ArrowUpRight size={14} aria-hidden />
+                        </a>
+                      )}
+                    </div>
+                  </Reveal>
+                ))}
+              </ul>
+            </>
+          ) : (
           <ul className="mt-12 border-t border-[var(--fg)]">
             {g.orgs.map((o, i) => (
               <Reveal as="li" key={o.id} delay={i * 0.06} className="grid gap-5 border-b border-[var(--line)] py-9 md:grid-cols-[1fr_1.2fr] md:gap-14">
@@ -96,9 +131,11 @@ export async function PartnerProfiles() {
               </Reveal>
             ))}
           </ul>
+          )}
           <p className="mt-5 max-w-[70ch] text-sm text-[var(--fg-faint)]">{g.meta.notes}</p>
         </section>
-      ))}
+        );
+      })}
 
       {panelists.length > 0 && (
         <section aria-labelledby="cat-panel">

@@ -3,7 +3,7 @@
  * candidate steps through. Pure SVG: instant first paint, tiny, and it is its own
  * static fallback. Colour comes from the brand palette only.
  */
-export function RibbonArt({ className = "" }: { className?: string }) {
+export function RibbonArt({ className = "", still = false }: { className?: string; still?: boolean }) {
   return (
     <svg viewBox="0 0 760 960" preserveAspectRatio="xMidYMid meet" style={{ overflow: "visible" }} className={className} aria-hidden focusable="false">
       <defs>
@@ -42,7 +42,7 @@ export function RibbonArt({ className = "" }: { className?: string }) {
         </radialGradient>
       </defs>
 
-      <g className="hero-art-drift">
+      <g className={still ? undefined : "hero-art-drift"}>
         {/* the lit room beyond the arch */}
         <path d="M150 960V350a230 230 0 0 1 460 0v610Z" fill="url(#room)" />
         <path d="M150 960V350a230 230 0 0 1 460 0v610Z" fill="none" stroke="#f4e6c6" strokeOpacity="0.55" strokeWidth="1.2" />

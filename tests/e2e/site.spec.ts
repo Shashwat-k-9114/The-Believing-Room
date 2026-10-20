@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { expect, test, type Page } from "@playwright/test";
 
 const ROUTES = [
@@ -233,6 +235,70 @@ test.describe("security boundaries", () => {
 test.describe("admin operations", () => {
   test.skip(!process.env.ADMIN_PASSWORD, "ADMIN_PASSWORD not set");
 
+  test("prospectus is public only when approved AND present; target window is organiser-controlled", async ({ page, request }) => {
+    const dir = path.join(process.cwd(), "private", "prospectus");
+    const file = path.join(dir, "the-believing-room-sponsorship.pdf");
+    const existed = fs.existsSync(file);
+    expect(existed, "a real prospectus is already in private/prospectus; refusing to overwrite it in a test").toBe(false);
+    const PDF = ["%PDF-1.4", "1 0 obj<<>>endobj", "%%EOF"].join("\n");
+    const save = async (approved: boolean, target?: string) => {
+      await page.goto("/admin?tab=settings");
+      const box = page.getByLabel(/Prospectus reviewed and externally approved/);
+      if (approved) await box.check();
+      else await box.uncheck();
+      if (target !== undefined) await page.getByLabel(/Public target window/).fill(target);
+      await page.getByRole("button", { name: "Save" }).click();
+      await expect(page.getByRole("status")).toContainText("Saved");
+    };
+    try {
+      await skipIntro(page);
+      await page.goto("/admin");
+      await page.getByLabel("Organiser password").fill(process.env.ADMIN_PASSWORD!);
+      await page.getByRole("button", { name: "Sign in" }).click();
+      await expect(page.getByRole("heading", { level: 1 })).toContainText(/control/i);
+
+      // 1. A file exists but nobody has approved it: not downloadable, not offered.
+      fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(file, PDF);
+      await save(false);
+      expect((await request.get("/sponsors/prospectus")).status()).toBe(404);
+      await page.goto("/sponsors");
+      await expect(page.getByRole("link", { name: /Download the prospectus/ })).toHaveCount(0);
+
+      // 2. Approved and present: served as a PDF attachment and offered.
+      await save(true);
+      const ok = await request.get("/sponsors/prospectus");
+      expect(ok.status()).toBe(200);
+      expect(ok.headers()["content-type"]).toBe("application/pdf");
+      expect(ok.headers()["content-disposition"]).toContain("attachment");
+      await page.goto("/sponsors");
+      await expect(page.getByRole("link", { name: /Download the prospectus/ }).first()).toBeVisible();
+
+      // 3. Approved but the file is not a real PDF (a draft/template saved with the wrong content): refused.
+      fs.writeFileSync(file, "<html>internal draft</html>");
+      expect((await request.get("/sponsors/prospectus")).status()).toBe(404);
+
+      // 4. Approved but the file is missing: falls back to "request", never a broken link.
+      fs.rmSync(file);
+      expect((await request.get("/sponsors/prospectus")).status()).toBe(404);
+      await page.goto("/sponsors");
+      await expect(page.getByRole("link", { name: /Download the prospectus/ })).toHaveCount(0);
+      await expect(page.getByRole("link", { name: "Request the prospectus" }).first()).toBeVisible();
+
+      // 5. The target window shows as a labelled target, can be edited, and can be hidden.
+      await save(false, "Mid-November");
+      await page.goto("/events");
+      await expect(page.locator("main")).toContainText("Mid-November · a target, not a confirmed date");
+      await expect(page.locator("main")).toContainText("To be announced"); // the Date row is never filled by a target
+      await save(false, "");
+      await page.goto("/events");
+      await expect(page.locator("main")).not.toContainText("Target window");
+      await save(false, "First week of November"); // restore the default for later tests
+    } finally {
+      fs.rmSync(file, { force: true });
+    }
+  });
+
   test("organiser signs in, publishes media that goes live, and drafts stay hidden", async ({ page }) => {
     await skipIntro(page);
     await page.goto("/admin");
@@ -244,6 +310,11 @@ test.describe("admin operations", () => {
     await page.getByRole("link", { name: "Applications", exact: true }).click();
     await expect(page.locator("main")).toContainText("asha.e2e@example.com");
     await expect(page.locator("main")).toContainText(/Publish pitch/);
+
+    // Sponsor enquiries submitted through the public form earlier in this run are really stored and visible to the organiser
+    await page.getByRole("link", { name: "Sponsorship", exact: true }).click();
+    await expect(page.locator("main")).toContainText("meera.e2e@example.com");
+    await expect(page.locator("main")).toContainText(/TBR-S-[A-Z0-9]{6}/);
 
     // Create a draft and a published episode
     await page.getByRole("link", { name: "Media", exact: true }).click();

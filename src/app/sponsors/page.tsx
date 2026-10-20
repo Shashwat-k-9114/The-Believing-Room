@@ -2,13 +2,13 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import type { Metadata } from "next";
 import { ArrowDownToLine } from "lucide-react";
-import { PROSPECTUS_PUBLIC_PATH } from "@/config/ecosystem";
+import { PROSPECTUS_FILE, PROSPECTUS_ROUTE } from "@/config/ecosystem";
 import { SponsorForm } from "@/components/forms/SponsorForm";
 import { ListRows, PageShell } from "@/components/layout/PageShell";
 import { LiquidButton } from "@/components/liquid/LiquidButton";
 import { Lines, Reveal } from "@/components/liquid/Reveal";
 import { EcosystemHome } from "@/components/partners/Ecosystem";
-import { publicSponsorshipPackages } from "@/lib/queries";
+import { prospectusApproved, publicOrganizations, publicSponsorshipPackages, targetWindow } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -27,8 +27,8 @@ const WHY = [
 ];
 
 export default async function Sponsors() {
-  const packages = await publicSponsorshipPackages();
-  const hasProspectus = existsSync(path.join(/*turbopackIgnore: true*/ process.cwd(), "public", PROSPECTUS_PUBLIC_PATH));
+  const [packages, recruiters, target] = await Promise.all([publicSponsorshipPackages(), publicOrganizations("recruitment"), targetWindow()]);
+  const hasProspectus = (await prospectusApproved()) && existsSync(path.join(/*turbopackIgnore: true*/ process.cwd(), ...PROSPECTUS_FILE));
   return (
     <PageShell
       eyebrow="Sponsors and partners"
@@ -38,13 +38,29 @@ export default async function Sponsors() {
         <>
           <LiquidButton href="#enquiry" variant="primary" size="lg">Start a conversation</LiquidButton>
           {hasProspectus ? (
-            <LiquidButton href={PROSPECTUS_PUBLIC_PATH} variant="glass" size="lg" download><ArrowDownToLine size={18} aria-hidden /> Download the prospectus</LiquidButton>
+            <LiquidButton href={PROSPECTUS_ROUTE} variant="glass" size="lg" download><ArrowDownToLine size={18} aria-hidden /> Download the prospectus</LiquidButton>
           ) : (
             <LiquidButton href="#prospectus" variant="glass" size="lg">Request the prospectus</LiquidButton>
           )}
         </>
       }
     >
+      {/* At a glance: the six things a decision-maker needs, using only confirmed facts. */}
+      <section aria-label="At a glance" className="mb-20 grid border-y border-[var(--fg)] sm:grid-cols-2 lg:mb-28 lg:grid-cols-4">
+        {[
+          { k: "The format", v: "Live pitches to hiring panels", d: "Candidates apply, are shortlisted and pitch in person." },
+          { k: "Four industries", v: <>IT &amp; Technology<br />Finance &amp; Accounting<br />Sales &amp; Marketing<br />Animation &amp; Multimedia</>, d: "One block of the show for each." },
+          ...(recruiters.length ? [{ k: "Recruiting participants", v: recruiters.map((o) => o.name).join(" · "), d: "Confirmed by the organiser." }] : []),
+          { k: "What is produced", v: "A YouTube show and a podcast", d: target ? `Target window: ${target}. The date is not yet confirmed.` : "Season 01 is in preparation; the date is not yet confirmed." },
+        ].map((c, i, a) => (
+          <div key={c.k} className={`py-7 sm:px-7 ${i === 0 ? "sm:pl-0" : ""} ${i < a.length - 1 ? "border-b border-[var(--line)] sm:border-r lg:border-b-0" : ""}`}>
+            <p className="eyebrow">{c.k}</p>
+            <p className={`display mt-3 ${typeof c.v === "string" ? "text-2xl leading-snug" : "text-xl leading-normal"}`}>{c.v}</p>
+            <p className="mt-3 text-sm text-[var(--fg-dim)]">{c.d}</p>
+          </div>
+        ))}
+      </section>
+
       {/* The opportunity */}
       <section aria-labelledby="opportunity" className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
         <Reveal>
@@ -146,7 +162,7 @@ export default async function Sponsors() {
           <p className="eyebrow">Prospectus</p>
           <h2 id="prospectus-h" className="display h-lg mt-4 max-w-[16ch]">The sponsorship deck</h2>
           {hasProspectus ? (
-            <div className="mt-8"><LiquidButton href={PROSPECTUS_PUBLIC_PATH} variant="primary" size="lg" download><ArrowDownToLine size={18} aria-hidden /> Download the prospectus (PDF)</LiquidButton></div>
+            <div className="mt-8"><LiquidButton href={PROSPECTUS_ROUTE} variant="primary" size="lg" download><ArrowDownToLine size={18} aria-hidden /> Download the prospectus (PDF)</LiquidButton></div>
           ) : (
             <>
               <p className="lede mt-5">The reviewed public prospectus is not yet available to download. Send an enquiry below and we will send it to you directly as soon as it is ready.</p>

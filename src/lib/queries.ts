@@ -2,7 +2,7 @@ import "server-only";
 import { and, asc, desc, eq, inArray, lte, or, isNull } from "drizzle-orm";
 import { getDb, schema } from "@/db/client";
 import { PUBLIC_EVENT_STATUSES } from "@/config/site";
-import { DEFAULT_PHASE, type OrgCategory } from "@/config/ecosystem";
+import { DEFAULT_PHASE, DEFAULT_TARGET_WINDOW, type OrgCategory } from "@/config/ecosystem";
 
 /** Public visibility rule, defined once: published, or scheduled and due. */
 function visible() {
@@ -158,6 +158,21 @@ export async function seasonPhase(): Promise<string> {
   const [row] = await db.select().from(schema.settings).where(eq(schema.settings.key, "season"));
   const v = row?.value as { phase?: string } | undefined;
   return v?.phase ?? DEFAULT_PHASE;
+}
+
+/** Public target production window. A saved empty value hides it; no saved value falls back to the default. */
+export async function targetWindow(): Promise<string> {
+  const db = await getDb();
+  const [row] = await db.select().from(schema.settings).where(eq(schema.settings.key, "public.targetWindow"));
+  const v = row?.value as { text?: string } | undefined;
+  return (v?.text ?? DEFAULT_TARGET_WINDOW).trim();
+}
+
+/** True only after the organiser has recorded that the PDF is reviewed and externally approved for release. */
+export async function prospectusApproved(): Promise<boolean> {
+  const db = await getDb();
+  const [row] = await db.select().from(schema.settings).where(eq(schema.settings.key, "public.prospectus"));
+  return (row?.value as { approved?: boolean } | undefined)?.approved === true;
 }
 
 export { isNull };

@@ -5,7 +5,7 @@ import { getDb, schema } from "@/db/client";
 import { adminConfigured, isAdmin } from "@/lib/admin-auth";
 import { CONFIRMATION_STATES, LOGO_PERMISSIONS, ORDER_STATUSES, ORG_CATEGORIES, PUBLICATION_STATES, SPONSOR_ENQUIRY_STATUSES, STUDENT_STATUSES } from "@/db/schema";
 import { ORG_CATEGORY_META, SEASON_PHASES, phaseMeta } from "@/config/ecosystem";
-import { seasonPhase } from "@/lib/queries";
+import { prospectusApproved, seasonPhase, targetWindow } from "@/lib/queries";
 import { industries } from "@/content/industries";
 import { formatINR } from "@/config/site";
 import { PageShell } from "@/components/layout/PageShell";
@@ -334,12 +334,15 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
     }
     if (tab === "settings") {
       const phase = await seasonPhase();
+      const [target, prospectusOk] = await Promise.all([targetWindow(), prospectusApproved()]);
       const [note] = await db.select().from(s.settings).where(eq(s.settings.key, "internal.planning"));
       const internalWindow = ((note?.value as { window?: string } | undefined)?.window) ?? "";
       return (
         <form action={A.saveSeason} className="grid max-w-2xl gap-5">
           <p className="text-sm text-[var(--fg-dim)]">The season phase is shown on the homepage and Season 01 page. It never counts down and never shows a date; dates come only from published events. Current: <b>{phaseMeta(phase).label}</b>.</p>
           <label className="field"><span className="label">Season phase (public)</span><select className="input" name="phase" defaultValue={phase}>{SEASON_PHASES.map((p) => <option key={p.key} value={p.key}>{p.label}</option>)}</select></label>
+          <label className="field"><span className="label">Public target window (shown as a target, never as a confirmed date; clear to hide)</span><input className="input" name="targetWindow" maxLength={80} defaultValue={target} /></label>
+          <label className="check"><input type="checkbox" name="prospectusApproved" defaultChecked={prospectusOk} /><span>Prospectus reviewed and externally approved for public release. The download appears only when this is ticked and the final PDF is in <code>private/prospectus/</code>.</span></label>
           <label className="field"><span className="label">Internal planning note (never shown publicly: e.g. target filming window)</span><input className="input" name="internalWindow" maxLength={300} defaultValue={internalWindow} /></label>
           <div><button className="rounded-full bg-[var(--fg)] px-6 py-3 text-[var(--bg)]">Save</button></div>
         </form>
