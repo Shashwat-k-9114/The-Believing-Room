@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Filming and media consent", descript
 export default function MediaConsent() {
   return (
     <PageShell eyebrow="Legal" title={<>Filming and <em>media consent.</em></>} lede="The show is filmed and published on YouTube and social media. Being recorded and being published are different things, so we ask for each one separately.">
-      <DraftNotice>The original page asks for a single consent covering recording, publication and promotion. This build splits it into four. Counsel should confirm the wording.</DraftNotice>
+      <DraftNotice>{"This wording is being finalised before the first event. Recording, publication, name and college, and promotional clips are each a separate choice, and saying no never counts against an application."}</DraftNotice>
       <ListRows
         items={[
           { title: "1. Recording", body: "You allow us to film or record you if you pitch. Recording alone does not allow publication." },

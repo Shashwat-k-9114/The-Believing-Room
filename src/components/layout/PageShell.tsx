@@ -68,7 +68,7 @@ export function Prose({ children }: { children: ReactNode }) {
 export function DraftNotice({ children }: { children?: ReactNode }) {
   return (
     <p role="note" className="mb-8 max-w-[72ch] rounded-xl border border-[var(--accent)]/50 bg-[var(--accent)]/10 p-4 text-sm">
-      <strong>Draft for legal review.</strong> {children ?? "This text is a working draft and has not been reviewed by a lawyer. It must be reviewed and finalised before public launch or ticket sales."}
+      <strong>Draft.</strong> {children ?? "This page is being finalised before the first event."}
     </p>
   );
 }

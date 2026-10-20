@@ -6,7 +6,7 @@ export const metadata: Metadata = { title: "Privacy notice", description: "What 
 export default function Privacy() {
   return (
     <PageShell eyebrow="Legal" title={<>Privacy <em>notice.</em></>} lede="What we collect, why, who sees it, and how you can have it corrected or deleted.">
-      <DraftNotice>Written to reflect how the software actually behaves. A lawyer must review it against India’s Digital Personal Data Protection Act, 2023 before launch, and the data controller’s legal name and address must be added.</DraftNotice>
+      <DraftNotice>{"This notice describes how the site handles your data today. It is being finalised, including the data controller’s registered details, before the first event."}</DraftNotice>
       <Prose>
         <h2>What we collect</h2>
         <ul>

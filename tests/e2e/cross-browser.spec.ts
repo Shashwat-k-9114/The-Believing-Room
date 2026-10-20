@@ -103,6 +103,20 @@ test.describe("cross-browser", () => {
     await ctx.close();
   });
 
+  test("sponsor CTAs scroll to their target on phone and desktop", async ({ page }) => {
+    await skipIntro(page);
+    for (const [w, h] of [[390, 844], [1440, 900]]) {
+      await page.setViewportSize({ width: w, height: h });
+      for (const [link, target] of [["Start a conversation", "#enquiry"], ["Request the prospectus", "#prospectus"]] as const) {
+        await page.goto("/sponsors");
+        await page.getByRole("link", { name: link }).first().click();
+        await expect.poll(async () => page.evaluate((sel) => Math.round(document.querySelector(sel)!.getBoundingClientRect().top), target), { message: `${link} at ${w}px`, timeout: 6000 }).toBeLessThan(220);
+        const top = await page.evaluate((sel) => document.querySelector(sel)!.getBoundingClientRect().top, target);
+        expect(top, `${link} at ${w}px overshoots`).toBeGreaterThanOrEqual(-10);
+      }
+    }
+  });
+
   test("prospectus is not available until reviewed and approved", async ({ page, request }) => {
     expect((await request.get("/sponsors/prospectus")).status()).toBe(404);
     await page.goto("/sponsors");

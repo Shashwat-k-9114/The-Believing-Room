@@ -42,3 +42,8 @@ next-env.d.ts
 .data/
 .data-dev.log
 !.env.example
+
+# test artifacts and unapproved prospectus files must never be committed
+test-results/
+playwright-report/
+private/prospectus/*.pdf

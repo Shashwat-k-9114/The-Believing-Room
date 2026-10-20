@@ -1,5 +1,7 @@
 # Implementation checklist — verification status
 
+> Superseded in scope by `docs/ACCEPTANCE-REPORT.md` (route-by-route review, defects, CMS coverage, Lighthouse, blockers). This file records the first verification pass.
+
 Last verified against the production build on 2026-10-20. Nothing here has been pushed, merged or deployed.
 
 ## Verified (tooling output, not assumption)
@@ -13,7 +15,7 @@ Last verified against the production build on 2026-10-20. Nothing here has been 
 - `.glass { position: relative }` is declared in `@layer base`, so any Tailwind utility (`absolute`, `sticky`, `fixed`) overrides it. The five other
   `.glass` + positioned elements (price summary, tooltip, episode play badge, YouTube facade, modal close) were checked; no `!absolute` was needed anywhere.
 - Reduced motion: no reveal stays hidden, no infinite animation runs.
-- Public site contains no mention of the ₹65,000 advance, vendor quotation or internal negotiations (asserted by a test).
+- Public site contains no mention of the confidential vendor advance, vendor quotation or internal negotiations (asserted by a test).
 
 ## Fixed in this pass
 1. Light-theme secondary text (`--fg-dim`, `--fg-faint`) failed WCAG AA contrast on pearl backgrounds. Strengthened.
@@ -25,7 +27,7 @@ Last verified against the production build on 2026-10-20. Nothing here has been 
 
 ## Not verified / needs you
 - Official logos: none are shown. They stay typographic until written permission for each is on file (`public/partners/`).
-- Prospectus PDF: the "Request the prospectus" path only offers a download if a reviewed PDF exists at `public/prospectus/the-believing-room-sponsorship.pdf`.
+- Prospectus PDF: superseded. It now lives in `private/prospectus/` (never `public/`) and is served by `/sponsors/prospectus` only while the organiser has ticked "reviewed and externally approved" in the admin. See `docs/ACCEPTANCE-REPORT.md`.
 - Real email delivery and Razorpay payments were exercised only in their "not configured" paths (honest fallbacks), not against live services.
 - Browsers: Chromium only. Safari/Firefox and real touch devices are untested (touch was emulated).
 - Lighthouse / performance budgets were not run in this pass.

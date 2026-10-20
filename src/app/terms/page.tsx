@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function Terms() {
   return (
     <PageShell eyebrow="Legal" title={<>Registration <em>terms.</em></>} lede="Plain statements of what registration, screening and a ticket each mean.">
-      <DraftNotice>These terms carry over the wording from the original registration page. They have not been reviewed by a lawyer and must be before ticket sales open.</DraftNotice>
+      <DraftNotice>{"These terms are being finalised before ticket sales open. Applying is free, and nothing is charged on this site today."}</DraftNotice>
 
       <div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr]">
         <aside className="lg:sticky lg:top-32 lg:self-start">
@@ -38,7 +38,7 @@ export default function Terms() {
               <div>
                 <h2 className="display text-2xl">{t.title}</h2>
                 <p className="mt-1 max-w-[60ch] text-[var(--fg-dim)]">{t.body}</p>
-                {t.needsDecision && <p className="mt-3 max-w-[60ch] rounded-md border border-[var(--accent)]/50 p-3 text-xs text-[var(--fg-dim)]"><strong className="text-[var(--fg)]">Pending owner decision:</strong> {t.needsDecision}</p>}
+                {/* t.needsDecision is an internal drafting note for the organiser (see content/policies.ts). It is never rendered publicly. */}
               </div>
             </li>
           ))}

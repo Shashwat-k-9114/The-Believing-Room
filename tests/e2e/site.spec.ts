@@ -26,6 +26,17 @@ test.describe("public site", () => {
     }
   });
 
+  test("no public page carries internal drafting notes or confidential figures", async ({ page }) => {
+    await skipIntro(page);
+    const banned = /pending owner decision|needs? (a )?decision|the source (says|implies|bundles)|in this build|this build|counsel should|the original (registration )?page|lorem ipsum|TODO|65,?000|quotation|vendor advance/i;
+    for (const r of [...ROUTES, "/partners", "/sponsors"]) {
+      await page.goto(r);
+      const text = await page.locator("body").innerText();
+      const hit = text.match(banned);
+      expect(hit?.[0] ?? null, `${r} contains internal wording`).toBeNull();
+    }
+  });
+
   test("homepage communicates the offer, prices and the confirmed ecosystem", async ({ page }) => {
     await skipIntro(page);
     await page.goto("/");
@@ -147,6 +158,10 @@ test.describe("student application", () => {
 
     await page.getByLabel(/Your pitch in a few sentences/).fill("I built a three-statement model of a listed retailer and will defend my margin assumptions live.");
     await page.getByRole("button", { name: "Continue" }).click();
+
+    // Arriving at the final step must not submit the form or scold the candidate before they have read anything.
+    await expect(page.getByRole("heading", { level: 2, name: "Consent & send" })).toBeVisible();
+    await expect(page.getByRole("alert").filter({ hasText: /\S/ })).toHaveCount(0); // (an empty live region is always present)
 
     // Draft survives a reload (text only; consent never restored)
     await page.getByRole("button", { name: "Submit application" }).click();

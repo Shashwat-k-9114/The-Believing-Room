@@ -41,7 +41,13 @@ export function rateLimit(key: string, limit: number, windowMs: number): boolean
   return true;
 }
 
-export const clientIp = (req: Request) =>
+/** True when `key` has already used its allowance. Does not record a hit. */
+export function rateLimited(key: string, limit: number, windowMs: number): boolean {
+  const now = Date.now();
+  return (buckets.get(key) ?? []).filter((t) => now - t < windowMs).length >= limit;
+}
+
+export const clientIp =(req: Request) =>
   req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "local";
 
 /** Reject cross-site mutating requests. Browsers always send Origin on POST. */

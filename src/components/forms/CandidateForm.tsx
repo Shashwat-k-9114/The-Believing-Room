@@ -225,10 +225,12 @@ export function CandidateForm({ defaultIndustry }: { defaultIndustry?: string })
 
       <div className="flex flex-wrap items-center gap-3">
         {step > 0 && <LiquidButton variant="glass" onClick={() => go(step - 1)}>Back</LiquidButton>}
+        {/* Distinct keys matter: without them React reuses one element for both buttons, the click lands on a submit button,
+            and "Continue" on the last-but-one step submits the form early. */}
         {step < STEPS.length - 1 ? (
-          <LiquidButton variant="primary" onClick={next}>Continue</LiquidButton>
+          <LiquidButton key="continue" variant="primary" onClick={next}>Continue</LiquidButton>
         ) : (
-          <LiquidButton type="submit" variant="primary" size="lg" disabled={sending}>{sending ? "Sending…" : "Submit application"}</LiquidButton>
+          <LiquidButton key="submit" type="submit" variant="primary" size="lg" disabled={sending}>{sending ? "Sending…" : "Submit application"}</LiquidButton>
         )}
         <p className="hint text-sm text-[var(--fg-faint)]">Draft saved in this browser.</p>
       </div>

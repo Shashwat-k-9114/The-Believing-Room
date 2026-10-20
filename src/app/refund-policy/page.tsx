@@ -14,7 +14,7 @@ export default function Refunds() {
   const items = IDS.map((id) => registrationTerms.find((t) => t.id === id)!);
   return (
     <PageShell eyebrow="Legal" title={<>Refunds and <em>transfers.</em></>} lede="Stated plainly, before any ticket is sold.">
-      <DraftNotice>This is the policy from the original registration page, unchanged. It has not been legally reviewed. No refund conditions have been added or softened in this redesign.</DraftNotice>
+      <DraftNotice>{"This policy is being finalised before any payment is taken. Nothing is charged on this site today."}</DraftNotice>
       <ol className="divide-y divide-[var(--line)] border-y border-[var(--line)]">
         {items.map((t) => (
           <li key={t.id} className="grid gap-2 py-7 md:grid-cols-[1fr_1.6fr] md:gap-12">

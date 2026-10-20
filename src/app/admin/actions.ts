@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { getDb, schema } from "@/db/client";
-import { destroySession, requireAdmin } from "@/lib/admin-auth";
+import { destroySession, isAdmin, requireAdmin } from "@/lib/admin-auth";
 import { audit } from "@/lib/audit";
 import { brand } from "@/config/site";
 import { sendMail, shortlistedMail } from "@/lib/email";
@@ -32,7 +32,13 @@ function back(path: string, msg?: string): never {
 }
 
 export async function logout() {
+  const wasAdmin = await isAdmin();
   await destroySession();
+  if (wasAdmin) {
+    try {
+      await audit("admin.logout", "admin_session");
+    } catch {}
+  }
   redirect("/admin");
 }
 
