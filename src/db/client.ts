@@ -11,11 +11,26 @@ type Db = ReturnType<typeof drizzlePglite<typeof schema>>;
 const MIGRATIONS = path.join(/*turbopackIgnore: true*/ process.cwd(), "drizzle");
 
 /**
+ * The e2e suite sets TBR_TEST_DB=1 and wipes its database between runs. In that mode the app refuses to run against
+ * anything except a disposable embedded directory, so a test run can never read or write a real database.
+ */
+function assertTestIsolation() {
+  if (process.env.TBR_TEST_DB !== "1") return;
+  const dir = process.env.PGLITE_DIR ?? "";
+  const dataRoot = path.resolve(/*turbopackIgnore: true*/ process.cwd(), ".data");
+  const ok = dir === "memory://" || (dir !== "" && path.dirname(path.resolve(dir)) === dataRoot && path.basename(dir).startsWith("pglite-e2e"));
+  if (process.env.DATABASE_URL || !ok) {
+    throw new Error("TBR_TEST_DB is set but the database is not a disposable test database (DATABASE_URL must be empty and PGLITE_DIR must be .data/pglite-e2e*). Refusing to start.");
+  }
+}
+
+/**
  * With DATABASE_URL set, uses PostgreSQL via node-postgres.
  * Without it, uses an embedded on-disk PostgreSQL (PGlite) in .data/pglite
  * so local development needs no external service. Same SQL dialect, same schema.
  */
 async function create(): Promise<Db> {
+  assertTestIsolation();
   const url = process.env.DATABASE_URL;
   if (url) {
     const { Pool } = await import("pg");
