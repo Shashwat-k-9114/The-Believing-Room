@@ -30,7 +30,7 @@ export function ActPhilosophy() {
               id="act-philosophy"
               as="h2"
               className="display h-xl mt-8"
-              lines={["Your resume opens the door.", <>Your potential makes you <em key="e">stand out.</em></>]}
+              lines={["Your resume opens the door.", <span key="e">Your potential makes you <em>stand out.</em></span>]}
             />
             <Reveal delay={0.2}>
               <p className="lede mt-10">
