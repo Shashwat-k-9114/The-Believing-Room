@@ -237,3 +237,5 @@ I deliberately did not include an earlier full-page partners capture in which se
 ## 17. Repository hygiene and commit
 
 Checked before committing: no secrets found by pattern scan of tracked files (live/test payment keys, cloud keys, private keys, mail keys, connection strings with credentials); no `.env*` file tracked (only `.env.example`); `.data/` ignored. Found and fixed: `test-results/.last-run.json` had been tracked (now untracked and ignored). The confidential vendor figure was removed from internal docs; the test that scans for it keeps the pattern. Repository size is 5 MB; no large binaries added (screenshots 3.4 MB). Final commit details are in the git log of branch `believing-room-redesign`; nothing was pushed or deployed.
+
+**Commits on `believing-room-redesign` (local only):** `c4355a3` baseline (tag `acceptance-baseline`), `71e7daf` DB reset safety, `27ff402` visual and functional pass, `dee8020` release-readiness pass. This report's final edit follows in a documentation-only commit.
