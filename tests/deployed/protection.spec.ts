@@ -5,7 +5,7 @@ const PATHS = ["/", "/the-show", "/terms", "/robots.txt", "/api/health", "/api/a
 
 test.describe("protection layers", () => {
   test("no credentials at all: the platform turns every path away, API included", async () => {
-    const anon = await pwRequest.newContext({ baseURL: BASE, extraHTTPHeaders: {}, httpCredentials: undefined });
+    const anon = await pwRequest.newContext({ baseURL: BASE, extraHTTPHeaders: {} });
     for (const p of PATHS) {
       const r = await anon.get(p, { maxRedirects: 0 });
       expect([301, 302, 303, 307, 401, 403], `${p} -> ${r.status()}`).toContain(r.status());

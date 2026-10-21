@@ -37,8 +37,9 @@ test.describe.serial("deployed preview: end to end", () => {
     const hosts = new Set<string>();
     const errors: string[] = [];
     page.on("request", (q) => hosts.add(new URL(q.url()).hostname));
+    // vercel.live is the platform's own preview toolbar, injected only on preview deployments; the app's CSP blocks it by design.
     page.on("pageerror", (e) => errors.push(e.message));
-    page.on("console", (m) => m.type() === "error" && !/favicon/.test(m.text()) && errors.push(m.text()));
+    page.on("console", (m) => m.type() === "error" && !/favicon|vercel\.live/.test(m.text()) && errors.push(m.text()));
     for (const p of ["/", "/partners", "/sponsors", "/events", "/the-show", "/podcast", "/faq", "/stories"]) {
       const r = await page.goto(p);
       expect(r?.status(), p).toBe(200);
@@ -69,7 +70,7 @@ test.describe.serial("deployed preview: end to end", () => {
   test("sponsor enquiry is stored", async ({ request }) => {
     const r = await request.post("/api/enquiry/sponsor", {
       headers: origin,
-      data: { organization: `Synthetic Sponsor ${stamp}`, contactName: "Synthetic Contact", email: `s-${stamp}@example.com`, category: "business", interest: "Synthetic preview enquiry", consentContact: true, consentNoGuarantee: true },
+      data: { organization: `Synthetic Sponsor ${stamp}`, contactName: "Synthetic Contact", email: `s-${stamp}@example.com`, category: "business", interest: "Not sure yet", consentContact: true, consentNoGuarantee: true },
     });
     expect(r.status(), await r.text()).toBe(201);
     expect((await r.json()).ref).toMatch(/^TBR-S-/);

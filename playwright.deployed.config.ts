@@ -20,8 +20,11 @@ export default defineConfig({
   reporter: [["list"]],
   use: {
     baseURL: base,
-    extraHTTPHeaders: process.env.VERCEL_BYPASS ? { "x-vercel-protection-bypass": process.env.VERCEL_BYPASS, "x-vercel-set-bypass-cookie": "true" } : {},
-    httpCredentials: process.env.GATE_PASSWORD ? { username: "reviewer", password: process.env.GATE_PASSWORD, origin: new URL(base).origin, send: "always" } : undefined,
+    // Sent as explicit headers (not httpCredentials) so a test can build a context that deliberately lacks the app password.
+    extraHTTPHeaders: {
+      ...(process.env.VERCEL_BYPASS ? { "x-vercel-protection-bypass": process.env.VERCEL_BYPASS, "x-vercel-set-bypass-cookie": "true" } : {}),
+      ...(process.env.GATE_PASSWORD ? { authorization: "Basic " + Buffer.from(`reviewer:${process.env.GATE_PASSWORD}`).toString("base64") } : {}),
+    },
   },
   projects: [
     { name: "desktop", testIgnore: /layout\.spec\.ts/, use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } },

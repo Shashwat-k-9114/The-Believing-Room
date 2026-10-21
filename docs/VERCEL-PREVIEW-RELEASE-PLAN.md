@@ -181,3 +181,71 @@ I will not link, set variables, provision, push or deploy until you answer.
 ## 9. Verification
 
 See the final report for the verified counts. All code changes are committed locally on `believing-room-redesign`. `.env.local` (not tracked) gained `REGISTRATION_MODE=preview-synthetic` so local development keeps working.
+
+
+---
+
+# Deployment record: protected Preview, 21 October 2026
+
+Authorised by the founders' deployment decisions A to J. One Preview deployment was made from the local CLI. Nothing was pushed to GitHub, merged to `main`, promoted to production, or changed in DNS.
+
+| Item | Value |
+|---|---|
+| Vercel account / scope | `shashwat-k-9114` (Hobby), scope `shashwats-projects-bd30a0f7`, team `team_kSrDQauCdYcWJNQPBtiv7HNu` |
+| Project | existing `thebelievingroom` (`prj_Q1vFHPsTwSnppsKXmee1g5Jty4yH`), linked GitHub repo `Shashwat-k-9114/The-Believing-Room`, production branch `main`. Verified before linking. No second project was created. |
+| Preview deployment | `dpl_4qLKeMXfJchbQoX9eZYXcvwwSBqN`, `https://thebelievingroom-925kvhz95-shashwats-projects-bd30a0f7.vercel.app`, source `cli`, target preview, state READY |
+| Code | local commit `84b0e88` (successor of `2b87e56`) |
+| Platform protection | Vercel Authentication, **All Deployments** (`ssoProtection.deploymentType = all`), set on this project only. No password protection, trusted IP, bypass secret or custom domain. |
+| Application gate | `SITE_GATE_PASSWORD` set for Preview (sensitive). Without it the app returns 503 on preview. |
+| Database | New, empty Neon project `tbr-preview-synthetic` (Vercel Marketplace, Free plan `free_v3`, no payment method, 1 GB, region iad1), connected to the **Preview** environment only. Not connected to Production or Development. The team's other Neon database (`temple-of-healing-db`) was not touched. |
+| Migrations | `npm run db:migrate` with `DB_MIGRATE_CONFIRM_HOST`, against the direct (unpooled) endpoint: 4 migrations applied, re-run safe. The app uses the pooled endpoint with `DB_POOL_MAX=3` and refuses to start against an unmigrated database. |
+
+## Preview-only environment variable names
+
+`DATABASE_URL` (pooled), `DATABASE_URL_UNPOOLED`, `POSTGRES_*`, `PG*`, `NEON_PROJECT_ID` (all from the Neon integration), `ADMIN_PASSWORD`, `SESSION_SECRET`, `SITE_GATE_PASSWORD` (sensitive), `REGISTRATION_MODE=preview-synthetic`, `DB_POOL_MAX=3`. Production has none of them. Payments, analytics and `REGISTRATION_APPROVAL_REF` are unset.
+
+## Evidence
+
+- Anonymous requests to every path tried (pages, `robots.txt`, `/api/health`, admin login, résumé route, unique deployment URL, aliases) are redirected to Vercel login or get 401. Anonymous POST to `/api/candidate` gets 401.
+- Platform pass without the application password: 401 with `WWW-Authenticate: Basic` on every path. Wrong password: 401.
+- Both layers: 22 of 22 deployed acceptance tests pass (`playwright.deployed.config.ts`): health reports database ok, rate limiter in Postgres, file storage in Postgres, payments not collecting; every public page renders with one h1 and no console errors; no third-party tracker hosts; synthetic banner shown; validation, wrong-origin and fake-PDF rejections; synthetic application accepted with a résumé; sponsor enquiry stored; admin refuses anonymous and wrong password; the organiser sees the application and downloads résumé bytes identical to those uploaded; audit log records the login and the download; prospectus 404; audience order unavailable; unsigned webhook and forged checkout rejected; no secrets or internal documents reachable; repeated bad requests rate limited; no horizontal overflow on nine pages at phone width.
+- Direct query of the Neon database: 4 migrations, 2 candidate rows with 2 stored résumés, 1 sponsor enquiry, the audit entries, 8 rate-limit rows. Requests were served by several different function instances, so state is shared, not per instance.
+- Runtime logs: no application errors. The only error-level lines are Node's one-time notice that `sslmode=require` is treated as `verify-full` (the safe behaviour). Writing `sslmode=verify-full` explicitly would silence it; not changed because a second deployment was not authorised.
+
+## Not verified
+
+- Persistence across a **redeployment**: only one deployment was authorised. The database and its variables are independent of deployments, so it is expected to hold, but it is untested.
+- Cold-start latency was not measured separately. Warm `/api/health` took roughly 0.5 to 2 seconds from this machine.
+- The Vercel preview toolbar script (`vercel.live`) is blocked by the app's content security policy. That is the platform's own injected script and the block is intended.
+
+## Incidents during the work
+
+- The Vercel CLI (`vercel curl`) created an automation-bypass secret on the project, and a diagnostic command printed it into the working session. It was used only for the acceptance run and then **revoked**; the project has no bypass entries and the old value now gets the platform redirect.
+- Linking the folder made the CLI add `.env*` to `.gitignore`, write an OIDC token into `.env.local`, and add `.agents/`, `.claude/` and `skills-lock.json`. All were reverted or removed before the commit.
+
+## Rollback and cleanup
+
+1. Remove the preview: `vercel remove thebelievingroom-925kvhz95-shashwats-projects-bd30a0f7.vercel.app --scope shashwats-projects-bd30a0f7` (affects only that deployment).
+2. Remove the database: delete the Neon resource `tbr-preview-synthetic` in the Vercel dashboard (Storage). This deletes its synthetic data and removes the Preview variables it injected.
+3. Remove the app variables: `vercel env rm ADMIN_PASSWORD preview` (and `SESSION_SECRET`, `SITE_GATE_PASSWORD`, `REGISTRATION_MODE`, `DB_POOL_MAX`).
+4. The platform protection change is recommended to stay in place; it is the only thing between the broken production deployment and the public.
+5. Rotate the preview passwords by `vercel env add ... preview --force` and redeploy.
+
+## Backup and recovery (Neon Free)
+
+Neon keeps a short point-in-time-restore history on the Free plan (check the current window in the Neon console before relying on it). The database holds only synthetic data; recovery means re-running `npm run db:migrate` on a new empty database. Do not use the preview database for anything that cannot be recreated.
+
+## Readiness, kept separate
+
+| Category | Status |
+|---|---|
+| Protected Preview deployed and verified | **Yes**, with the "not verified" items above |
+| Public informational launch | **Not approved.** Needs the production `NEXT_PUBLIC_SITE_URL`, a production database, legal review, image rights, `PUBLIC_LAUNCH_APPROVED`, and an explicit founder decision. |
+| Public candidate registration | **Not approved.** Needs the completed privacy notice, candidate terms, approved refund policy, a production database and `REGISTRATION_APPROVAL_REF`. |
+| Payment collection | **Not approved.** Needs provider, amounts, refund policy and tested webhooks. |
+
+## Limiter failure behaviour and the shared-password admin (residual risk)
+
+- Sign-in, audience-order, payment-verify and candidate-pay routes now **fail closed**: if the Postgres limiter errors, the request is refused (and logged) instead of falling back to a per-instance memory counter. Public low-risk forms (enquiries, waitlist, candidate application) degrade to the memory limiter with a logged warning, which is weaker across instances but does not take the form down. Covered by a unit test.
+- Lockout resistance: the all-clients failure cap (30 in 10 minutes) applies only to browsers that have never signed in; a browser that has signed in carries a signed device marker and has its own, separate limit. An attacker can therefore lock out only new browsers for up to 10 minutes. Recovery: use the usual browser, wait, or rotate `ADMIN_PASSWORD`.
+- Residual risks: one password is shared by every organiser, so the audit log shows that a sign-in or a résumé download happened, from which address, but **not which person**. There is no per-person revocation: removing one person's access means rotating the password for everyone. The device marker is a convenience, not a second factor. If the database is down, organisers cannot sign in at all. Individual accounts are the fix before real data is held.
