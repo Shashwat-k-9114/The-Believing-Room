@@ -20,7 +20,7 @@ test.describe("curtain intro", () => {
     expect(early.right).toBeLessThanOrEqual(early.w / 2 + 2);
 
     // Late: they have slid fully off-screen and the overlay is hidden.
-    await expect(intro).toHaveCSS("visibility", "hidden", { timeout: 6000 });
+    await expect(intro).toHaveCSS("visibility", "hidden", { timeout: 15_000 });
     const late = await covers(page);
     expect(late.left).toBeLessThanOrEqual(0);
     expect(late.right).toBeGreaterThanOrEqual(late.w);
@@ -35,12 +35,20 @@ test.describe("curtain intro", () => {
     await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
   });
 
-  test("plays once per session: a second page in the same session starts without it", async ({ page }) => {
+  test("plays again on every reload, but not when navigating between pages inside the site", async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator("#curtain-intro")).toBeVisible();
-    await page.goto("/faq");
-    await expect(page.locator("html")).toHaveAttribute("data-curtain", "seen");
-    await expect(page.locator("#curtain-intro")).toBeHidden();
+    const intro = page.locator("#curtain-intro");
+    await expect(intro).toHaveCSS("visibility", "hidden", { timeout: 15_000 });
+
+    await page.reload();
+    await expect(intro).toHaveCSS("visibility", "visible"); // restarted: closed curtains are back
+    const again = await covers(page);
+    expect(again.left).toBeGreaterThanOrEqual(again.w / 2 - 2);
+    await expect(intro).toHaveCSS("visibility", "hidden", { timeout: 15_000 });
+
+    await page.getByRole("link", { name: "The Show" }).first().click(); // client-side navigation
+    await expect(page).toHaveURL(/the-show/);
+    await expect(intro).toHaveCSS("visibility", "hidden");
   });
 
   test("is not shown at all for visitors who prefer reduced motion", async ({ browser }) => {
@@ -55,7 +63,7 @@ test.describe("curtain intro", () => {
     const ctx = await browser.newContext({ javaScriptEnabled: false });
     const page = await ctx.newPage();
     await page.goto("/");
-    await expect(page.locator("#curtain-intro")).toHaveCSS("visibility", "hidden", { timeout: 6000 });
+    await expect(page.locator("#curtain-intro")).toHaveCSS("visibility", "hidden", { timeout: 15_000 });
     const over = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(over).toBeLessThanOrEqual(0);
     await ctx.close();

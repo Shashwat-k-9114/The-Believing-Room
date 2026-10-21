@@ -2,12 +2,16 @@
  * Opening-night curtains: two velvet panels part over the page to reveal it, with the B mark on the closed curtain.
  *
  * Pure markup and CSS (see "curtain intro" in globals.css). It needs no script to run and ends on its own, so it can
- * never leave the page covered. It is decorative (aria-hidden), never intercepts clicks, plays once per browser
- * session, and is skipped for visitors who ask for reduced motion.
+ * never leave the page covered. It is decorative (aria-hidden), never intercepts clicks, plays on every full page
+ * load or reload (not on in-site link navigation, which does not remount the layout), and is skipped for visitors
+ * who ask for reduced motion.
  */
 
-/** Runs before first paint: marks the page so the curtains are skipped when already seen this session. */
-export const CURTAIN_GUARD = `try{var d=document.documentElement;if(sessionStorage.getItem("tbr-curtain")||localStorage.getItem("arena-intro-v1")){d.setAttribute("data-curtain","seen")}else{sessionStorage.setItem("tbr-curtain","1")}}catch(e){}`;
+/**
+ * Runs before first paint. The curtains play on every full load and reload; the only way to skip them is the
+ * legacy "arena-intro-v1" flag, which the browser tests set so they do not wait for the animation.
+ */
+export const CURTAIN_GUARD = `try{if(localStorage.getItem("arena-intro-v1")){document.documentElement.setAttribute("data-curtain","seen")}}catch(e){}`;
 
 export function CurtainIntro() {
   return (
