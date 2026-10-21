@@ -2,14 +2,16 @@ import { paymentsConfigured, priceBreakdown, pricing } from "@/config/site";
 import { getDb, schema } from "@/db/client";
 import { createProviderOrder } from "@/lib/payments";
 import { openAudienceEvent } from "@/lib/queries";
+import { REGISTRATION_CLOSED_MESSAGE, registrationAccepting } from "@/lib/registration-mode";
 import { guard, json, makeRef, makeToken, readJson } from "@/lib/security";
 import { audienceSchema, fieldErrors } from "@/lib/validation";
 
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
-  const blocked = guard(req, "order", 5);
+  const blocked = await guard(req, "order", 5);
   if (blocked) return blocked;
+  if (!registrationAccepting()) return json({ error: "closed", message: REGISTRATION_CLOSED_MESSAGE }, 403);
 
   // Truthful unavailability: never fabricate a purchase.
   const event = await openAudienceEvent();

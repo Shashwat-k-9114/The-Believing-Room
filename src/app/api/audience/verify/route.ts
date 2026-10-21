@@ -20,7 +20,7 @@ const body = z.object({
  * settles the order. The webhook is the independent second path.
  */
 export async function POST(req: Request) {
-  const blocked = guard(req, "verify", 10);
+  const blocked = await guard(req, "verify", 10);
   if (blocked) return blocked;
   const parsed = body.safeParse(await readJson(req));
   if (!parsed.success) return json({ error: "bad_request" }, 400);

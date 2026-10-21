@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { formatINR, paymentsConfigured, pricing } from "@/config/site";
 import { openAudienceEvent } from "@/lib/queries";
 import { AudienceForm } from "@/components/forms/AudienceForm";
+import { RegistrationGate } from "@/components/forms/RegistrationGate";
 import { PageShell } from "@/components/layout/PageShell";
 
 export const dynamic = "force-dynamic";
@@ -24,7 +25,7 @@ export default async function AudienceRegistration() {
       title={<>Be in <em>the room.</em></>}
       lede={`${formatINR(pricing.audience.amount)} per ticket, food included. Watch students pitch live and see how industry panels question them. Entry and food only: a ticket is not a route to selection or an internship.`}
     >
-      <AudienceForm available={available} unavailableReason={reason} />
+      <RegistrationGate what="audience tickets"><AudienceForm available={available} unavailableReason={reason} /></RegistrationGate>
     </PageShell>
   );
 }

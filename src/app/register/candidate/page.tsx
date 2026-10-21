@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { formatINR, pricing } from "@/config/site";
 import { CandidateForm } from "@/components/forms/CandidateForm";
+import { RegistrationGate } from "@/components/forms/RegistrationGate";
 import { PageShell } from "@/components/layout/PageShell";
 import { EducationNote } from "@/components/partners/Education";
 
@@ -23,7 +24,7 @@ export default async function CandidateRegistration({ searchParams }: { searchPa
     >
       <div className="mx-auto max-w-3xl">
         <EducationNote />
-        <CandidateForm defaultIndustry={industry} />
+        <RegistrationGate what="candidate applications"><CandidateForm defaultIndustry={industry} /></RegistrationGate>
       </div>
     </PageShell>
   );

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { RegistrationGate } from "@/components/forms/RegistrationGate";
 import { WaitlistForm } from "@/components/forms/WaitlistForm";
 import { PageShell } from "@/components/layout/PageShell";
 
@@ -24,7 +25,7 @@ export default function Stories() {
         </div>
         <div className="glass glass-frost h-fit max-w-md p-8 [--r:1.6rem]">
           <p className="eyebrow mb-4">Hear when the first stories land</p>
-          <WaitlistForm kind="updates" cta="Notify me" note="participant stories and event announcements" />
+          <RegistrationGate what="notification list"><WaitlistForm kind="updates" cta="Notify me" note="participant stories and event announcements" /></RegistrationGate>
         </div>
       </div>
     </PageShell>

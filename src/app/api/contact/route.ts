@@ -5,7 +5,7 @@ import { contactSchema, fieldErrors } from "@/lib/validation";
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
-  const blocked = guard(req, "contact", 5);
+  const blocked = await guard(req, "contact", 5);
   if (blocked) return blocked;
   const parsed = contactSchema.safeParse(await readJson(req));
   if (!parsed.success) return json({ error: "validation", fields: fieldErrors(parsed.error) }, 422);

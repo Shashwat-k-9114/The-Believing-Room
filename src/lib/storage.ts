@@ -2,12 +2,17 @@ import "server-only";
 import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
+import { eq } from "drizzle-orm";
+import { getDb, schema } from "@/db/client";
 
 /**
  * Private file storage. Files are never served from /public; they are read
- * only through admin-authorised routes. The local driver is for development
- * and single-server hosting. Serverless hosts have read-only/ephemeral disks:
- * add an S3/R2/Blob driver implementing this interface before deploying there.
+ * only through admin-authorised routes. Two drivers:
+ *  - local disk: development and single-server hosting.
+ *  - postgres (the `stored_files` table): serverless hosts, whose disks are read-only or ephemeral. Résumés are at
+ *    most 2 MB, so this needs no extra service and is backed up and erased with the rest of the data. If volume
+ *    ever outgrows it, add an object-storage driver behind this same interface.
+ * The postgres driver is chosen when DATABASE_URL is set (override with STORAGE_DRIVER=local|postgres).
  */
 export interface Storage {
   put(bytes: Buffer, ext: string): Promise<string>;
@@ -38,7 +43,37 @@ export const localStorageDriver: Storage = {
   },
 };
 
-export const storage: Storage = localStorageDriver;
+const KEY = /^[0-9a-f-]{36}\.[a-z0-9]{2,5}$/;
+
+export const dbStorageDriver: Storage = {
+  async put(bytes, ext) {
+    const key = `${randomUUID()}.${ext}`;
+    await (await getDb()).insert(schema.storedFiles).values({ key, bytes, size: bytes.length });
+    return key;
+  },
+  async get(key) {
+    if (!KEY.test(key)) return null;
+    const [row] = await (await getDb()).select().from(schema.storedFiles).where(eq(schema.storedFiles.key, key));
+    return row ? row.bytes : null;
+  },
+  async remove(key) {
+    if (!KEY.test(key)) return;
+    await (await getDb()).delete(schema.storedFiles).where(eq(schema.storedFiles.key, key));
+  },
+};
+
+export function storageDriverName(env: Record<string, string | undefined> = process.env): "postgres" | "local" {
+  if (env.STORAGE_DRIVER === "local" || env.STORAGE_DRIVER === "postgres") return env.STORAGE_DRIVER;
+  return env.DATABASE_URL ? "postgres" : "local";
+}
+
+const pick = () => (storageDriverName() === "postgres" ? dbStorageDriver : localStorageDriver);
+
+export const storage: Storage = {
+  put: (bytes, ext) => pick().put(bytes, ext),
+  get: (key) => pick().get(key),
+  remove: (key) => pick().remove(key),
+};
 
 export const RESUME_MAX_BYTES = 2 * 1024 * 1024;
 

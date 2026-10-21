@@ -7,7 +7,7 @@ import { fieldErrors, sponsorSchema } from "@/lib/validation";
 export const runtime = "nodejs";
 
 export async function POST(req: Request) {
-  const blocked = guard(req, "sponsor", 5);
+  const blocked = await guard(req, "sponsor", 5);
   if (blocked) return blocked;
   const parsed = sponsorSchema.safeParse(await readJson(req));
   if (!parsed.success) return json({ error: "validation", fields: fieldErrors(parsed.error) }, 422);

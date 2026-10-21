@@ -17,7 +17,7 @@ const body = z.object({ ref: z.string().min(5).max(30), token: z.string().min(10
  * checkout callback or the signed webhook.
  */
 export async function POST(req: Request) {
-  const blocked = guard(req, "cand-pay", 6);
+  const blocked = await guard(req, "cand-pay", 6);
   if (blocked) return blocked;
   if (!paymentsConfigured())
     return json({ error: "unavailable", message: "Online payment is not enabled yet. Nothing has been charged. We will email you when it opens." }, 503);

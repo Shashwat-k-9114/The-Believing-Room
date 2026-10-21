@@ -1,5 +1,5 @@
 import { getDb, schema } from "@/db/client";
-import { candidateApplicationsOpen } from "@/config/site";
+import { REGISTRATION_CLOSED_MESSAGE, registrationAccepting } from "@/lib/registration-mode";
 import { applicationReceivedMail, sendMail } from "@/lib/email";
 import { brand, paymentsConfigured, pricing } from "@/config/site";
 import { guard, json, makeRef, makeToken } from "@/lib/security";
@@ -10,9 +10,9 @@ export const runtime = "nodejs";
 
 /** multipart/form-data: `data` (JSON string) + optional `resume` (PDF). */
 export async function POST(req: Request) {
-  const blocked = guard(req, "student", 6);
+  const blocked = await guard(req, "student", 6);
   if (blocked) return blocked;
-  if (!candidateApplicationsOpen) return json({ error: "closed", message: "Applications are not open right now." }, 403);
+  if (!registrationAccepting()) return json({ error: "closed", message: REGISTRATION_CLOSED_MESSAGE }, 403);
 
   let form: FormData;
   try {

@@ -23,6 +23,8 @@ const TEST_DB_DIR = resolveTestDbDir(process.cwd());
 if (process.env.TEST_WORKER_INDEX === undefined) resetTestDatabase(process.cwd());
 
 const PORT = 3217;
+// A second server with every switch at its default (registrations closed) proves the shipped defaults.
+const CLOSED_PORT = 3218;
 
 export default defineConfig({
   testDir: "tests/e2e",
@@ -32,12 +34,14 @@ export default defineConfig({
   reporter: [["list"]],
   use: { baseURL: `http://localhost:${PORT}`, trace: "retain-on-failure" },
   projects: [
-    { name: "chromium-desktop", use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } },
+    { name: "closed-defaults", testMatch: /closed-defaults\.spec\.ts/, use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 }, baseURL: `http://localhost:${CLOSED_PORT}` } },
+    { name: "chromium-desktop", testIgnore: /closed-defaults.spec.ts/, use: { ...devices["Desktop Chrome"], viewport: { width: 1440, height: 900 } } },
     // Firefox and WebKit run only the browser-sensitive spec; the full suite is Chromium-only.
     { name: "firefox", testMatch: /cross-browser\.spec\.ts/, use: { ...devices["Desktop Firefox"], viewport: { width: 1440, height: 900 } } },
     { name: "webkit", testMatch: /cross-browser\.spec\.ts/, use: { ...devices["Desktop Safari"], viewport: { width: 1440, height: 900 } } },
   ],
-  webServer: {
+  webServer: [
+    {
     command: `npx next start -p ${PORT}`,
     url: `http://localhost:${PORT}`,
     reuseExistingServer: false,
@@ -53,6 +57,26 @@ export default defineConfig({
       POSTGRES_URL_NON_POOLING: "",
       POSTGRES_PRISMA_URL: "",
       NEXT_PUBLIC_SITE_URL: `http://localhost:${PORT}`,
+      REGISTRATION_MODE: "preview-synthetic",
     },
   },
+    {
+      command: `npx next start -p ${CLOSED_PORT}`,
+      url: `http://localhost:${CLOSED_PORT}`,
+      reuseExistingServer: false,
+      timeout: 120_000,
+      env: {
+        TBR_TEST_DB: "1",
+        PGLITE_DIR: TEST_DB_DIR + "-closed",
+        DATABASE_URL: "",
+        DATABASE_URL_UNPOOLED: "",
+        POSTGRES_URL: "",
+        POSTGRES_URL_NON_POOLING: "",
+        POSTGRES_PRISMA_URL: "",
+        NEXT_PUBLIC_SITE_URL: `http://localhost:${CLOSED_PORT}`,
+        REGISTRATION_MODE: "",
+        SITE_GATE_PASSWORD: "",
+      },
+    },
+  ],
 });

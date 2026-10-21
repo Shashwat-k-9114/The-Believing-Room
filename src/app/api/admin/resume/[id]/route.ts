@@ -1,6 +1,7 @@
 import { eq } from "drizzle-orm";
 import { getDb, schema } from "@/db/client";
 import { isAdmin } from "@/lib/admin-auth";
+import { audit } from "@/lib/audit";
 import { storage } from "@/lib/storage";
 
 export const runtime = "nodejs";
@@ -15,6 +16,8 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
   if (!row?.resumeKey || row.deletedAt) return new Response("Not found", { status: 404 });
   const bytes = await storage.get(row.resumeKey);
   if (!bytes) return new Response("Not found", { status: 404 });
+  // A résumé is a personal document: record every download (never the contents).
+  await audit("student.resume_download", "student_application", id, { ref: row.ref }).catch(() => {});
   return new Response(new Uint8Array(bytes), {
     headers: {
       "Content-Type": "application/pdf",

@@ -1,6 +1,9 @@
 import { sql } from "drizzle-orm";
 import {
+  bigint,
   boolean,
+  customType,
+  primaryKey,
   index,
   integer,
   jsonb,
@@ -374,6 +377,34 @@ export const auditLog = pgTable("audit_log", {
   entity: text("entity").notNull(),
   entityId: text("entity_id"),
   meta: jsonb("meta"),
+  createdAt: createdAt(),
+});
+
+/**
+ * Shared, durable request counters for serverless hosts (see src/lib/rate-limit.ts). Fixed windows: one row per key
+ * and window. Rows carry their own expiry so unrelated limiters with different windows can share the table.
+ */
+export const rateLimits = pgTable(
+  "rate_limits",
+  {
+    key: text("key").notNull(),
+    windowStart: bigint("window_start", { mode: "number" }).notNull(),
+    hits: integer("hits").notNull().default(0),
+    expiresAt: bigint("expires_at", { mode: "number" }).notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.key, t.windowStart] }), index("rate_limits_expires_idx").on(t.expiresAt)],
+);
+
+const bytea = customType<{ data: Buffer; driverData: Buffer }>({
+  dataType: () => "bytea",
+  fromDriver: (v) => Buffer.from(v as unknown as Uint8Array),
+});
+
+/** Private file bytes (résumés) for hosts with no persistent disk. Never served directly; read only through admin routes. */
+export const storedFiles = pgTable("stored_files", {
+  key: text("key").primaryKey(),
+  bytes: bytea("bytes").notNull(),
+  size: integer("size").notNull(),
   createdAt: createdAt(),
 });
 

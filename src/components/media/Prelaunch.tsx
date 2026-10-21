@@ -1,4 +1,5 @@
 import { brand } from "@/config/site";
+import { RegistrationGate } from "../forms/RegistrationGate";
 import { WaitlistForm } from "../forms/WaitlistForm";
 import { LiquidButton } from "../liquid/LiquidButton";
 
@@ -16,7 +17,7 @@ export function Prelaunch({ what }: { what: string }) {
       </div>
       <div id="notify" className="glass glass-frost p-8 [--r:1.6rem]">
         <p className="eyebrow mb-4">Be told at launch</p>
-        <WaitlistForm kind="updates" cta="Notify me" note="the first episodes and event announcements" />
+        <RegistrationGate what="notification list"><WaitlistForm kind="updates" cta="Notify me" note="the first episodes and event announcements" /></RegistrationGate>
       </div>
     </div>
   );

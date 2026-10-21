@@ -134,4 +134,3 @@ export const inclusions = {
   unconfirmed: ["Goodies for all attendees"],
 };
 
-export const candidateApplicationsOpen = true;

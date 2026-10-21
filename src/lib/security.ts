@@ -1,5 +1,6 @@
 import "server-only";
 import { createHmac, randomBytes, randomInt, timingSafeEqual } from "node:crypto";
+import { limitHit } from "./rate-limit";
 
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I
 
@@ -21,33 +22,10 @@ export const hmacHex = (secret: string, data: string | Buffer) =>
   createHmac("sha256", secret).update(data).digest("hex");
 
 /* ------------------------------ Rate limiting ----------------------------- */
+// Implemented in ./rate-limit (shared store on serverless, memory otherwise). Re-exported so existing imports keep working.
+export { rateLimit, rateLimited } from "./rate-limit";
 
-const buckets = new Map<string, number[]>();
-
-/**
- * Sliding-window limiter, in memory. Fine for one instance; swap for a shared
- * store (Redis/Upstash) before running more than one server instance.
- */
-export function rateLimit(key: string, limit: number, windowMs: number): boolean {
-  const now = Date.now();
-  const hits = (buckets.get(key) ?? []).filter((t) => now - t < windowMs);
-  if (hits.length >= limit) {
-    buckets.set(key, hits);
-    return false;
-  }
-  hits.push(now);
-  buckets.set(key, hits);
-  if (buckets.size > 5000) for (const [k, v] of buckets) if (!v.length || now - v[v.length - 1] > windowMs) buckets.delete(k);
-  return true;
-}
-
-/** True when `key` has already used its allowance. Does not record a hit. */
-export function rateLimited(key: string, limit: number, windowMs: number): boolean {
-  const now = Date.now();
-  return (buckets.get(key) ?? []).filter((t) => now - t < windowMs).length >= limit;
-}
-
-export const clientIp =(req: Request) =>
+export const clientIp = (req: Request) =>
   req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "local";
 
 /** Reject cross-site mutating requests. Browsers always send Origin on POST. */
@@ -67,9 +45,9 @@ export function json(body: unknown, status = 200, headers?: Record<string, strin
 }
 
 /** Common gate for public POST endpoints. Returns a Response to short-circuit, or null. */
-export function guard(req: Request, bucket: string, limit = 8, windowMs = 60_000): Response | null {
+export async function guard(req: Request, bucket: string, limit = 8, windowMs = 60_000): Promise<Response | null> {
   if (!sameOrigin(req)) return json({ error: "forbidden", message: "Cross-site request blocked." }, 403);
-  if (!rateLimit(`${bucket}:${clientIp(req)}`, limit, windowMs))
+  if (!(await limitHit(`${bucket}:${clientIp(req)}`, limit, windowMs)))
     return json({ error: "rate_limited", message: "Too many attempts. Please wait a minute and try again." }, 429, { "Retry-After": "60" });
   return null;
 }
