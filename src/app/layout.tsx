@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant, Hanken_Grotesk } from "next/font/google";
 import { brand, socialLinks } from "@/config/site";
 import { isIndexable } from "@/lib/indexing";
+import { CURTAIN_GUARD, CurtainIntro } from "@/components/layout/CurtainIntro";
 import { Footer } from "@/components/layout/Footer";
 import { GlassNavigation } from "@/components/layout/GlassNavigation";
 import "./globals.css";
@@ -53,9 +54,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en-IN" className={`${grotesk.variable} ${serif.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
+        <script dangerouslySetInnerHTML={{ __html: CURTAIN_GUARD }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd).replace(/</g, "\\u003c") }} />
       </head>
       <body suppressHydrationWarning>
+        <CurtainIntro />
         <a href="#main" className="skip-link">Skip to content</a>
         <GlassNavigation />
         <main id="main">{children}</main>

@@ -437,3 +437,37 @@ a:hover .logo-lockup .logo-b, a:focus-visible .logo-lockup .logo-b { transform: 
 /* A very quiet B behind the footer. It sits below all content and is too faint to affect text contrast. */
 .footer-b { position: absolute; right: -3%; bottom: -14%; z-index: -1; width: min(40vw, 30rem); aspect-ratio: 1; background: url(/brand/b-mark.svg) center / contain no-repeat; opacity: 0.055; pointer-events: none; }
 @media (max-width: 640px) { .footer-b { width: 78vw; right: -18%; bottom: 6%; opacity: 0.045; } }
+
+/* ---- curtain intro: two velvet panels part over the page; markup in CurtainIntro.tsx ---- */
+#curtain-intro { position: fixed; inset: 0; z-index: 100000; pointer-events: none; overflow: hidden; animation: curtain-gone 0s linear 2.35s forwards; }
+.curtain {
+  position: absolute; top: 0; bottom: 0; width: 50.4%;
+  background:
+    repeating-linear-gradient(90deg, rgb(0 0 0 / 0.34) 0 1.6%, rgb(255 255 255 / 0.05) 1.6% 3.2%, transparent 3.2% 6.4%),
+    linear-gradient(180deg, #5a1229 0%, #3a0c1d 55%, #25070f 100%);
+  box-shadow: inset 0 -90px 120px -60px rgb(0 0 0 / 0.65);
+  animation-duration: 1.15s; animation-timing-function: cubic-bezier(0.7, 0, 0.25, 1); animation-delay: 0.95s; animation-fill-mode: forwards;
+  will-change: transform;
+}
+.curtain::after { content: ""; position: absolute; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, #f3e0a8, #b78d43 60%, #7a5f2e); }
+.curtain-l { left: 0; transform-origin: left; animation-name: curtain-open-l; }
+.curtain-l::after { right: 0; }
+.curtain-r { right: 0; transform-origin: right; animation-name: curtain-open-r; }
+.curtain-r::after { left: 0; }
+.curtain-logo {
+  position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 1rem; text-align: center;
+  opacity: 0; animation: curtain-logo 1.45s ease-in-out 0.1s forwards;
+}
+.curtain-logo img { width: clamp(72px, 16vw, 112px); height: auto; border-radius: 22%; box-shadow: 0 0 0 1px rgb(243 224 168 / 0.55), 0 0 60px 8px rgb(203 174 118 / 0.35); }
+.curtain-logo span { font-family: var(--font-display); font-size: clamp(1.1rem, 3.4vw, 1.6rem); letter-spacing: 0.32em; text-transform: uppercase; color: #f3e0a8; text-shadow: 0 1px 12px rgb(0 0 0 / 0.6); }
+@keyframes curtain-open-l { to { transform: translateX(-108%) skewX(-2deg); } }
+@keyframes curtain-open-r { to { transform: translateX(108%) skewX(-2deg); } }
+@keyframes curtain-logo {
+  0% { opacity: 0; transform: scale(0.92); }
+  35% { opacity: 1; transform: scale(1); }
+  62% { opacity: 1; transform: scale(1); }
+  82%, 100% { opacity: 0; transform: scale(1.06); }
+}
+@keyframes curtain-gone { to { visibility: hidden; } }
+html[data-curtain="seen"] #curtain-intro { display: none; }
+@media (prefers-reduced-motion: reduce) { #curtain-intro { display: none; } }
