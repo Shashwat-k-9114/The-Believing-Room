@@ -307,7 +307,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
               {enq.map((r) => (
                 <tr key={r.id}>
                   <Td><span className="mono">{r.ref}</span><br />{fmt(r.createdAt)}</Td>
-                  <Td><b>{r.organization}</b><br />{r.contactName}, {r.role}<br />{r.email}{r.phone ? ` · ${r.phone}` : ""}</Td>
+                  <Td><b>{r.organization}</b><br />{r.contactName}{r.role ? `, ${r.role}` : ""}<br />{r.email}{r.phone ? ` · ${r.phone}` : ""}</Td>
                   <Td className="max-w-md">{r.interest} · {r.category}<br />Budget: {r.budgetRange ?? "not given"}<br /><span className="whitespace-pre-wrap">{r.message}</span></Td>
                   <Td>
                     <form action={A.setSponsorEnquiry} className="grid gap-2">

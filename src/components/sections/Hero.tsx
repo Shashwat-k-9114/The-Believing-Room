@@ -30,7 +30,7 @@ export async function Hero() {
           One room. Many chances to be heard.
         </p>
         <p className="lede hero-fade mt-5 max-w-[34rem]" style={{ ["--d" as string]: "0.12s" }}>
-          Candidates and hiring companies meet in person, so people can demonstrate their skills, show their potential and receive honest feedback.
+          The Believing Room is a live internship-pitching show. Students present their skills, projects and potential directly to industry professionals, and show what a résumé cannot.
         </p>
 
         <div className="hero-fade mt-10 flex flex-wrap items-center gap-3" style={{ ["--d" as string]: "0.26s" }}>
@@ -59,7 +59,7 @@ export async function Hero() {
           Season 01 · {phase.label}
         </p>
         <p className="hero-fade mt-2 text-xs text-[var(--fg-faint)]" style={{ ["--d" as string]: "0.55s" }}>
-          Planned pricing: candidate {formatINR(pricing.candidate.amount)}, audience {formatINR(pricing.audience.amount)}, food included.
+          Not a job board, and no placement is promised. Planned pricing: candidate {formatINR(pricing.candidate.amount)}, audience {formatINR(pricing.audience.amount)}, food included.
         </p>
         </div>
       </div>

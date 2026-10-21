@@ -67,7 +67,7 @@ type SponsorMailInput = { organization: string; contactName: string; role: strin
 export function sponsorEnquiryOrganiserMail(d: SponsorMailInput, ref: string, to: string): Mail {
   const subject = `New partnership enquiry: ${d.organization} (${ref})`;
   const lines = [
-    `Reference: ${ref}`, `Organisation: ${d.organization}`, `Contact: ${d.contactName}, ${d.role}`, `Email: ${d.email}`, `Phone: ${d.phone ?? "not given"}`,
+    `Reference: ${ref}`, `Organisation: ${d.organization}`, `Contact: ${d.contactName}${d.role ? `, ${d.role}` : ""}`, `Email: ${d.email}`, `Phone: ${d.phone ?? "not given"}`,
     `Interest: ${d.interest}`, `Type: ${d.category}`, `Indicative budget: ${d.budgetRange ?? "not given"}`, "", d.message ?? "(no message)",
   ];
   return { to, subject, text: lines.join("\n"), html: lines.map((l) => `<p>${esc(l)}</p>`).join("") };

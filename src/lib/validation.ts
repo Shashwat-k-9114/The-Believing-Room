@@ -151,7 +151,8 @@ export const collegeSchema = z.object({
 export const sponsorSchema = z.object({
   organization: text(2, 160, "Organisation"),
   contactName: text(2, 120, "Contact person"),
-  role: text(2, 120, "Your role"),
+  // Optional: it helps the team, but a genuine enquiry is recognisable without it. Stored as "" (the column is NOT NULL).
+  role: optionalText(120, "Your role").transform((v) => v ?? ""),
   email,
   phone: phone.optional().or(z.literal("").transform(() => undefined)),
   interest: z.enum(SPONSOR_INTERESTS, { error: "Choose the kind of partnership you are interested in" }),

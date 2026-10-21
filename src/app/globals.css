@@ -428,3 +428,12 @@ select.input option { color: #1c1820; }
 .slider:not([data-slider="ready"]) [aria-selected="true"],
 .slider:not([data-slider="ready"]) input:checked + span { background: #e3cfa8; }
 @media (prefers-reduced-motion: reduce) { .slider-bar { transition: none; } }
+
+/* ------------------------------ Brand mark ------------------------------- */
+.logo-lockup .logo-b { transform-origin: 50% 70%; transition: transform 0.5s var(--ease-cinema), filter 0.5s var(--ease-cinema); }
+a:hover .logo-lockup .logo-b, a:focus-visible .logo-lockup .logo-b { transform: rotate(-6deg) scale(1.07); filter: drop-shadow(0 0 7px rgb(203 174 118 / 0.5)); }
+@media (prefers-reduced-motion: reduce) { .logo-lockup .logo-b { transition: none; } a:hover .logo-lockup .logo-b, a:focus-visible .logo-lockup .logo-b { transform: none; } }
+
+/* A very quiet B behind the footer. It sits below all content and is too faint to affect text contrast. */
+.footer-b { position: absolute; right: -3%; bottom: -14%; z-index: -1; width: min(40vw, 30rem); aspect-ratio: 1; background: url(/brand/b-mark.svg) center / contain no-repeat; opacity: 0.055; pointer-events: none; }
+@media (max-width: 640px) { .footer-b { width: 78vw; right: -18%; bottom: 6%; opacity: 0.045; } }

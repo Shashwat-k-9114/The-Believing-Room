@@ -5,7 +5,8 @@ import { Wordmark } from "./Wordmark";
 
 export function Footer() {
   return (
-    <footer data-theme="dark" className="relative">
+    <footer data-theme="dark" className="relative isolate overflow-hidden">
+      <div aria-hidden className="footer-b" />
       <div className="wrap grid gap-16 border-t border-[var(--line)] py-20 lg:grid-cols-[1fr_1.7fr]">
         <div>
           <Wordmark />

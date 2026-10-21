@@ -5,6 +5,7 @@ import { industries } from "@/content/industries";
 import { EpisodeCard, fmtDuration, thumbOf } from "@/components/media/EpisodeCard";
 import { Prelaunch } from "@/components/media/Prelaunch";
 import { PageShell } from "@/components/layout/PageShell";
+import { ShowIdentity } from "@/components/media/ShowArt";
 import { LiquidButton } from "@/components/liquid/LiquidButton";
 
 export const dynamic = "force-dynamic";
@@ -35,6 +36,8 @@ export default async function TheShow() {
       actions={<LiquidButton href="/episodes" variant="glass" size="lg">Browse episodes</LiquidButton>}
       body="dark"
     >
+      <ShowIdentity />
+
       {feature ? (
         <>
           <Link href={`/episodes/${feature.slug}`} className="group grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-end">

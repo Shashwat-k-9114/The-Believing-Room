@@ -45,20 +45,23 @@ export function SponsorForm({ defaultInterest }: { defaultInterest?: string }) {
       <div className="grid gap-5 sm:grid-cols-2">
         <TextField name="organization" label="Organisation" required autoComplete="organization" error={errors.organization} />
         <TextField name="contactName" label="Contact person" required autoComplete="name" error={errors.contactName} />
-        <TextField name="role" label="Your role" required autoComplete="organization-title" error={errors.role} />
         <TextField name="email" label="Business email" type="email" required autoComplete="email" error={errors.email} />
-        <TextField name="phone" label="Business phone (optional)" type="tel" inputMode="tel" autoComplete="tel" error={errors.phone} />
         <SelectField name="category" label="You are" required options={TYPES} error={errors.category} />
         <SelectField name="interest" label="Partnership interest" required defaultValue={defaultInterest ?? ""} options={SPONSOR_INTERESTS.map((v) => ({ value: v, label: v }))} error={errors.interest} />
-        <SelectField name="budgetRange" label="Indicative budget (optional)" placeholder="Prefer not to say" options={BUDGET_RANGES.map((v) => ({ value: v, label: v }))} error={errors.budgetRange} />
       </div>
+      <fieldset className="grid gap-5 sm:grid-cols-3">
+        <legend className="eyebrow mb-4">Optional, if you would like to say more</legend>
+        <TextField name="role" label="Your role (optional)" autoComplete="organization-title" error={errors.role} />
+        <TextField name="phone" label="Business phone (optional)" type="tel" inputMode="tel" autoComplete="tel" error={errors.phone} />
+        <SelectField name="budgetRange" label="Indicative budget (optional)" placeholder="Prefer not to say" options={BUDGET_RANGES.map((v) => ({ value: v, label: v }))} error={errors.budgetRange} />
+      </fieldset>
       <TextArea name="message" label="Tell us what you have in mind" rows={5} maxLength={3000} error={errors.message} hint="Optional. Goals, timing, content you would like to be part of." />
       <div className="grid gap-3">
         <Check name="consentContact" required error={errors.consentContact}>I agree to be contacted about this enquiry.</Check>
         <Check name="consentNoGuarantee" required error={errors.consentNoGuarantee}>I understand that formats are proposals until agreed in writing, and that no audience reach, views or recruitment outcomes are guaranteed.</Check>
       </div>
       {fail && <FormAlert>{fail}</FormAlert>}
-      <div><LiquidButton type="submit" variant="primary" size="lg" disabled={busy}>{busy ? "Sending…" : "Send partnership enquiry"}</LiquidButton></div>
+      <div><LiquidButton type="submit" variant="primary" size="lg" disabled={busy} aria-busy={busy}>{busy ? "Sending…" : "Send partnership enquiry"}</LiquidButton></div>
     </form>
   );
 }

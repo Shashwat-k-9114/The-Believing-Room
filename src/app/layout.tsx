@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant, Hanken_Grotesk } from "next/font/google";
-import { brand } from "@/config/site";
+import { brand, socialLinks } from "@/config/site";
+import { isIndexable } from "@/lib/indexing";
 import { Footer } from "@/components/layout/Footer";
 import { GlassNavigation } from "@/components/layout/GlassNavigation";
 import "./globals.css";
@@ -22,6 +23,19 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image" },
   alternates: { canonical: "/" },
+  robots: isIndexable() ? undefined : { index: false, follow: false },
+};
+
+/** Factual organisation data only: no events, dates, ratings or audience figures. */
+const orgJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: brand.name,
+  url: brand.url,
+  logo: `${brand.url}/brand/icon-512.png`,
+  description: brand.description,
+  email: brand.contactEmail,
+  sameAs: socialLinks.map((s) => s.href),
 };
 
 export const viewport: Viewport = {
@@ -39,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en-IN" className={`${grotesk.variable} ${serif.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd).replace(/</g, "\\u003c") }} />
       </head>
       <body suppressHydrationWarning>
         <a href="#main" className="skip-link">Skip to content</a>
