@@ -44,10 +44,13 @@ export function json(body: unknown, status = 200, headers?: Record<string, strin
   return Response.json(body, { status, headers: { "Cache-Control": "no-store", ...headers } });
 }
 
+/** Buckets where a limiter outage must refuse the request rather than fall back to a per-instance counter. */
+const FAIL_CLOSED_BUCKETS = new Set(["admin-login", "order", "verify", "cand-pay"]);
+
 /** Common gate for public POST endpoints. Returns a Response to short-circuit, or null. */
 export async function guard(req: Request, bucket: string, limit = 8, windowMs = 60_000): Promise<Response | null> {
   if (!sameOrigin(req)) return json({ error: "forbidden", message: "Cross-site request blocked." }, 403);
-  if (!(await limitHit(`${bucket}:${clientIp(req)}`, limit, windowMs)))
+  if (!(await limitHit(`${bucket}:${clientIp(req)}`, limit, windowMs, FAIL_CLOSED_BUCKETS.has(bucket))))
     return json({ error: "rate_limited", message: "Too many attempts. Please wait a minute and try again." }, 429, { "Retry-After": "60" });
   return null;
 }

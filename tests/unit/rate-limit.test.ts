@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { getDb } from "@/db/client";
 import { rateLimit, rateLimited, sharedHit, sharedPeek, usesSharedStore } from "@/lib/rate-limit";
 
@@ -44,5 +44,25 @@ describe("memory limiter and store selection", () => {
     expect(usesSharedStore({ DATABASE_URL: "postgres://x" })).toBe(true);
     expect(usesSharedStore({ DATABASE_URL: "postgres://x", RATE_LIMIT_STORE: "memory" })).toBe(false);
     expect(usesSharedStore({ RATE_LIMIT_STORE: "postgres" })).toBe(true);
+  });
+});
+
+describe("limiter outage behaviour", () => {
+  it("sensitive callers are refused, others degrade to the memory limiter, when the shared store errors", async () => {
+    vi.resetModules();
+    vi.doMock("@/db/client", () => ({ getDb: async () => { throw new Error("db down"); }, schema: {} }));
+    vi.stubEnv("DATABASE_URL", "postgres://x:y@127.0.0.1:1/z");
+    vi.stubEnv("RATE_LIMIT_STORE", "");
+    const rl = await import("@/lib/rate-limit");
+    expect(rl.usesSharedStore()).toBe(true);
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+    vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect(await rl.limitHit("k1", 5, 60_000, true)).toBe(false); // sign-in: fail closed
+    expect(await rl.limitPeek("k1", 5, 60_000, true)).toBe(true);
+    expect(await rl.limitHit("k2", 5, 60_000)).toBe(true); // public form: degrade
+    expect(spy).toHaveBeenCalled();
+    vi.doUnmock("@/db/client");
+    vi.unstubAllEnvs();
+    vi.restoreAllMocks();
   });
 });

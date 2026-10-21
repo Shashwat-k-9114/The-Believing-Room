@@ -8,6 +8,7 @@ import { ORG_CATEGORY_META, SEASON_PHASES, phaseMeta } from "@/config/ecosystem"
 import { prospectusApproved, seasonPhase, targetWindow } from "@/lib/queries";
 import { industries } from "@/content/industries";
 import { formatINR } from "@/config/site";
+import { registrationMode } from "@/lib/registration-mode";
 import { PageShell } from "@/components/layout/PageShell";
 import { LoginForm } from "./LoginForm";
 import * as A from "./actions";
@@ -372,6 +373,11 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
 
   return (
     <PageShell eyebrow="Organiser" title={<>Control <em>room.</em></>}>
+      {registrationMode() === "preview-synthetic" && (
+        <p data-synthetic-admin role="note" className="mb-6 rounded-md border border-[var(--line)] bg-black/5 p-3 text-sm">
+          <strong>Synthetic preview database.</strong> Every record here is made-up test data from a protected preview. None of it is a real applicant, attendee or sponsor.
+        </p>
+      )}
       <div className="-mt-10 flex flex-wrap items-center justify-between gap-4">
         <nav aria-label="Admin sections" className="flex flex-wrap gap-2">
           {TABS.map(([k, label]) => (

@@ -41,8 +41,8 @@ export async function POST(req: Request) {
   const tooMany = () => json({ error: "rate_limited", message: "Too many failed sign-ins. Please wait a few minutes." }, 429, { "Retry-After": "600" });
 
   if (device) {
-    if (await limitPeek(`admin-device-fail:${device}`, DEVICE_FAIL.limit, DEVICE_FAIL.windowMs)) return tooMany();
-  } else if (await limitPeek(GLOBAL_FAIL.key, GLOBAL_FAIL.limit, GLOBAL_FAIL.windowMs)) {
+    if (await limitPeek(`admin-device-fail:${device}`, DEVICE_FAIL.limit, DEVICE_FAIL.windowMs, true)) return tooMany();
+  } else if (await limitPeek(GLOBAL_FAIL.key, GLOBAL_FAIL.limit, GLOBAL_FAIL.windowMs, true)) {
     return tooMany();
   }
 

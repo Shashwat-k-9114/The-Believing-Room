@@ -71,12 +71,21 @@ function degrade(e: unknown) {
   if (warned++ % 50 === 0) console.warn("[rate-limit] shared store unavailable; using the in-memory limiter for this request.", e instanceof Error ? e.message : e);
 }
 
-/** Record a hit. True means the request is allowed. */
-export async function limitHit(key: string, limit: number, windowMs: number): Promise<boolean> {
+/**
+ * Record a hit. True means the request is allowed.
+ * `failClosed`: when the shared store is configured but errors, deny instead of falling back to the per-instance
+ * memory counter. A memory counter is not shared across serverless instances, so for sign-in and payment routes it
+ * would quietly remove the protection exactly when the database is struggling.
+ */
+export async function limitHit(key: string, limit: number, windowMs: number, failClosed = false): Promise<boolean> {
   if (usesSharedStore()) {
     try {
       return await sharedHit(await getDb(), key, limit, windowMs);
     } catch (e) {
+      if (failClosed) {
+        console.error("[rate-limit] shared store unavailable; refusing a security-sensitive request.", e instanceof Error ? e.message : e);
+        return false;
+      }
       degrade(e);
     }
   }
@@ -84,11 +93,15 @@ export async function limitHit(key: string, limit: number, windowMs: number): Pr
 }
 
 /** True when the allowance is already used up. Records nothing. */
-export async function limitPeek(key: string, limit: number, windowMs: number): Promise<boolean> {
+export async function limitPeek(key: string, limit: number, windowMs: number, failClosed = false): Promise<boolean> {
   if (usesSharedStore()) {
     try {
       return await sharedPeek(await getDb(), key, limit, windowMs);
     } catch (e) {
+      if (failClosed) {
+        console.error("[rate-limit] shared store unavailable; refusing a security-sensitive request.", e instanceof Error ? e.message : e);
+        return true;
+      }
       degrade(e);
     }
   }
