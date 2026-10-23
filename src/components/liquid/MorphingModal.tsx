@@ -56,7 +56,7 @@ export function MorphingModal({
         requestAnimationFrame(() => (returnFocus?.current ?? prev.current)?.focus?.());
       }}
       onClick={(e) => e.target === e.currentTarget && onClose()}
-      className={`arena-modal ${full ? "arena-modal-full" : ""}`}
+      className={`arena-modal pointer-events-auto ${full ? "arena-modal-full" : ""}`}
     >
       <div className="relative">
         <button
