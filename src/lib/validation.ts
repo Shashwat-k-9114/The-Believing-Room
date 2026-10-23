@@ -102,8 +102,8 @@ export const audienceSchema = z.object({
     .number()
     .int()
     .min(1, "Choose at least one ticket")
-    .max(pricing.maxAudienceQuantity, `You can buy up to ${pricing.maxAudienceQuantity} tickets at once`),
-  attendeeNames: z.array(text(2, 120, "Attendee name")).max(pricing.maxAudienceQuantity).default([]),
+    .max(pricing.audienceTickets.maxPerOrder, `You can request up to ${pricing.audienceTickets.maxPerOrder} tickets at once`),
+  attendeeNames: z.array(text(2, 120, "Attendee name")).max(pricing.audienceTickets.maxPerOrder).default([]),
   consentTerms: mustAgree("You must accept the ticket terms"),
   consentPrivacy: mustAgree("You must accept the privacy notice"),
   consentFilming: mustAgree("You must acknowledge that the event is filmed"),

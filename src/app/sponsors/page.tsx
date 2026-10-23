@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { SponsorForm } from "@/components/forms/SponsorForm";
 import { ListRows, PageShell } from "@/components/layout/PageShell";
 import { LiquidButton } from "@/components/liquid/LiquidButton";
@@ -105,7 +106,7 @@ export default function Sponsors() {
                   <li key={d} className="border-t border-[var(--line)] pt-2">{d}</li>
                 ))}
               </ul>
-              <div className="mt-6"><LiquidButton href={`#enquiry`} variant="glass">Enquire about this format</LiquidButton></div>
+              <div className="mt-6"><LiquidButton href={`/sponsors?interest=${encodeURIComponent(p.name)}#enquiry`} variant="glass">Enquire about this format</LiquidButton></div>
             </Reveal>
           ))}
         </ul>
@@ -163,7 +164,7 @@ export default function Sponsors() {
         <div className="glass glass-frost p-7 sm:p-10 [--r:1.2rem]">
           <h2 id="enquiry-h" className="display text-4xl sm:text-5xl">Partnership enquiry</h2>
           <p className="mb-8 mt-2 max-w-[56ch] text-[var(--fg-dim)]">Tell us who you are and what you have in mind. Your enquiry is saved securely and reviewed by a member of the team.</p>
-          <SponsorForm />
+          <Suspense fallback={null}><SponsorForm /></Suspense>
         </div>
       </section>
     </PageShell>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { BUDGET_RANGES, SPONSOR_INTERESTS } from "@/config/ecosystem";
 import { LiquidButton } from "../liquid/LiquidButton";
@@ -19,6 +20,11 @@ export function SponsorForm({ defaultInterest }: { defaultInterest?: string }) {
   const [fail, setFail] = useState("");
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState<{ ref?: string } | null>(null);
+  // "Enquire about this format" links arrive as /sponsors?interest=<format>#enquiry.
+  const fromLink = useSearchParams().get("interest");
+  const [picked, setPicked] = useState<string | null>(null);
+  const linked = fromLink && (SPONSOR_INTERESTS as readonly string[]).includes(fromLink) ? fromLink : null;
+  const interest = picked ?? linked ?? defaultInterest ?? "";
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -47,7 +53,7 @@ export function SponsorForm({ defaultInterest }: { defaultInterest?: string }) {
         <TextField name="contactName" label="Contact person" required autoComplete="name" error={errors.contactName} />
         <TextField name="email" label="Business email" type="email" required autoComplete="email" error={errors.email} />
         <SelectField name="category" label="You are" required options={TYPES} error={errors.category} />
-        <SelectField name="interest" label="Partnership interest" required defaultValue={defaultInterest ?? ""} options={SPONSOR_INTERESTS.map((v) => ({ value: v, label: v }))} error={errors.interest} />
+        <SelectField name="interest" label="Partnership interest" required value={interest} onChange={setPicked} options={SPONSOR_INTERESTS.map((v) => ({ value: v, label: v }))} error={errors.interest} />
       </div>
       <fieldset className="grid gap-5 sm:grid-cols-3">
         <legend className="eyebrow mb-4">Optional, if you would like to say more</legend>

@@ -44,7 +44,7 @@ test.describe("public site", () => {
     await expect(hero).toContainText("₹300");
     await expect(hero).toContainText(/food included/i);
     const main = page.locator("main");
-    for (const org of ["Manacle", "KRVVY", "Immverse AI", "Galvanic", "Futured Innovation Studios", "BIT Noida"]) {
+    for (const org of ["Manacle", "KRVVY", "Immverse AI", "Galvanic", "BIT Noida"]) {
       await expect(main, org).toContainText(org);
     }
     await page.getByRole("link", { name: "Apply as a Candidate" }).first().click();
@@ -54,8 +54,8 @@ test.describe("public site", () => {
   test("partner roles are stated precisely and never as sponsorship or endorsement", async ({ page }) => {
     await page.goto("/partners");
     const main = page.locator("main");
-    await expect(main).toContainText(/free of charge/i);
-    await expect(main).toContainText(/not a cash sponsor/i);
+    await expect(main).toContainText(/not co-hosting, sponsorship or endorsement/i);
+    await expect(main).not.toContainText(/free of charge|free learning|free course/i);
     await expect(main).not.toContainText(/amity/i);
     const text = (await page.locator("body").innerText()).toLowerCase();
     for (const banned of ["65,000", "65000", "quotation", "advance"]) expect(text, banned).not.toContain(banned);
@@ -102,6 +102,61 @@ test.describe("public site", () => {
     await expect(ok).toBeVisible();
     await expect(ok).toContainText(/TBR-S-[A-Z0-9]{6}/);
     await expect(ok).toContainText(/not an agreement/i);
+  });
+
+  test("free learning is gone from the homepage and candidate registration", async ({ page }) => {
+    await skipIntro(page);
+    await page.goto("/");
+    await expect(page.locator("main")).not.toContainText(/free learning|free course|educational contribution|learning, beyond/i);
+    await page.goto("/register/candidate");
+    await expect(page.locator("main")).not.toContainText(/free learning|free course/i);
+  });
+
+  test("'Enquire about this format' carries the format into the form and the form submits", async ({ page }) => {
+    await page.goto("/sponsors");
+    await page.getByRole("link", { name: "Enquire about this format" }).nth(1).click();
+    const form = page.getByRole("form", { name: "Partnership enquiry" });
+    await expect(form.getByLabel("Partnership interest")).toHaveValue("Industry Partner");
+    await form.getByLabel("Organisation").fill("Format Test Ltd");
+    await form.getByLabel("Contact person").fill("Dev Rao");
+    await form.getByLabel("Business email").fill("dev.e2e@example.com");
+    await form.getByLabel("You are").selectOption("business");
+    await form.getByLabel(/agree to be contacted/).check();
+    await form.getByLabel(/formats are proposals/).check();
+    await form.getByRole("button", { name: "Send partnership enquiry" }).click();
+    await expect(page.getByRole("status").filter({ hasText: "Enquiry received." })).toBeVisible();
+  });
+
+  async function fillSponsor(page: import("@playwright/test").Page, suffix: string) {
+    await page.goto("/sponsors");
+    const form = page.getByRole("form", { name: "Partnership enquiry" });
+    await form.getByLabel("Organisation").fill(`Net Test ${suffix}`);
+    await form.getByLabel("Contact person").fill("Net Tester");
+    await form.getByLabel("Business email").fill(`net.${suffix}@example.com`);
+    await form.getByLabel("You are").selectOption("business");
+    await form.getByLabel("Partnership interest").selectOption({ index: 1 });
+    await form.getByLabel(/agree to be contacted/).check();
+    await form.getByLabel(/formats are proposals/).check();
+    return form;
+  }
+
+  test("sponsor enquiry: a network failure shows an error, never success, and keeps the input", async ({ page }) => {
+    const form = await fillSponsor(page, "offline");
+    await page.route("**/api/submit/sponsor", (r) => r.abort());
+    await form.getByRole("button", { name: "Send partnership enquiry" }).click();
+    await expect(page.getByRole("alert").filter({ hasText: /offline|try again/i })).toBeVisible();
+    await expect(page.getByRole("status").filter({ hasText: "Enquiry received." })).toHaveCount(0);
+    await expect(form.getByLabel("Organisation")).toHaveValue("Net Test offline");
+  });
+
+  test("sponsor enquiry: a double click sends one request", async ({ page }) => {
+    const form = await fillSponsor(page, "double");
+    let posts = 0;
+    await page.route("**/api/submit/sponsor", async (r) => { posts++; await new Promise((res) => setTimeout(res, 400)); await r.continue(); });
+    const btn = form.getByRole("button", { name: "Send partnership enquiry" });
+    await btn.dblclick();
+    await expect(page.getByRole("status").filter({ hasText: "Enquiry received." })).toBeVisible();
+    expect(posts).toBe(1);
   });
 
   test("sponsor API rejects missing consent and foreign origins", async ({ request }) => {

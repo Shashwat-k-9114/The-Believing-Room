@@ -28,7 +28,7 @@ export async function EcosystemHome() {
     <div className="grid gap-x-16 gap-y-12 lg:grid-cols-[0.8fr_1.4fr]">
       <Reveal className="lg:sticky lg:top-32 lg:self-start">
         <p className="lede">
-          Four kinds of support, kept distinct: who is hiring, where we film, who is offering learning, and who is helping us reach students. Each is described only as far as it has been confirmed.
+          Kinds of support, kept distinct: who is hiring, where we film, and who is helping us reach students. Each is described only as far as it has been confirmed.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
           <LiquidButton href="/partners" variant="glass">Every organisation</LiquidButton>

@@ -7,6 +7,8 @@ import { LiquidButton } from "../liquid/LiquidButton";
 import { LiquidSegmentedControl } from "../liquid/controls";
 import { Check, FormAlert, Honeypot, postJson, SuccessPanel, TextField, type Errors } from "./ui";
 
+const CUSTOM = "custom";
+
 /** Registers interest in audience tickets. No payment is taken on the site; the team writes to confirm. */
 export function AudienceForm() {
   const [qty, setQty] = useState("1");
@@ -17,7 +19,11 @@ export function AudienceForm() {
   const [fail, setFail] = useState("");
   const [done, setDone] = useState<{ ref?: string } | null>(null);
 
-  const q = Number(qty);
+  const { quickPickMax, maxPerOrder } = pricing.audienceTickets;
+  const custom = qty === CUSTOM;
+  const [customQty, setCustomQty] = useState(String(quickPickMax + 1));
+  // Anything that is not a whole number in range is sent as 0 and rejected by the server rather than silently clamped.
+  const q = custom ? (/^\d+$/.test(customQty.trim()) ? Number(customQty) : 0) : Number(qty);
   const set = (k: keyof typeof v) => (val: string | boolean) => setV((p) => ({ ...p, [k]: val }));
 
   if (done)
@@ -31,6 +37,10 @@ export function AudienceForm() {
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (custom && (q < quickPickMax + 1 || q > maxPerOrder)) {
+      setErrors({ quantity: `Enter a whole number from ${quickPickMax + 1} to ${maxPerOrder}.` });
+      return;
+    }
     const website = (e.currentTarget.elements.namedItem("website") as HTMLInputElement | null)?.value ?? "";
     setBusy(true);
     setFail("");
@@ -48,8 +58,18 @@ export function AudienceForm() {
       <div className="grid gap-6">
         <LiquidSegmentedControl
           name="qty" legend="How many tickets?" value={qty} onChange={setQty}
-          options={Array.from({ length: pricing.maxAudienceQuantity }, (_, i) => ({ value: String(i + 1), label: String(i + 1) }))}
+          options={[
+            ...Array.from({ length: Math.min(quickPickMax, maxPerOrder) }, (_, i) => ({ value: String(i + 1), label: String(i + 1) })),
+            ...(maxPerOrder > quickPickMax ? [{ value: CUSTOM, label: "More" }] : []),
+          ]}
         />
+        {custom && (
+          <TextField
+            name="customQty" label={`How many tickets? (${quickPickMax + 1} to ${maxPerOrder})`} inputMode="numeric" required
+            value={customQty} onChange={setCustomQty} error={errors.quantity}
+            hint="Enter the whole number of tickets you need."
+          />
+        )}
         <div className="grid gap-5 sm:grid-cols-2">
           <TextField name="name" label="Your name" required autoComplete="name" value={v.name} onChange={set("name")} error={errors.name} />
           <TextField name="phone" label="Mobile number" type="tel" inputMode="tel" required autoComplete="tel" value={v.phone} onChange={set("phone")} error={errors.phone} />

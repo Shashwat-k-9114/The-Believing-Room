@@ -9,7 +9,6 @@ import { COLOR, Curve } from "./Curve";
 import { DisciplineMark } from "./DisciplineMark";
 import { ShowShelf } from "./HomeDynamic";
 import { EcosystemHome } from "../partners/Ecosystem";
-import { EducationBenefit } from "../partners/Education";
 import { Journey } from "./Journey";
 import { ArchMark, LogoBadge } from "../layout/Wordmark";
 
@@ -175,7 +174,7 @@ export function ActPlace() {
   const afterShortlist = pricing.candidatePaymentStage === "after_shortlist";
   return (
     <>
-      <Curve from={COLOR.champagne} to={COLOR.ivory} shape="swell" flip />
+      <Curve from={COLOR.aubergine} to={COLOR.ivory} shape="swell" flip />
       <section data-theme="light" aria-labelledby="act-place" className="section cv-auto !pt-16 sm:!pt-24">
         <div className="wrap">
           <Reveal><Eyebrow>Three ways in</Eyebrow></Reveal>
@@ -293,22 +292,6 @@ export function ActEcosystem() {
         <div className="mt-16"><EcosystemHome /></div>
       </div>
     </section>
-  );
-}
-
-/* ------------------------ Scene VII: The educational contribution ---------- */
-export function ActEducation() {
-  return (
-    <>
-      <Curve from={COLOR.aubergine} to={COLOR.champagne} shape="ribbon" />
-      <section data-theme="light" aria-labelledby="act-education" className="section cv-auto !pb-24 !pt-16 sm:!pb-32 sm:!pt-24" style={{ ["--bg" as string]: COLOR.champagne, background: COLOR.champagne }}>
-        <div className="wrap">
-          <Reveal><Eyebrow>The educational contribution</Eyebrow></Reveal>
-          <Lines id="act-education" as="h2" className="display h-xl mt-8 max-w-[16ch]" lines={["Learning, beyond", <em key="e">the hiring decision.</em>]} />
-          <div className="mt-14"><EducationBenefit /></div>
-        </div>
-      </section>
-    </>
   );
 }
 

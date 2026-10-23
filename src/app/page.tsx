@@ -3,7 +3,6 @@ import { StageBanner } from "@/components/sections/StageBanner";
 import {
   ActDisciplines,
   ActEcosystem,
-  ActEducation,
   ActInside,
   ActManifesto,
   ActPhilosophy,
@@ -25,7 +24,6 @@ export default function Home() {
       <ActProcess />
       <ActDisciplines />
       <ActInside />
-      <ActEducation />
       <ActPlace />
       <ActShow />
       <ActPodcast />

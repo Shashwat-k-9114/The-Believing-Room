@@ -52,8 +52,23 @@ describe("studentSchema", () => {
 describe("audienceSchema and pricing", () => {
   const base = { name: "Ravi K", email: "r@example.com", phone: "9876543210", quantity: 2, consentTerms: true, consentPrivacy: true, consentFilming: true };
   it("caps quantity", () => {
-    expect(audienceSchema.safeParse({ ...base, quantity: pricing.maxAudienceQuantity + 1 }).success).toBe(false);
+    expect(audienceSchema.safeParse({ ...base, quantity: pricing.audienceTickets.maxPerOrder + 1 }).success).toBe(false);
     expect(audienceSchema.safeParse({ ...base, quantity: 0 }).success).toBe(false);
+  });
+  it("accepts every quantity up to the configured per-order limit, including custom ones above the quick picks", () => {
+    const { quickPickMax, maxPerOrder } = pricing.audienceTickets;
+    for (let n = 1; n <= maxPerOrder; n++) expect(audienceSchema.safeParse({ ...base, quantity: n }).success, String(n)).toBe(true);
+    expect(maxPerOrder).toBeGreaterThan(quickPickMax);
+  });
+  it("rejects negative, fractional, non-numeric and absurd quantities", () => {
+    for (const quantity of [-1, -5, 1.5, "abc", "", NaN, 1e9, "1e9"]) {
+      expect(audienceSchema.safeParse({ ...base, quantity }).success, String(quantity)).toBe(false);
+    }
+  });
+  it("totals follow the quantity, never a client-sent price", () => {
+    const parsed = audienceSchema.parse({ ...base, quantity: 6, total: 1, price: 1 });
+    expect(parsed).not.toHaveProperty("total");
+    expect(priceBreakdown("audience", parsed.quantity).total).toBe(pricing.audience.amount * 6);
   });
   it("requires the filming acknowledgement", () => {
     expect(audienceSchema.safeParse({ ...base, consentFilming: false }).success).toBe(false);

@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { PageShell } from "@/components/layout/PageShell";
 import { LiquidButton } from "@/components/liquid/LiquidButton";
 import { Reveal } from "@/components/liquid/Reveal";
-import { EducationBenefit, OpportunityList } from "@/components/partners/Education";
+import { OpportunityList } from "@/components/partners/Education";
 import { PartnerProfiles } from "@/components/partners/Ecosystem";
 
 export const metadata: Metadata = {
   title: "Partners",
-  description: "The organisations taking part in The Believing Room: recruitment participants, venue facilities, an educational contribution and student outreach, each described as far as it has been confirmed.",
+  description: "The organisations taking part in The Believing Room: recruitment participants, venue facilities and student outreach, each described as far as it has been confirmed.",
   alternates: { canonical: "/partners" },
 };
 
@@ -25,14 +25,6 @@ export default function Partners() {
       }
     >
       <PartnerProfiles />
-
-      <section aria-labelledby="edu" className="mt-28 border-t border-[var(--fg)] pt-16">
-        <Reveal>
-          <p className="eyebrow">Educational contribution · details</p>
-          <h2 id="edu" className="display h-lg mt-4 max-w-[18ch]">What candidates may receive</h2>
-        </Reveal>
-        <div className="mt-12"><EducationBenefit /></div>
-      </section>
 
       <section aria-labelledby="roles" className="mt-28 border-t border-[var(--fg)] pt-16">
         <Reveal>

@@ -10,6 +10,8 @@ import { Check, FormAlert, Honeypot, SelectField, SuccessPanel, TextArea, TextFi
 
 const DRAFT_KEY = "arena-student-draft-v1";
 const thisYear = new Date().getFullYear();
+// Same window the schema accepts (thisYear - 1 … thisYear + 8).
+const gradYearOptions = Array.from({ length: 10 }, (_, i) => String(thisYear - 1 + i)).map((y) => ({ value: y, label: y }));
 
 const initial = {
   fullName: "", email: "", phone: "", college: "", course: "", gradYear: String(thisYear + 1),
@@ -146,7 +148,7 @@ export function CandidateForm({ defaultIndustry }: { defaultIndustry?: string })
           <TextField name="fullName" label="Full name" required autoComplete="name" value={v.fullName} onChange={set("fullName")} error={errors.fullName} />
           <TextField name="email" label="Email" type="email" required autoComplete="email" value={v.email} onChange={set("email")} error={errors.email} />
           <TextField name="phone" label="Mobile number" type="tel" inputMode="tel" required autoComplete="tel" hint="10-digit Indian mobile. +91 is fine." value={v.phone} onChange={set("phone")} error={errors.phone} />
-          <TextField name="gradYear" label="Graduation year" inputMode="numeric" required value={v.gradYear} onChange={set("gradYear")} error={errors.gradYear} />
+          <SelectField name="gradYear" label="Graduation year" required options={gradYearOptions} value={v.gradYear} onChange={set("gradYear")} error={errors.gradYear} />
           <TextField name="college" label="College or university" required autoComplete="organization" value={v.college} onChange={set("college")} error={errors.college} />
           <TextField name="course" label="Course or degree" required value={v.course} onChange={set("course")} error={errors.course} />
         </div>

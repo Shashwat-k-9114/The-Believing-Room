@@ -132,11 +132,6 @@ export const publicSponsorshipPackages = (): { id: string; slug: string; name: s
     summary: "Contribute equipment, services, hospitality or materials that make filming and the day itself possible.",
     deliverables: ["Credit matched to the contribution", "Acknowledgement in published episodes, subject to agreement", "Content deliverables agreed in advance"],
   },
-  {
-    id: "educational-partner", slug: "educational-partner", name: "Educational Partner", price: null,
-    summary: "Offer learning to candidates, as an educational contribution rather than cash sponsorship.",
-    deliverables: ["Dedicated educational-contribution feature on the website", "Acknowledgement in candidate communications, subject to agreement", "Eligibility and access terms published by agreement"],
-  },
 ];
 
 /** Where the season stands. Change by hand; the site never infers a phase from the calendar. See SEASON_PHASES in config/ecosystem. */

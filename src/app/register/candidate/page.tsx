@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { formatINR, pricing } from "@/config/site";
 import { CandidateForm } from "@/components/forms/CandidateForm";
 import { PageShell } from "@/components/layout/PageShell";
-import { EducationNote } from "@/components/partners/Education";
 
 export const metadata: Metadata = {
   title: "Apply as a candidate",
@@ -20,7 +19,6 @@ export default async function CandidateRegistration({ searchParams }: { searchPa
       lede={`${after ? "Applying is free. If you are shortlisted you will be asked to confirm your place" : "You will be asked to confirm your place"} with the candidate ticket (${formatINR(pricing.candidate.amount)}, food included). A ticket does not guarantee an offer: selection depends entirely on the panel’s decision.`}
     >
       <div className="mx-auto max-w-3xl">
-        <EducationNote />
         <CandidateForm defaultIndustry={industry} />
       </div>
     </PageShell>

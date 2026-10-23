@@ -36,7 +36,7 @@ export const ORG_CATEGORY_META: Record<
   },
 };
 
-export const ORG_CATEGORY_ORDER: OrgCategory[] = ["recruitment", "venue", "education", "outreach"];
+export const ORG_CATEGORY_ORDER: OrgCategory[] = ["recruitment", "venue", "outreach"];
 
 /**
  * Season phase, set by hand (see seasonPhase in src/lib/content.ts). The website never infers a phase from the
@@ -67,7 +67,6 @@ export const SPONSOR_INTERESTS = [
   "Industry Partner",
   "Community / Supporting Partner",
   "In-Kind Production Partner",
-  "Educational Partner",
   "Advertising or brand visibility",
   "Not sure yet",
 ] as const;

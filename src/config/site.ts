@@ -48,7 +48,12 @@ export const pricing = {
   /** Percentages applied on top of the base amount. */
   gstPercent: 0,
   platformFeePercent: 0,
-  maxAudienceQuantity: 6,
+  /**
+   * OPEN OWNER DECISION: the handwritten note says "after 5 -> custom" with a crossed-out "6". Quick-pick buttons
+   * stop at `quickPickMax`; larger orders use the custom field up to `maxPerOrder`. Change both numbers here and
+   * the form and the server validation follow. `maxPerOrder` is still the previous limit until the owner decides.
+   */
+  audienceTickets: { quickPickMax: 5, maxPerOrder: 6 },
   /**
    * OPEN OWNER DECISION. The reference page says registration is complete only
    * after payment, while its process lists Shortlist before Pitch. Default:
