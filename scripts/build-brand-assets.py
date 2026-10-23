@@ -28,7 +28,7 @@ def save_pair(im, base, quality_webp=82, quality_jpg=84):
 
 # ---------------------------------------------------------------- show artwork
 emb = Image.open(os.path.join(SRC, "Show_DP.png")).convert("RGB")
-for w in (640, 1024):
+for w in (96, 192, 640, 1024):
     save_pair(emb.resize((w, w), Image.LANCZOS), f"show-emblem-{w}")
 
 wm = Image.open(os.path.join(SRC, "Show.jpeg")).convert("RGB")

@@ -8,7 +8,7 @@ import { brand, socialLinks } from "@/config/site";
 import { menuGroups, primaryNav } from "@/config/nav";
 import { LiquidButton } from "../liquid/LiquidButton";
 import { MorphingModal } from "../liquid/MorphingModal";
-import { Wordmark } from "./Wordmark";
+import { LogoBadge, Wordmark } from "./Wordmark";
 
 /**
  * Slim glass navigation (one of the few places optical glass is used).
@@ -81,6 +81,10 @@ export function GlassNavigation() {
 
       <MorphingModal open={open} onClose={() => setOpen(false)} title="Site menu" origin={origin} returnFocus={openerRef} full>
         <div data-theme="dark" className="wrap pointer-events-auto grid min-h-dvh content-center gap-12 py-24 !bg-transparent">
+          <Link href="/" onClick={() => setOpen(false)} className="flex items-center gap-4 justify-self-start" aria-label={`${brand.name}, home`}>
+            <LogoBadge size={72} />
+            <span className="display text-3xl text-white/90 sm:text-4xl">{brand.name}<span className="mt-1 block text-base italic text-[#cbae76]">{brand.tagline}</span></span>
+          </Link>
           <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
             {menuGroups.map((g) => (
               <div key={g.title}>

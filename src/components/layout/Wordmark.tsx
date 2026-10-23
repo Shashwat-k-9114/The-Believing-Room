@@ -11,6 +11,19 @@ export function ArchMark({ size = 26, className = "" }: { size?: number; classNa
   );
 }
 
+/** The show logo (Show_DP) as a round badge with a gold ring. 96 and 192 px files exist for crisp small sizes. */
+export function LogoBadge({ size = 40, className = "" }: { size?: number; className?: string }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element -- tiny fixed-size logo; the optimiser would add a hop for nothing
+    <img
+      src={size > 48 ? "/brand/show-emblem-192.webp" : "/brand/show-emblem-96.webp"}
+      width={size} height={size} alt="" decoding="async"
+      className={`rounded-full object-cover ring-1 ring-[#f3e0a8]/60 shadow-[0_0_18px_-2px_rgb(203_174_118/0.45)] ${className}`}
+      style={{ width: size, height: size }}
+    />
+  );
+}
+
 /** The simplified B: the small-icon identity (same geometry as src/app/icon.svg). Gold on any dark ground. */
 export function BMark({ size = 24, className = "" }: { size?: number; className?: string }) {
   return (
@@ -35,14 +48,14 @@ export function Wordmark({ compact = false, className = "" }: { compact?: boolea
   if (compact) {
     return (
       <span className={`logo-lockup flex items-center gap-2.5 text-[#f4eee4] ${className}`}>
-        <BMark size={26} className="logo-b" />
+        <LogoBadge size={42} className="logo-b" />
         <span className="display text-[1.3rem] leading-none tracking-tight">{brand.name}</span>
       </span>
     );
   }
   return (
     <span className={`block ${className}`}>
-      <ArchMark size={30} className="mb-4 text-[var(--accent)]" />
+      <LogoBadge size={96} className="mb-5" />
       <span className="display block text-4xl leading-none sm:text-5xl">
         The Believing
         <br />

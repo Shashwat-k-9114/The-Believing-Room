@@ -1,4 +1,5 @@
 import { Hero } from "@/components/sections/Hero";
+import { StageBanner } from "@/components/sections/StageBanner";
 import {
   ActDisciplines,
   ActEcosystem,
@@ -18,6 +19,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <StageBanner />
       <ActPhilosophy />
       <ActEcosystem />
       <ActProcess />

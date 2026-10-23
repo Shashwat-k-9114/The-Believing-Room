@@ -11,7 +11,7 @@ import { ShowShelf } from "./HomeDynamic";
 import { EcosystemHome } from "../partners/Ecosystem";
 import { EducationBenefit } from "../partners/Education";
 import { Journey } from "./Journey";
-import { ArchMark } from "../layout/Wordmark";
+import { ArchMark, LogoBadge } from "../layout/Wordmark";
 
 const Eyebrow = ({ children }: { children: React.ReactNode }) => (
   <p className="eyebrow flex items-center gap-4">
@@ -356,7 +356,7 @@ export function ActManifesto() {
       <section data-theme="light" aria-labelledby="act-manifesto" className="relative isolate overflow-hidden">
         <div aria-hidden className="absolute inset-0 -z-10 bg-[radial-gradient(60%_70%_at_50%_100%,rgb(203_174_118/0.2),transparent_70%)]" />
         <div className="wrap section grid min-h-[88svh] content-center justify-items-center text-center !pt-12">
-          <ArchMark size={44} className="text-[#cbae76]" />
+          <LogoBadge size={88} />
           <Lines id="act-manifesto" as="h2" className="display h-xl mt-10 max-w-[16ch]" lines={["Talent is everywhere.", <em key="e">Opportunity shouldn’t be hidden.</em>]} />
           <Reveal delay={0.2}>
             <p className="lede mx-auto mt-8">Be one of the first candidates, companies or supporters to help build a different hiring experience.</p>

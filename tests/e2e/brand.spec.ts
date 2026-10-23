@@ -33,11 +33,11 @@ test.describe("brand assets and identity", () => {
     expect(JSON.stringify(ld)).not.toMatch(/startDate|aggregateRating|review|\d{4}-\d{2}-\d{2}/);
   });
 
-  test("header shows the B mark in an accessible home link and keeps the menu working", async ({ page }) => {
+  test("header shows the show logo in an accessible home link and keeps the menu working", async ({ page }) => {
     await skipIntro(page);
     await page.goto("/the-show");
     const home = page.getByRole("link", { name: /The Believing Room, home/ });
-    await expect(home.locator("svg.logo-b")).toBeVisible();
+    await expect(home.locator("img.logo-b")).toBeVisible();
     await home.hover();
     await page.mouse.wheel(0, 600);
     await expect(home).toBeVisible();
@@ -56,7 +56,7 @@ test.describe("brand assets and identity", () => {
     await page.goto("/");
     const home = page.getByRole("link", { name: /The Believing Room, home/ });
     await home.hover();
-    const t = await home.locator("svg.logo-b").evaluate((el) => getComputedStyle(el).transform);
+    const t = await home.locator("img.logo-b").evaluate((el) => getComputedStyle(el).transform);
     expect(t).toBe("none");
     await ctx.close();
   });

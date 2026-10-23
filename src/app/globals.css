@@ -471,3 +471,12 @@ a:hover .logo-lockup .logo-b, a:focus-visible .logo-lockup .logo-b { transform: 
 @keyframes curtain-gone { to { visibility: hidden; } }
 html[data-curtain="seen"] #curtain-intro { display: none; }
 @media (prefers-reduced-motion: reduce) { #curtain-intro { display: none; } }
+
+/* Home banner: one beam of light crosses the stage when the banner is revealed. */
+@keyframes stage-sweep { from { left: -40%; opacity: 0; } 12% { opacity: 1; } to { left: 120%; opacity: 0; } }
+.stage-beam {
+  position: absolute; top: -10%; bottom: -10%; width: 26%; left: -40%; opacity: 0; pointer-events: none; mix-blend-mode: screen; transform: skewX(-14deg);
+  background: linear-gradient(100deg, transparent, rgb(255 236 190 / 0.34) 50%, transparent);
+}
+.reveal.in .stage-beam { animation: stage-sweep 2.2s cubic-bezier(0.5, 0, 0.3, 1) 0.4s both; }
+@media (prefers-reduced-motion: reduce) { .stage-beam { display: none; } }
