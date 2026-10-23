@@ -24,7 +24,7 @@ export function LogoBadge({ size = 40, className = "" }: { size?: number; classN
   );
 }
 
-/** The simplified B: the small-icon identity (same geometry as src/app/icon.svg). Gold on any dark ground. */
+/** The simplified B: the small-icon identity. Gold on any dark ground. */
 export function BMark({ size = 24, className = "" }: { size?: number; className?: string }) {
   return (
     <svg width={size} height={size} viewBox="0 0 64 64" aria-hidden className={className}>
