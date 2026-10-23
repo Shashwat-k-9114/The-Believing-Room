@@ -1,5 +1,5 @@
 /**
- * Opening-night curtains: two velvet panels part over the page to reveal it, with the B mark on the closed curtain.
+ * Opening-night curtains: two velvet panels part over the page to reveal it, with the logo on the closed curtain.
  *
  * Pure markup and CSS (see "curtain intro" in globals.css). It needs no script to run and ends on its own, so it can
  * never leave the page covered. It is decorative (aria-hidden), never intercepts clicks, plays on every full page
@@ -19,8 +19,8 @@ export function CurtainIntro() {
       <div className="curtain curtain-l" />
       <div className="curtain curtain-r" />
       <div className="curtain-logo">
-        {/* eslint-disable-next-line @next/next/no-img-element -- a 2 KB SVG that must paint immediately; no optimiser needed */}
-        <img src="/brand/b-mark.svg" width={96} height={96} alt="" fetchPriority="high" decoding="async" />
+        {/* eslint-disable-next-line @next/next/no-img-element -- the logo must paint immediately; no optimiser needed */}
+        <img src="/brand/show-emblem-640.webp" width={168} height={168} alt="" fetchPriority="high" decoding="async" />
         <span>The Believing Room</span>
       </div>
     </div>

@@ -444,7 +444,7 @@ a:hover .logo-lockup .logo-b, a:focus-visible .logo-lockup .logo-b { transform: 
   position: absolute; top: 0; bottom: 0; width: 50.4%;
   background:
     repeating-linear-gradient(90deg, rgb(0 0 0 / 0.34) 0 1.6%, rgb(255 255 255 / 0.05) 1.6% 3.2%, transparent 3.2% 6.4%),
-    linear-gradient(180deg, #5a1229 0%, #3a0c1d 55%, #25070f 100%);
+    linear-gradient(180deg, #4b2a73 0%, #2f1850 55%, #1c0e33 100%);
   box-shadow: inset 0 -90px 120px -60px rgb(0 0 0 / 0.65);
   animation-duration: 1.15s; animation-timing-function: cubic-bezier(0.7, 0, 0.25, 1); animation-delay: 0.95s; animation-fill-mode: forwards;
   will-change: transform;
@@ -458,7 +458,7 @@ a:hover .logo-lockup .logo-b, a:focus-visible .logo-lockup .logo-b { transform: 
   position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 1rem; text-align: center;
   opacity: 0; animation: curtain-logo 1.45s ease-in-out 0.1s forwards;
 }
-.curtain-logo img { width: clamp(72px, 16vw, 112px); height: auto; border-radius: 22%; box-shadow: 0 0 0 1px rgb(243 224 168 / 0.55), 0 0 60px 8px rgb(203 174 118 / 0.35); }
+.curtain-logo img { width: clamp(96px, 22vw, 168px); height: auto; border-radius: 22%; box-shadow: 0 0 0 1px rgb(243 224 168 / 0.55), 0 0 60px 8px rgb(203 174 118 / 0.35); }
 .curtain-logo span { font-family: var(--font-display); font-size: clamp(1.1rem, 3.4vw, 1.6rem); letter-spacing: 0.32em; text-transform: uppercase; color: #f3e0a8; text-shadow: 0 1px 12px rgb(0 0 0 / 0.6); }
 @keyframes curtain-open-l { to { transform: translateX(-108%) skewX(-2deg); } }
 @keyframes curtain-open-r { to { transform: translateX(108%) skewX(-2deg); } }

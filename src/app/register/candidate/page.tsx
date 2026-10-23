@@ -6,7 +6,7 @@ import { EducationNote } from "@/components/partners/Education";
 
 export const metadata: Metadata = {
   title: "Apply as a candidate",
-  description: "Apply to pitch to industry panels at The Believing Room. Applying is free; the candidate ticket (₹500, food included) is requested on shortlisting.",
+  description: "Apply to pitch to industry panels at The Believing Room. Applying is free; the candidate ticket (₹1,000, food included) is requested on shortlisting.",
   alternates: { canonical: "/register/candidate" },
 };
 

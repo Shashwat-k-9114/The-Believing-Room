@@ -3,7 +3,7 @@ import { brand } from "@/config/site";
 import { industries } from "@/content/industries";
 import { publicEpisodes, publicEvents } from "@/lib/content";
 
-const STATIC = ["", "/about", "/how-it-works", "/industries", "/partners", "/sponsors", "/events", "/register/candidate", "/register/audience", "/for-recruiters", "/for-colleges", "/the-show", "/episodes", "/podcast", "/stories", "/faq", "/contact", "/privacy", "/terms", "/refund-policy", "/media-consent"];
+const STATIC = ["", "/about", "/how-it-works", "/industries", "/partners", "/sponsors", "/events", "/register/candidate", "/register/audience", "/for-recruiters", "/for-colleges", "/the-show", "/episodes", "/podcast", "/stories", "/faq", "/contact", "/links","/privacy", "/terms", "/refund-policy", "/media-consent"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const events = publicEvents();

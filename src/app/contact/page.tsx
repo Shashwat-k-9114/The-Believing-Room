@@ -17,6 +17,7 @@ export default function Contact() {
         <div className="prose-arena">
           <h2>Direct</h2>
           {brand.contactEmail ? <p><a href={`mailto:${brand.contactEmail}`}>{brand.contactEmail}</a></p> : <p>A public email address and phone number will be listed here once they are set up. Until then, use the form.</p>}
+          <p>Every channel in one place: <a href="/links">all our links</a>.</p>
           <h2>For parents</h2>
           <p>Read the <a href="/faq">FAQ</a>, the <a href="/terms">terms</a> and the <a href="/refund-policy">refund policy</a>. Nothing is charged to apply, and a ticket never promises an internship.</p>
         </div>

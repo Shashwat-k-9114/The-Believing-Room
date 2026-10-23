@@ -263,7 +263,7 @@ export function ActPodcast() {
             <Lines id="act-podcast" as="h2" className="display h-xl mt-8" lines={["Conversations before", <em key="e">the first job.</em>]} />
             <Reveal delay={0.15}>
               <p className="lede mt-8">Long-form interviews with founders, hiring managers, interns and mentors about ambition, recruitment and how careers actually begin. Intelligent and conversational, not motivational.</p>
-              <p className="mt-6 max-w-[56ch] text-sm text-[var(--fg-faint)]">Recordings are planned for the podcast room made available through Amity Greater Noida. Recording equipment and production are arranged separately by The Believing Room.</p>
+              <p className="mt-6 max-w-[56ch] text-sm text-[var(--fg-faint)]">Recording location to be announced. Equipment and production are arranged by The Believing Room.</p>
               <p className="eyebrow mt-6">Coming soon · no episodes published yet</p>
               <div className="mt-8"><LiquidButton href="/podcast" variant="glass" size="lg">The podcast</LiquidButton></div>
             </Reveal>
@@ -324,7 +324,7 @@ export function ActSponsor() {
             <Lines id="act-sponsor" as="h2" className="display h-xl mt-8" lines={["Help make", <em key="e">opportunity visible.</em>]} />
             <Reveal delay={0.15}>
               <p className="lede mt-8">
-                The venue is provided. Filming, audio, lighting, postproduction, hospitality and event operations still need support. Founding partners are being invited to help produce a first season that is honest, well made and useful to students.
+                The venue is yet to be announced. Filming, audio, lighting, postproduction, hospitality and event operations still need support. Founding partners are being invited to help produce a first season that is honest, well made and useful to students.
               </p>
               <div className="mt-9 flex flex-wrap gap-3">
                 <LiquidButton href="/sponsors" variant="primary" size="lg">Explore partnership</LiquidButton>

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { publicEvents, publicOrganizations, seasonPhase, targetWindow } from "@/lib/content";
+import { publicEvents, seasonPhase, targetWindow } from "@/lib/content";
 import { phaseMeta } from "@/config/ecosystem";
 import { formatINR, inclusions, pricing, season } from "@/config/site";
 import { industries } from "@/content/industries";
@@ -19,14 +19,14 @@ export const metadata: Metadata = {
 };
 
 async function SeasonOverview() {
-  const [phaseKey, venue, target] = await Promise.all([seasonPhase(), publicOrganizations("venue"), targetWindow()]);
+  const [phaseKey, target] = await Promise.all([seasonPhase(), targetWindow()]);
   const phase = phaseMeta(phaseKey);
   const slot = season.slot;
   const rows: [string, string][] = [
     ["Status", phase.label],
     ["Date", season.date ?? "To be announced"],
     ...(target && !season.date ? ([["Target window", `${target} · a target, not a confirmed date`]] as [string, string][]) : []),
-    ["Location", "Greater Noida"],
+    ["Venue", "To be announced"],
     ["Industries", industries.map((i) => i.short).join(" · ")],
     ["Candidate ticket", `${formatINR(pricing.candidate.amount)} · food included · planned`],
     ["Audience ticket", `${formatINR(pricing.audience.amount)} · food included · planned`],
@@ -66,8 +66,7 @@ async function SeasonOverview() {
           <div>
             <p className="eyebrow">Venue</p>
             <p className="mt-3 text-[var(--fg-dim)]">
-              {venue.length ? `Facilities are provided by ${venue.map((v) => v.name).join(", ")} at no charge: an auditorium and a podcast room. ` : ""}
-              The exact venue name, address and access details will be published once confirmed. Filming and audio equipment are arranged separately.
+              The venue is yet to be announced. Its name, address and access details will be published once confirmed. Filming and audio equipment are arranged separately.
             </p>
           </div>
           <div>

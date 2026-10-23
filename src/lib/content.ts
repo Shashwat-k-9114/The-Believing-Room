@@ -86,11 +86,6 @@ const organizations: PublicOrganization[] = [
   org({ slug: "krvvy", name: "KRVVY", category: "recruitment", role: RECRUITING }),
   org({ slug: "immverse-ai", name: "Immverse AI", category: "recruitment", role: RECRUITING }),
   org({ slug: "galvanic", name: "Galvanic", category: "recruitment", role: RECRUITING }),
-  org({
-    slug: "amity-greater-noida", name: "Amity Greater Noida", category: "venue",
-    role: "Provides an auditorium and a podcast room at no charge.",
-    description: "Facilities only. Cameras, lighting, microphones, recording equipment and crews are arranged separately by The Believing Room.",
-  }),
   org({ slug: "futured-innovation-studios", name: "Futured Innovation Studios", category: "education", role: "Provides its courses to candidates free of charge." }),
   org({
     slug: "bit-noida", name: "BIT Noida", category: "outreach",

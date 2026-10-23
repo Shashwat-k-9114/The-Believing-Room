@@ -51,17 +51,14 @@ describe("ecosystem content (confirmed facts only)", () => {
     const orgs = publicOrganizations();
     const by = (c: string) => orgs.filter((o) => o.category === c).map((o) => o.name).sort();
     expect(by("recruitment")).toEqual(["Galvanic", "Immverse AI", "KRVVY", "Manacle"]);
-    expect(by("venue")).toEqual(["Amity Greater Noida"]);
+    expect(by("venue")).toEqual([]);
     expect(by("education")).toEqual(["Futured Innovation Studios"]);
     expect(by("outreach")).toEqual(["BIT Noida"]);
     expect(orgs.every((o) => o.logoPath === null)).toBe(true);
   });
 
-  it("describes the venue as facilities only, not sponsorship or production", () => {
-    const [venue] = publicOrganizations("venue");
-    expect(venue.role).toMatch(/no charge/i);
-    expect(venue.description).toMatch(/arranged separately/i);
-    expect(JSON.stringify(venue)).not.toMatch(/sponsor/i);
+  it("names no venue until one is confirmed", () => {
+    expect(publicOrganizations("venue")).toEqual([]);
   });
 
   it("invents no roles, openings or stipends", () => {

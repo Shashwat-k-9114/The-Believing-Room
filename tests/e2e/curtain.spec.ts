@@ -11,7 +11,7 @@ test.describe("curtain intro", () => {
     await page.goto("/");
     const intro = page.locator("#curtain-intro");
     await expect(intro).toHaveAttribute("aria-hidden", "true");
-    await expect(page.locator(".curtain-logo img")).toHaveAttribute("src", "/brand/b-mark.svg");
+    await expect(page.locator(".curtain-logo img")).toHaveAttribute("src", "/brand/show-emblem-640.webp");
     await expect(page.locator(".curtain-logo")).toContainText("The Believing Room");
 
     // Early: the two panels meet in the middle, covering the whole viewport.

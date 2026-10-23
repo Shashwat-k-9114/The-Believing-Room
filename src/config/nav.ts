@@ -41,6 +41,7 @@ export const menuGroups = [
     links: [
       { href: "/faq", label: "Questions" },
       { href: "/contact", label: "Contact" },
+      { href: "/links", label: "All our links" },
     ],
   },
 ];

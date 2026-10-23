@@ -40,11 +40,11 @@ test.describe("public site", () => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toContainText(/opportunity/i);
     const hero = page.locator("#hero-title").locator("xpath=ancestor::section");
-    await expect(hero).toContainText("₹500");
+    await expect(hero).toContainText("₹1,000");
     await expect(hero).toContainText("₹300");
     await expect(hero).toContainText(/food included/i);
     const main = page.locator("main");
-    for (const org of ["Manacle", "KRVVY", "Immverse AI", "Galvanic", "Futured Innovation Studios", "Amity Greater Noida", "BIT Noida"]) {
+    for (const org of ["Manacle", "KRVVY", "Immverse AI", "Galvanic", "Futured Innovation Studios", "BIT Noida"]) {
       await expect(main, org).toContainText(org);
     }
     await page.getByRole("link", { name: "Apply as a Candidate" }).first().click();
@@ -55,7 +55,8 @@ test.describe("public site", () => {
     await page.goto("/partners");
     const main = page.locator("main");
     await expect(main).toContainText(/free of charge/i);
-    await expect(main).toContainText(/not financial sponsorship/i);
+    await expect(main).toContainText(/not a cash sponsor/i);
+    await expect(main).not.toContainText(/amity/i);
     const text = (await page.locator("body").innerText()).toLowerCase();
     for (const banned of ["65,000", "65000", "quotation", "advance"]) expect(text, banned).not.toContain(banned);
   });
@@ -216,5 +217,19 @@ test.describe("security boundaries", () => {
     }
     expect(statuses).toContain(429);
     expect(statuses.slice(0, 5).every((s) => s === 201)).toBe(true);
+  });
+});
+
+test.describe("links page", () => {
+  test("is a standalone link-in-bio page with every channel and no site chrome", async ({ page }) => {
+    await page.goto("/links");
+    await expect(page.getByRole("heading", { level: 1 })).toContainText("The Believing Room");
+    await expect(page.locator("header[data-theme=dark]").first()).toBeHidden(); // site navigation is hidden here
+    for (const name of ["YouTube", "Instagram", "LinkedIn", "X", "Reddit", "Email", "Apply to pitch"]) {
+      await expect(page.getByRole("link", { name: new RegExp(name) }).first()).toBeVisible({ timeout: 8000 });
+    }
+    await expect(page.getByRole("link", { name: /LinkedIn/ })).toHaveAttribute("href", "https://www.linkedin.com/company/the-believing-room/");
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
   });
 });

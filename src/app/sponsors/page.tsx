@@ -8,7 +8,7 @@ import { publicOrganizations, publicSponsorshipPackages, targetWindow } from "@/
 
 export const metadata: Metadata = {
   title: "Sponsor the room",
-  description: "Partner with The Believing Room, an early-career recruitment show and podcast. Proposed founding partnership formats, how the venue and production are supported, and a working enquiry form.",
+  description: "Partner with The Believing Room, an early-career recruitment show and podcast. Proposed founding partnership formats, how production is supported, and a working enquiry form.",
   alternates: { canonical: "/sponsors" },
 };
 
@@ -120,7 +120,7 @@ export default function Sponsors() {
         </Reveal>
         <Reveal delay={0.1}>
           <p className="lede">
-            The venue facilities, an auditorium and a podcast room, are offered at no hire charge. Producing a season still takes professional filming, audio, lighting, postproduction, hospitality for candidates and guests, educational content and event operations.
+            The venue is yet to be announced. Producing a season takes professional filming, audio, lighting, postproduction, hospitality for candidates and guests, educational content and event operations.
           </p>
           <p className="mt-5 max-w-[58ch] text-[var(--fg-dim)]">
             Founding commercial partners are being sought to help meet those costs. We do not claim that any funding has been secured.

@@ -43,6 +43,11 @@ for w in (704, 1408):
     h = round(768 * w / 1408)
     save_pair(wm.resize((w, h), Image.LANCZOS) if w != 1408 else wm, f"show-wordmark-{w}")
 
+# ---------------------------------------------------------------- LinkedIn banner (2172x724), used on /links
+bn = Image.open(os.path.join(SRC, "linkedin-banner-tbr.png")).convert("RGB")
+for w in (1000, 2000):
+    save_pair(bn.resize((w, round(724 * w / 2172)), Image.LANCZOS), f"tbr-banner-{w}")
+
 # ---------------------------------------------------------------- the simplified B (one geometry, SVG + raster)
 OUTER = "M16 17 L23 10 H37 C46 10 51.5 14.5 51.5 21.5 C51.5 26.5 48.5 30 44 31.5 C50 33 54.5 37 54.5 43 C54.5 50.5 48.5 54 39.5 54 H16 Z"
 C1 = "M25 18.5 V27.5 H35 C38.8 27.5 41 25.8 41 23 C41 20.2 38.8 18.5 35 18.5 Z"

@@ -18,7 +18,7 @@ export const brand = {
   social: {
     youtube: "https://youtube.com/@thebelievingroom",
     instagram: "https://www.instagram.com/the.believing.room/",
-    linkedin: "https://www.linkedin.com/in/the-believing-room-521503427/",
+    linkedin: "https://www.linkedin.com/company/the-believing-room/",
     x: "https://x.com/thbelievingroom",
     reddit: "https://www.reddit.com/user/thebelievingroom/",
   },
@@ -42,7 +42,7 @@ export const socialLinks = [
 /** Owner-confirmed prices, whole rupees. Never hardcode a price anywhere else. */
 export const pricing = {
   currency: "INR",
-  candidate: { label: "Candidate ticket", amount: 500 },
+  candidate: { label: "Candidate ticket", amount: 1000 },
   audience: { label: "Audience ticket", amount: 300 },
   foodIncluded: true,
   /** Percentages applied on top of the base amount. */
