@@ -10,7 +10,7 @@ import { DisciplineMark } from "./DisciplineMark";
 import { ShowShelf } from "./HomeDynamic";
 import { EcosystemHome } from "../partners/Ecosystem";
 import { Journey } from "./Journey";
-import { ArchMark, LogoBadge } from "../layout/Wordmark";
+import { LogoBadge } from "../layout/Wordmark";
 
 const Eyebrow = ({ children }: { children: React.ReactNode }) => (
   <p className="eyebrow flex items-center gap-4">
@@ -169,6 +169,8 @@ export function ActInside() {
   );
 }
 
+const CARD = "hover-lift flex h-full flex-col rounded-[1.2rem] border p-8 sm:p-9";
+
 /* ------------------------ Act VII: Your place ------------------------------ */
 export function ActPlace() {
   const afterShortlist = pricing.candidatePaymentStage === "after_shortlist";
@@ -180,19 +182,19 @@ export function ActPlace() {
           <Reveal><Eyebrow>Three ways in</Eyebrow></Reveal>
           <Lines id="act-place" as="h2" className="display h-xl mt-8 max-w-[14ch]" lines={["There is a place", <em key="e">for you in the room.</em>]} />
 
-          <div className="mt-16 grid gap-10 lg:grid-cols-[1.25fr_1fr_1fr] lg:gap-14">
-            {/* The one signature glass moment: the candidate ticket */}
+          <div className="mt-16 grid gap-6 lg:grid-cols-3 lg:gap-8">
+            {/* Three cards of one family; the candidate card is the highlighted one. */}
             <Reveal>
-              <article data-theme="dark" className="glass relative flex h-full flex-col overflow-hidden p-8 sm:p-10 [--r:1.2rem]" style={{ background: "linear-gradient(160deg,#2d2238,#160f1c 70%)" }}>
-                <ArchMark size={34} className="text-[#cbae76]" />
-                <p className="eyebrow mt-8">Candidate</p>
-                <p className="display mt-3 text-7xl leading-none sm:text-8xl" aria-label={`${formatINR(pricing.candidate.amount)} candidate ticket`}>{formatINR(pricing.candidate.amount)}</p>
+              <article className={`${CARD} hover-lift-gold relative border-[#b8975a] bg-[var(--bg-raised)] shadow-[0_0_0_1px_#b8975a,0_24px_60px_-24px_rgb(184_151_90/0.55)]`}>
+                <span aria-hidden className="absolute inset-x-8 top-0 h-[3px] rounded-b-full bg-[#b8975a]" />
+                <p className="eyebrow">Candidate</p>
+                <p className="display mt-3 text-6xl leading-none" aria-label={`${formatINR(pricing.candidate.amount)} candidate ticket`}>{formatINR(pricing.candidate.amount)}</p>
                 <p className="mt-2 text-sm text-[var(--fg-faint)]">Candidate ticket · food included</p>
                 <p className="mt-6 text-[var(--fg-dim)]">Put your skills, story and personality in front of real hiring decision-makers.</p>
-                <ul className="mt-6 grid gap-2 text-sm text-[var(--fg-dim)]">
+                <ul className="mt-5 grid gap-2 text-sm text-[var(--fg-dim)]">
                   {[...inclusions.both, ...inclusions.candidate].map((f) => <li key={f} className="border-t border-[var(--line)] pt-2">{f}</li>)}
                 </ul>
-                <p className="mt-6 text-xs text-[var(--fg-faint)]">
+                <p className="mt-5 text-xs text-[var(--fg-faint)]">
                   {afterShortlist ? "Applying is free; the ticket is requested after you are shortlisted. " : "Payable when you register. "}Not a guarantee of an offer. Selection depends entirely on the panel’s decision.
                 </p>
                 <div className="mt-auto pt-8"><LiquidButton href="/register/candidate" variant="primary" size="lg" className="w-full">Apply as a Candidate</LiquidButton></div>
@@ -200,22 +202,23 @@ export function ActPlace() {
             </Reveal>
 
             <Reveal delay={0.1}>
-              <article className="flex h-full flex-col border-t border-[var(--fg)] pt-8">
+              <article className={`${CARD} border-[var(--line)] bg-[var(--bg-raised)]`}>
                 <p className="eyebrow">Hiring companies</p>
-                <h3 className="display mt-3 text-5xl">Recruiter</h3>
-                <p className="mt-5 text-[var(--fg-dim)]">Meet candidates, evaluate their potential and offer meaningful internship opportunities.</p>
-                <p className="mt-4 text-sm text-[var(--fg-faint)]">Participation is by enquiry. No hiring outcome or media reach is promised.</p>
-                <div className="mt-auto pt-8"><LiquidButton href="/for-recruiters" variant="glass" size="lg">Apply as a Recruiter</LiquidButton></div>
+                <h3 className="display mt-3 text-6xl leading-none">Recruiter</h3>
+                <p className="mt-2 text-sm text-[var(--fg-faint)]">Participation by enquiry</p>
+                <p className="mt-6 text-[var(--fg-dim)]">Meet candidates, evaluate their potential and offer meaningful internship opportunities.</p>
+                <p className="mt-5 text-xs text-[var(--fg-faint)]">No hiring outcome or media reach is promised.</p>
+                <div className="mt-auto pt-8"><LiquidButton href="/for-recruiters" variant="glass" size="lg" className="w-full">Apply as a Recruiter</LiquidButton></div>
               </article>
             </Reveal>
 
             <Reveal delay={0.2}>
-              <article className="flex h-full flex-col border-t border-[var(--fg)] pt-8">
+              <article className={`${CARD} border-[var(--line)] bg-[var(--bg-raised)]`}>
                 <p className="eyebrow">Audience</p>
-                <p className="display mt-3 text-7xl leading-none" aria-label={`${formatINR(pricing.audience.amount)} audience ticket`}>{formatINR(pricing.audience.amount)}</p>
+                <p className="display mt-3 text-6xl leading-none" aria-label={`${formatINR(pricing.audience.amount)} audience ticket`}>{formatINR(pricing.audience.amount)}</p>
                 <p className="mt-2 text-sm text-[var(--fg-faint)]">Audience ticket · food included</p>
-                <p className="mt-5 text-[var(--fg-dim)]">Follow the journey, learn from real interviews and join the community.</p>
-                <div className="mt-auto pt-8"><LiquidButton href="/register/audience" variant="glass" size="lg">Audience tickets</LiquidButton></div>
+                <p className="mt-6 text-[var(--fg-dim)]">Follow the journey, learn from real interviews and join the community.</p>
+                <div className="mt-auto pt-8"><LiquidButton href="/register/audience" variant="glass" size="lg" className="w-full">Audience tickets</LiquidButton></div>
               </article>
             </Reveal>
           </div>

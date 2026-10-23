@@ -346,6 +346,13 @@ html:not(.js) .reveal { opacity: 1; transform: none; }
 }
 .skip-link:focus { top: 1rem; }
 
+/* Card lift: rises a few pixels with a deeper shadow on hover or keyboard focus. Pointer devices only, and off for reduced motion. */
+.hover-lift { transition: transform 0.5s var(--ease-cinema), box-shadow 0.5s var(--ease-cinema), border-color 0.4s; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .hover-lift:hover, .hover-lift:focus-within { transform: translateY(-6px); box-shadow: 0 26px 50px -26px rgb(22 15 28 / 0.4); border-color: color-mix(in srgb, var(--fg) 32%, transparent); }
+  .hover-lift-gold:hover, .hover-lift-gold:focus-within { transform: translateY(-8px); box-shadow: 0 0 0 1px #b8975a, 0 34px 64px -24px rgb(184 151 90 / 0.7); border-color: #b8975a; }
+}
+
 /* Underlined editorial link */
 .link-u { background-image: linear-gradient(currentColor, currentColor); background-size: 100% 1px; background-position: 0 100%; background-repeat: no-repeat; background-origin: content-box; padding-block: 0.65rem; /* hit area only: vertical padding on an inline link does not move the lines around it */ transition: background-size 0.5s var(--ease-cinema); }
 .link-u:hover { background-size: 0 1px; background-position: 100% 100%; }

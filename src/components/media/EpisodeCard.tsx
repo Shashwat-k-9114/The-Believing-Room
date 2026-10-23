@@ -15,7 +15,7 @@ export function EpisodeCard({ ep }: { ep: Episode }) {
   const ind = industries.find((i) => i.slug === ep.industry);
   const meta = [ep.season && ep.number ? `S${ep.season} · E${ep.number}` : null, ind?.short, fmtDuration(ep.durationSec)].filter(Boolean).join("  ·  ");
   return (
-    <Link href={`/episodes/${ep.slug}`} className="group glass block overflow-hidden [--r:1.4rem]">
+    <Link href={`/episodes/${ep.slug}`} className="group glass hover-lift block overflow-hidden [--r:1.4rem]">
       <div className="relative aspect-video bg-graphite">
         {thumb && (
           // eslint-disable-next-line @next/next/no-img-element
