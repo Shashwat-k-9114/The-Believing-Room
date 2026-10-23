@@ -7,7 +7,7 @@ async function skipIntro(page: Page) {
 test.describe("brand assets and identity", () => {
   test("favicon, app icons, manifest and social images are served as the right types", async ({ request }) => {
     const want: [string, RegExp][] = [
-      ["/icon.svg", /image\/svg/], ["/favicon.ico", /image\/(x-icon|vnd\.microsoft\.icon)/], ["/apple-icon.png", /image\/png/],
+      ["/icon.png", /image\/png/], ["/favicon.ico", /image\/(x-icon|vnd\.microsoft\.icon)/], ["/apple-icon.png", /image\/png/],
       ["/brand/icon-192.png", /image\/png/], ["/brand/icon-512.png", /image\/png/], ["/brand/icon-maskable-512.png", /image\/png/],
       ["/manifest.webmanifest", /json/], ["/opengraph-image", /image\/png/], ["/twitter-image", /image\/png/],
       ["/brand/show-emblem-1024.webp", /image\/webp/], ["/brand/show-wordmark-1408.webp", /image\/webp/],
