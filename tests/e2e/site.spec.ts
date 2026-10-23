@@ -1,5 +1,3 @@
-import fs from "node:fs";
-import path from "node:path";
 import { expect, test, type Page } from "@playwright/test";
 
 const ROUTES = [
@@ -107,8 +105,8 @@ test.describe("public site", () => {
 
   test("sponsor API rejects missing consent and foreign origins", async ({ request }) => {
     const body = { organization: "X Ltd", contactName: "A B", role: "Head", email: "a@x.com", category: "business", interest: "Not sure yet", consentContact: true, consentNoGuarantee: true };
-    expect((await request.post("/api/enquiry/sponsor", { data: body })).status()).toBe(403);
-    const bad = await request.post("/api/enquiry/sponsor", { headers: { origin: "http://localhost:3217" }, data: { ...body, consentNoGuarantee: false } });
+    expect((await request.post("/api/submit/sponsor", { data: body })).status()).toBe(403);
+    const bad = await request.post("/api/submit/sponsor", { headers: { origin: "http://localhost:3217" }, data: { ...body, consentNoGuarantee: false } });
     expect(bad.status()).toBe(422);
   });
 
@@ -120,12 +118,19 @@ test.describe("public site", () => {
     await expect(page.locator("main")).not.toContainText(/views/i);
   });
 
-  test("audience tickets are unavailable, not faked, when no event/payments", async ({ page, request }) => {
+  test("audience registration saves interest and takes no payment", async ({ page }) => {
     await page.goto("/register/audience");
-    await expect(page.locator("main")).toContainText(/aren’t available to buy/);
     await expect(page.getByRole("button", { name: /^Pay/ })).toHaveCount(0);
-    const res = await request.post("/api/audience/order", { headers: { origin: "http://localhost:3217" }, data: { name: "X Y", email: "x@y.com", phone: "9876543210", quantity: 1, consentTerms: true, consentPrivacy: true, consentFilming: true } });
-    expect(res.status()).toBe(503);
+    await page.getByLabel("Your name").fill("Ravi Kumar");
+    await page.getByLabel("Mobile number").fill("9876543210");
+    await page.getByLabel("Email").fill("ravi.e2e@example.com");
+    await page.getByLabel(/ticket terms/).check();
+    await page.getByLabel(/privacy notice/).check();
+    await page.getByLabel(/event is filmed/).check();
+    await page.getByRole("button", { name: "Register interest" }).click();
+    const ok = page.getByRole("status").filter({ hasText: "on the list" });
+    await expect(ok).toContainText(/TBR-A-[A-Z0-9]{6}/);
+    await expect(ok).toContainText(/Nothing has been charged/);
   });
 
   test("prices appear consistently from config", async ({ page }) => {
@@ -176,58 +181,25 @@ test.describe("student application", () => {
     await expect(ok).toContainText(/not\s+being selected/);
   });
 
-  test("server rejects bad input, wrong origin, fake PDFs; accepts a real PDF", async ({ request }) => {
+  test("server rejects bad input and wrong origin; accepts a valid application", async ({ request }) => {
     const base = { fullName: "Test User", email: "t@example.com", phone: "9876543210", college: "X College", course: "BCA", gradYear: new Date().getFullYear() + 1, industry: "it-technology", skills: "Go, SQL", pitchSummary: "A short but sufficiently long pitch summary for the validator to accept.", consentTerms: true, consentPrivacy: true };
     const origin = { origin: "http://localhost:3217" };
 
-    const noOrigin = await request.post("/api/candidate", { multipart: { data: JSON.stringify(base) } });
-    expect(noOrigin.status()).toBe(403);
+    expect((await request.post("/api/submit/candidate", { data: base })).status()).toBe(403);
 
-    const bad = await request.post("/api/candidate", { headers: origin, multipart: { data: JSON.stringify({ ...base, consentPrivacy: false, email: "nope" }) } });
+    const bad = await request.post("/api/submit/candidate", { headers: origin, data: { ...base, consentPrivacy: false, email: "nope" } });
     expect(bad.status()).toBe(422);
     const body = await bad.json();
     expect(body.fields.consentPrivacy).toBeTruthy();
     expect(body.fields.email).toBeTruthy();
 
-    const fake = await request.post("/api/candidate", { headers: origin, multipart: { data: JSON.stringify(base), resume: { name: "cv.pdf", mimeType: "application/pdf", buffer: Buffer.from("MZ not a pdf") } } });
-    expect(fake.status()).toBe(422);
-    expect((await fake.json()).fields.resume).toMatch(/PDF/);
-
-    const pdf = await request.post("/api/candidate", { headers: origin, multipart: { data: JSON.stringify({ ...base, email: "pdf.e2e@example.com" }), resume: { name: "cv.pdf", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.4\n1 0 obj<<>>endobj\n%%EOF") } } });
-    expect(pdf.status()).toBe(201);
-    expect((await pdf.json()).ref).toMatch(/^TBR-C-/);
+    const good = await request.post("/api/submit/candidate", { headers: origin, data: base });
+    expect(good.status()).toBe(201);
+    expect((await good.json()).ref).toMatch(/^TBR-C-/);
   });
 });
 
 test.describe("security boundaries", () => {
-  test("webhook rejects unsigned and wrongly signed payloads", async ({ request }) => {
-    const body = JSON.stringify({ event: "payment.captured", payload: { payment: { entity: { id: "pay_x", order_id: "order_x", amount: 30000, status: "captured" } } } });
-    expect((await request.post("/api/webhooks/razorpay", { data: body, headers: { "content-type": "application/json" } })).status()).toBe(400);
-    expect((await request.post("/api/webhooks/razorpay", { data: body, headers: { "content-type": "application/json", "x-razorpay-signature": "deadbeef", "x-razorpay-event-id": "e1" } })).status()).toBe(400);
-  });
-
-  test("checkout verify rejects forged signatures", async ({ request }) => {
-    const res = await request.post("/api/audience/verify", { headers: { origin: "http://localhost:3217" }, data: { providerOrderId: "order_forged", providerPaymentId: "pay_forged", signature: "0".repeat(64) } });
-    expect(res.status()).toBe(400);
-  });
-
-  test("admin is closed to anonymous users everywhere", async ({ page, request }) => {
-    await page.goto("/admin");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText(/sign/i);
-    await expect(page.locator("body")).not.toContainText("Applications");
-    expect((await request.get("/api/admin/resume/00000000-0000-0000-0000-000000000000")).status()).toBe(401);
-    const login = await request.post("/api/admin/login", { headers: { origin: "http://localhost:3217" }, data: { password: "definitely-wrong-password" } });
-    expect(login.status()).toBe(401);
-    // forged cookie
-    const forged = await request.get("/admin?tab=students", { headers: { cookie: "arena_admin=eyJleHAiOjk5OTk5OTk5OTk5OTl9.deadbeef" } });
-    expect(await forged.text()).not.toContain("Control");
-  });
-
-  test("ticket page leaks nothing for unknown refs or wrong tokens", async ({ page }) => {
-    await page.goto("/tickets/ARN-A-AAAAAA?k=wrong");
-    await expect(page.getByRole("heading", { level: 1 })).toContainText(/not found/i);
-  });
-
   test("security headers are present", async ({ request }) => {
     const h = (await request.get("/")).headers();
     expect(h["content-security-policy"]).toContain("frame-ancestors 'none'");
@@ -239,140 +211,10 @@ test.describe("security boundaries", () => {
   test("public endpoints are rate limited", async ({ request }) => {
     const statuses: number[] = [];
     for (let i = 0; i < 8; i++) {
-      const r = await request.post("/api/contact", { headers: { origin: "http://localhost:3217" }, data: { name: "Rate Tester", email: "rate@example.com", topic: "other", message: "Testing the limiter now." } });
+      const r = await request.post("/api/submit/contact", { headers: { origin: "http://localhost:3217" }, data: { name: "Rate Tester", email: "rate@example.com", topic: "other", message: "Testing the limiter now." } });
       statuses.push(r.status());
     }
     expect(statuses).toContain(429);
     expect(statuses.slice(0, 5).every((s) => s === 201)).toBe(true);
-  });
-});
-
-test.describe("admin operations", () => {
-  test.skip(!process.env.ADMIN_PASSWORD, "ADMIN_PASSWORD not set");
-
-  test("prospectus is public only when approved AND present; target window is organiser-controlled", async ({ page, request }) => {
-    const dir = path.join(process.cwd(), "private", "prospectus");
-    const file = path.join(dir, "the-believing-room-sponsorship.pdf");
-    const existed = fs.existsSync(file);
-    expect(existed, "a real prospectus is already in private/prospectus; refusing to overwrite it in a test").toBe(false);
-    const PDF = ["%PDF-1.4", "1 0 obj<<>>endobj", "%%EOF"].join("\n");
-    const save = async (approved: boolean, target?: string) => {
-      await page.goto("/admin?tab=settings");
-      const box = page.getByLabel(/Prospectus reviewed and externally approved/);
-      if (approved) await box.check();
-      else await box.uncheck();
-      if (target !== undefined) await page.getByLabel(/Public target window/).fill(target);
-      await page.getByRole("button", { name: "Save" }).click();
-      await expect(page.getByRole("status")).toContainText("Saved");
-    };
-    try {
-      await skipIntro(page);
-      await page.goto("/admin");
-      await page.getByLabel("Organiser password").fill(process.env.ADMIN_PASSWORD!);
-      await page.getByRole("button", { name: "Sign in" }).click();
-      await expect(page.getByRole("heading", { level: 1 })).toContainText(/control/i);
-
-      // 1. A file exists but nobody has approved it: not downloadable, not offered.
-      fs.mkdirSync(dir, { recursive: true });
-      fs.writeFileSync(file, PDF);
-      await save(false);
-      expect((await request.get("/sponsors/prospectus")).status()).toBe(404);
-      await page.goto("/sponsors");
-      await expect(page.getByRole("link", { name: /Download the prospectus/ })).toHaveCount(0);
-
-      // 2. Approved and present: served as a PDF attachment and offered.
-      await save(true);
-      const ok = await request.get("/sponsors/prospectus");
-      expect(ok.status()).toBe(200);
-      expect(ok.headers()["content-type"]).toBe("application/pdf");
-      expect(ok.headers()["content-disposition"]).toContain("attachment");
-      await page.goto("/sponsors");
-      await expect(page.getByRole("link", { name: /Download the prospectus/ }).first()).toBeVisible();
-
-      // 3. Approved but the file is not a real PDF (a draft/template saved with the wrong content): refused.
-      fs.writeFileSync(file, "<html>internal draft</html>");
-      expect((await request.get("/sponsors/prospectus")).status()).toBe(404);
-
-      // 4. Approved but the file is missing: falls back to "request", never a broken link.
-      fs.rmSync(file);
-      expect((await request.get("/sponsors/prospectus")).status()).toBe(404);
-      await page.goto("/sponsors");
-      await expect(page.getByRole("link", { name: /Download the prospectus/ })).toHaveCount(0);
-      await expect(page.getByRole("link", { name: "Request the prospectus" }).first()).toBeVisible();
-
-      // 5. The target window shows as a labelled target, can be edited, and can be hidden.
-      await save(false, "Mid-November");
-      await page.goto("/events");
-      await expect(page.locator("main")).toContainText("Mid-November · a target, not a confirmed date");
-      await expect(page.locator("main")).toContainText("To be announced"); // the Date row is never filled by a target
-      await save(false, "");
-      await page.goto("/events");
-      await expect(page.locator("main")).not.toContainText("Target window");
-      await save(false, "First week of November"); // restore the default for later tests
-    } finally {
-      fs.rmSync(file, { force: true });
-    }
-  });
-
-  test("organiser signs in, publishes media that goes live, and drafts stay hidden", async ({ page }) => {
-    await skipIntro(page);
-    await page.goto("/admin");
-    await page.getByLabel("Organiser password").fill(process.env.ADMIN_PASSWORD!);
-    await page.getByRole("button", { name: "Sign in" }).click();
-    await expect(page.getByRole("heading", { level: 1 })).toContainText(/control/i);
-
-    // Applications from earlier tests are visible, with separate consent flags
-    await page.getByRole("link", { name: "Applications", exact: true }).click();
-    await expect(page.locator("main")).toContainText("asha.e2e@example.com");
-    await expect(page.locator("main")).toContainText(/Publish pitch/);
-
-    // Sponsor enquiries submitted through the public form earlier in this run are really stored and visible to the organiser
-    await page.getByRole("link", { name: "Sponsorship", exact: true }).click();
-    await expect(page.locator("main")).toContainText("meera.e2e@example.com");
-    await expect(page.locator("main")).toContainText(/TBR-S-[A-Z0-9]{6}/);
-
-    // Create a draft and a published episode
-    await page.getByRole("link", { name: "Media", exact: true }).click();
-    const add = async (slug: string, title: string, publication: string) => {
-      const f = page.locator("form").filter({ hasText: "Add or update media" });
-      await f.getByLabel("Title").fill(title);
-      await f.getByLabel("Slug").fill(slug);
-      await f.getByLabel("Publication").selectOption(publication);
-      await f.getByLabel("Summary").fill("A test summary long enough to be valid.");
-      await f.getByLabel(/YouTube video ID/).fill("dQw4w9WgXcQ");
-      await f.getByRole("button", { name: "Save" }).click();
-      await expect(page.getByRole("status")).toContainText("Saved");
-    };
-    await add("e2e-draft", "Hidden Draft Episode", "draft");
-    await add("e2e-live", "Visible Live Episode", "published");
-
-    await page.goto("/episodes");
-    await expect(page.locator("main")).toContainText("Visible Live Episode");
-    await expect(page.locator("main")).not.toContainText("Hidden Draft Episode");
-    expect((await page.request.get("/episodes/e2e-draft")).status()).toBe(404);
-    expect((await page.request.get("/episodes/e2e-live")).status()).toBe(200);
-
-    // Embeds are lazy: no YouTube iframe until play is pressed
-    await page.goto("/episodes/e2e-live");
-    await expect(page.locator("iframe")).toHaveCount(0);
-    await page.getByRole("button", { name: /Play video/ }).click();
-    await expect(page.locator("iframe[src*='youtube-nocookie.com']")).toHaveCount(1);
-
-    // Audit trail recorded
-    await page.goto("/admin?tab=audit");
-    await expect(page.locator("main")).toContainText("episode.save");
-  });
-
-  test("resume download requires the admin session", async ({ page, request }) => {
-    const login = await page.request.post("/api/admin/login", { headers: { origin: "http://localhost:3217" }, data: { password: process.env.ADMIN_PASSWORD! } });
-    expect(login.ok()).toBe(true);
-    await page.goto("/admin?tab=students");
-    const link = page.getByRole("link", { name: "Résumé (PDF)" }).first();
-    await expect(link).toBeVisible();
-    const href = (await link.getAttribute("href"))!;
-    const authed = await page.request.get(href);
-    expect(authed.status()).toBe(200);
-    expect(authed.headers()["content-type"]).toBe("application/pdf");
-    expect((await request.get(href)).status()).toBe(401);
   });
 });

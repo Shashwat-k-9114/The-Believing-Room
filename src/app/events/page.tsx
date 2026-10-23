@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { publicEvents, publicOrganizations, seasonPhase, targetWindow } from "@/lib/queries";
+import { publicEvents, publicOrganizations, seasonPhase, targetWindow } from "@/lib/content";
 import { phaseMeta } from "@/config/ecosystem";
 import { formatINR, inclusions, pricing, season } from "@/config/site";
 import { industries } from "@/content/industries";
@@ -8,12 +8,10 @@ import { LiquidButton } from "@/components/liquid/LiquidButton";
 import { Reveal } from "@/components/liquid/Reveal";
 import { EVENT_STATUS_LABEL, formatEventDate } from "@/lib/event-ui";
 import type { EventStatus } from "@/config/site";
-import { RegistrationGate } from "@/components/forms/RegistrationGate";
 import { WaitlistForm } from "@/components/forms/WaitlistForm";
 import { PageShell } from "@/components/layout/PageShell";
 import { ElasticPill } from "@/components/liquid/surfaces";
 
-export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Events",
   description: "Upcoming and past editions of the live internship pitching event. Dates, venues and registration status, only when confirmed.",
@@ -93,7 +91,7 @@ export default async function Events() {
             <h2 className="display h-lg">Hear it first.</h2>
             <p className="mt-4 max-w-[48ch] text-[var(--fg-dim)]">Leave your email and we’ll write once, when the first date and venue are confirmed, and again when registration opens. Nothing else.</p>
           </div>
-          <div className="glass glass-frost max-w-md p-8 [--r:1.6rem]"><RegistrationGate what="notification list"><WaitlistForm kind="updates" cta="Notify me" note="event announcements" /></RegistrationGate></div>
+          <div className="glass glass-frost max-w-md p-8 [--r:1.6rem]"><WaitlistForm kind="updates" cta="Notify me" note="event announcements" /></div>
         </div>
       ) : (
         <ul className="divide-y divide-[var(--line)] border-y border-[var(--line)]">

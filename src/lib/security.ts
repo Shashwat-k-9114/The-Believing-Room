@@ -1,6 +1,4 @@
-import "server-only";
-import { createHmac, randomBytes, randomInt, timingSafeEqual } from "node:crypto";
-import { limitHit } from "./rate-limit";
+import { randomInt } from "node:crypto";
 
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no 0/O/1/I
 
@@ -9,21 +7,6 @@ export function makeRef(prefix: string, length = 6): string {
   for (let i = 0; i < length; i++) s += ALPHABET[randomInt(ALPHABET.length)];
   return `${prefix}-${s}`;
 }
-
-export const makeToken = (bytes = 18) => randomBytes(bytes).toString("base64url");
-
-export function safeEqual(a: string, b: string): boolean {
-  const ab = Buffer.from(a);
-  const bb = Buffer.from(b);
-  return ab.length === bb.length && timingSafeEqual(ab, bb);
-}
-
-export const hmacHex = (secret: string, data: string | Buffer) =>
-  createHmac("sha256", secret).update(data).digest("hex");
-
-/* ------------------------------ Rate limiting ----------------------------- */
-// Implemented in ./rate-limit (shared store on serverless, memory otherwise). Re-exported so existing imports keep working.
-export { rateLimit, rateLimited } from "./rate-limit";
 
 export const clientIp = (req: Request) =>
   req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || req.headers.get("x-real-ip") || "local";
@@ -44,15 +27,22 @@ export function json(body: unknown, status = 200, headers?: Record<string, strin
   return Response.json(body, { status, headers: { "Cache-Control": "no-store", ...headers } });
 }
 
-/** Buckets where a limiter outage must refuse the request rather than fall back to a per-instance counter. */
-const FAIL_CLOSED_BUCKETS = new Set(["admin-login", "order", "verify", "cand-pay"]);
-
-/** Common gate for public POST endpoints. Returns a Response to short-circuit, or null. */
-export async function guard(req: Request, bucket: string, limit = 8, windowMs = 60_000): Promise<Response | null> {
-  if (!sameOrigin(req)) return json({ error: "forbidden", message: "Cross-site request blocked." }, 403);
-  if (!(await limitHit(`${bucket}:${clientIp(req)}`, limit, windowMs, FAIL_CLOSED_BUCKETS.has(bucket))))
-    return json({ error: "rate_limited", message: "Too many attempts. Please wait a minute and try again." }, 429, { "Retry-After": "60" });
-  return null;
+/**
+ * Per-instance sliding-window limiter. On serverless each instance counts separately, so this only blunts a single
+ * client hammering one instance; the honeypot and the Apps Script quota are the other lines of defence.
+ */
+const hits = new Map<string, number[]>();
+export function limitHit(key: string, limit: number, windowMs = 60_000): boolean {
+  const now = Date.now();
+  const recent = (hits.get(key) ?? []).filter((t) => now - t < windowMs);
+  if (recent.length >= limit) {
+    hits.set(key, recent);
+    return false;
+  }
+  recent.push(now);
+  hits.set(key, recent);
+  if (hits.size > 5000) for (const [k, v] of hits) if (!v.some((t) => now - t < windowMs)) hits.delete(k);
+  return true;
 }
 
 /** Parse JSON body with a size cap. */

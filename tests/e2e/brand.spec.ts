@@ -100,7 +100,7 @@ test.describe("brand assets and identity", () => {
 
   test("sponsor enquiry accepts the reduced field set (role is optional)", async ({ request }) => {
     const body = { organization: "Minimal Fields Ltd", contactName: "Asha Rao", email: "asha.e2e@example.com", category: "business", interest: "Not sure yet", consentContact: true, consentNoGuarantee: true };
-    const res = await request.post("/api/enquiry/sponsor", { headers: { origin: "http://localhost:3217" }, data: body });
+    const res = await request.post("/api/submit/sponsor", { headers: { origin: "http://localhost:3217" }, data: body });
     expect(res.status()).toBe(201);
     expect((await res.json()).ref).toMatch(/^TBR-S-/);
   });
@@ -108,7 +108,7 @@ test.describe("brand assets and identity", () => {
   test("robots allows crawling here and hides private routes", async ({ request }) => {
     const t = await (await request.get("/robots.txt")).text();
     expect(t).toMatch(/Allow: \//);
-    expect(t).toMatch(/Disallow: \/admin/);
+    expect(t).toMatch(/Disallow: \/api\//);
     expect(t).toMatch(/Sitemap:/);
   });
 });

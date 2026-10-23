@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { Play } from "lucide-react";
-import type { schema } from "@/db/client";
+import type { Episode } from "@/lib/content";
 import { industries } from "@/content/industries";
-
-type Episode = typeof schema.episodes.$inferSelect;
 
 export const fmtDuration = (s?: number | null) => (s ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}` : null);
 

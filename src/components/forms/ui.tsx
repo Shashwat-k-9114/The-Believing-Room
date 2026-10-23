@@ -9,12 +9,6 @@ export interface ApiData {
   message?: string;
   fields?: Errors;
   ref?: string;
-  token?: string;
-  keyId?: string;
-  providerOrderId?: string;
-  amountPaise?: number;
-  emailSent?: boolean;
-  payUrl?: string;
 }
 
 export async function postJson(url: string, body: unknown): Promise<{ ok: boolean; status: number; data: ApiData }> {
@@ -160,6 +154,15 @@ export function SuccessPanel({ title, children }: { title: string; children: Rea
       <p className="eyebrow text-emerald-300">Received</p>
       <h2 className="display mt-3 text-4xl sm:text-5xl">{title}</h2>
       <div className="mt-5 grid gap-3 text-[var(--fg-dim)]">{children}</div>
+    </div>
+  );
+}
+
+/** Hidden from people, tempting to bots. The submit route silently drops any submission that fills it. */
+export function Honeypot() {
+  return (
+    <div aria-hidden className="absolute -left-[9999px] size-0 overflow-hidden">
+      <label>Leave this field empty<input name="website" tabIndex={-1} autoComplete="off" defaultValue="" /></label>
     </div>
   );
 }

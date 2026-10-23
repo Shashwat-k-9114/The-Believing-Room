@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { industryOptions } from "@/content/industries";
 import { LiquidButton } from "../liquid/LiquidButton";
-import { Check, FormAlert, postJson, readForm, SelectField, SuccessPanel, TextArea, TextField, type Errors } from "./ui";
+import { Check, FormAlert, Honeypot, postJson, readForm, SelectField, SuccessPanel, TextArea, TextField, type Errors } from "./ui";
 
 function useEnquiry(url: string) {
   const [errors, setErrors] = useState<Errors>({});
@@ -39,7 +39,7 @@ function Interests({ name, options }: { name: string; options: string[] }) {
 }
 
 export function CompanyForm() {
-  const f = useEnquiry("/api/enquiry/company");
+  const f = useEnquiry("/api/submit/company");
   if (f.done)
     return (
       <SuccessPanel title="Enquiry received.">
@@ -63,6 +63,7 @@ export function CompanyForm() {
       </div>
       <Interests name="interests" options={COMPANY_INTERESTS} />
       <TextArea name="message" label="Anything else we should know?" rows={4} maxLength={2000} error={f.errors.message} />
+      <Honeypot />
       {f.fail && <FormAlert>{f.fail}</FormAlert>}
       <div><LiquidButton type="submit" variant="primary" size="lg" disabled={f.busy}>{f.busy ? "Sending…" : "Send enquiry"}</LiquidButton></div>
     </form>
@@ -70,7 +71,7 @@ export function CompanyForm() {
 }
 
 export function CollegeForm() {
-  const f = useEnquiry("/api/enquiry/college");
+  const f = useEnquiry("/api/submit/college");
   if (f.done)
     return (
       <SuccessPanel title="Enquiry received.">
@@ -90,6 +91,7 @@ export function CollegeForm() {
       <TextField name="studentCount" label="Approximate students interested" inputMode="numeric" error={f.errors.studentCount} />
       <Interests name="interests" options={COLLEGE_INTERESTS} />
       <TextArea name="message" label="Anything else we should know?" rows={4} maxLength={2000} error={f.errors.message} />
+      <Honeypot />
       {f.fail && <FormAlert>{f.fail}</FormAlert>}
       <div><LiquidButton type="submit" variant="primary" size="lg" disabled={f.busy}>{f.busy ? "Sending…" : "Send enquiry"}</LiquidButton></div>
     </form>
@@ -97,7 +99,7 @@ export function CollegeForm() {
 }
 
 export function ContactForm() {
-  const f = useEnquiry("/api/contact");
+  const f = useEnquiry("/api/submit/contact");
   if (f.done) return <SuccessPanel title="Message sent."><p>Thanks. We read every message and will reply to the email you gave.</p></SuccessPanel>;
   return (
     <form onSubmit={f.submit} noValidate aria-label="Contact form" className="grid gap-5">
@@ -114,6 +116,7 @@ export function ContactForm() {
         ]}
       />
       <TextArea name="message" label="Message" required rows={6} maxLength={3000} error={f.errors.message} />
+      <Honeypot />
       {f.fail && <FormAlert>{f.fail}</FormAlert>}
       <div><LiquidButton type="submit" variant="primary" size="lg" disabled={f.busy}>{f.busy ? "Sending…" : "Send message"}</LiquidButton></div>
     </form>

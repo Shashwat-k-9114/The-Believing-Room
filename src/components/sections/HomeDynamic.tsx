@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { publicEpisodes } from "@/lib/queries";
+import { publicEpisodes } from "@/lib/content";
 import { LiquidButton } from "../liquid/LiquidButton";
 import { EpisodeCard } from "../media/EpisodeCard";
 

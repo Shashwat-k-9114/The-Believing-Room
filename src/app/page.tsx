@@ -13,7 +13,6 @@ import {
   ActSponsor,
 } from "@/components/sections/Acts";
 
-export const dynamic = "force-dynamic";
 
 export default function Home() {
   return (

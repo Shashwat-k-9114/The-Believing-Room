@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { publicEpisodes } from "@/lib/queries";
+import { publicEpisodes } from "@/lib/content";
 import { industries } from "@/content/industries";
 import { EpisodeCard, fmtDuration, thumbOf } from "@/components/media/EpisodeCard";
 import { Prelaunch } from "@/components/media/Prelaunch";
@@ -8,7 +8,6 @@ import { PageShell } from "@/components/layout/PageShell";
 import { ShowIdentity } from "@/components/media/ShowArt";
 import { LiquidButton } from "@/components/liquid/LiquidButton";
 
-export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "The Show",
   description: "Full-length pitching episodes, standout pitches, panel conversations and behind-the-scenes films, published on YouTube with participants’ permission.",

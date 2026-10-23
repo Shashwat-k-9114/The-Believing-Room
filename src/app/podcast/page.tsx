@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import { brand } from "@/config/site";
-import { publicEpisodes } from "@/lib/queries";
+import { publicEpisodes } from "@/lib/content";
 import { EpisodeCard } from "@/components/media/EpisodeCard";
 import { Prelaunch } from "@/components/media/Prelaunch";
 import { PageShell } from "@/components/layout/PageShell";
 import { LiquidButton } from "@/components/liquid/LiquidButton";
 
-export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Podcast",
   description: "Long-form conversations with founders, hiring managers, interns and mentors about how careers actually begin.",

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { formatINR, pricing } from "@/config/site";
 import { CandidateForm } from "@/components/forms/CandidateForm";
-import { RegistrationGate } from "@/components/forms/RegistrationGate";
 import { PageShell } from "@/components/layout/PageShell";
 import { EducationNote } from "@/components/partners/Education";
 
@@ -10,8 +9,6 @@ export const metadata: Metadata = {
   description: "Apply to pitch to industry panels at The Believing Room. Applying is free; the candidate ticket (₹500, food included) is requested on shortlisting.",
   alternates: { canonical: "/register/candidate" },
 };
-
-export const dynamic = "force-dynamic";
 
 export default async function CandidateRegistration({ searchParams }: { searchParams: Promise<{ industry?: string }> }) {
   const { industry } = await searchParams;
@@ -24,7 +21,7 @@ export default async function CandidateRegistration({ searchParams }: { searchPa
     >
       <div className="mx-auto max-w-3xl">
         <EducationNote />
-        <RegistrationGate what="candidate applications"><CandidateForm defaultIndustry={industry} /></RegistrationGate>
+        <CandidateForm defaultIndustry={industry} />
       </div>
     </PageShell>
   );

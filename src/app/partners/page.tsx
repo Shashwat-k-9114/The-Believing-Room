@@ -5,7 +5,6 @@ import { Reveal } from "@/components/liquid/Reveal";
 import { EducationBenefit, OpportunityList } from "@/components/partners/Education";
 import { PartnerProfiles } from "@/components/partners/Ecosystem";
 
-export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Partners",
   description: "The organisations taking part in The Believing Room: recruitment participants, venue facilities, an educational contribution and student outreach, each described as far as it has been confirmed.",

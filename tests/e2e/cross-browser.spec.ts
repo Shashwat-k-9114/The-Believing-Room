@@ -54,7 +54,7 @@ test.describe("cross-browser", () => {
     await expect(opener).toBeFocused();
   });
 
-  test("sponsor enquiry persists and the confirmation does not claim email was sent", async ({ page, browserName }) => {
+  test("sponsor enquiry persists and the confirmation saves and confirms with a reference", async ({ page, browserName }) => {
     await page.goto("/sponsors");
     const form = page.getByRole("form", { name: "Partnership enquiry" });
     await form.getByLabel("Organisation").fill(`Cross ${browserName} Ltd`);
@@ -69,8 +69,7 @@ test.describe("cross-browser", () => {
     const ok = page.getByRole("status").filter({ hasText: "Enquiry received." });
     await expect(ok).toBeVisible();
     await expect(ok).toContainText(/TBR-S-[A-Z0-9]{6}/);
-    // E-mail is not configured in the test environment, so the page must say so rather than imply delivery.
-    await expect(ok).toContainText(/not been able to send an automatic receipt/i);
+    await expect(ok).toContainText(/keep this reference/i);
     await expect(ok).not.toContainText(/receipt has been emailed/i);
   });
 

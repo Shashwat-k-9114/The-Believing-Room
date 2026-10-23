@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { publicEpisode, publicEpisodes } from "@/lib/queries";
+import { publicEpisode, publicEpisodes } from "@/lib/content";
 import { industries } from "@/content/industries";
 import { brand } from "@/config/site";
 import { EpisodeCard, fmtDuration, thumbOf } from "@/components/media/EpisodeCard";
@@ -9,7 +9,6 @@ import { YouTubeFacade } from "@/components/media/YouTubeFacade";
 import { PageShell } from "@/components/layout/PageShell";
 import { LiquidButton } from "@/components/liquid/LiquidButton";
 
-export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const e = await publicEpisode((await params).slug);

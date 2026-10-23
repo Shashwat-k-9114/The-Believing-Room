@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { publicEpisodes } from "@/lib/queries";
+import { publicEpisodes } from "@/lib/content";
 import { industries } from "@/content/industries";
 import { EpisodeCard } from "@/components/media/EpisodeCard";
 import { Prelaunch } from "@/components/media/Prelaunch";
 import { PageShell } from "@/components/layout/PageShell";
 
-export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Episodes",
   description: "The full archive of published episodes, filterable by season and industry.",

@@ -1,16 +1,11 @@
-import { existsSync } from "node:fs";
-import path from "node:path";
 import type { Metadata } from "next";
-import { ArrowDownToLine } from "lucide-react";
-import { PROSPECTUS_FILE, PROSPECTUS_ROUTE } from "@/config/ecosystem";
 import { SponsorForm } from "@/components/forms/SponsorForm";
 import { ListRows, PageShell } from "@/components/layout/PageShell";
 import { LiquidButton } from "@/components/liquid/LiquidButton";
 import { Lines, Reveal } from "@/components/liquid/Reveal";
 import { EcosystemHome } from "@/components/partners/Ecosystem";
-import { prospectusApproved, publicOrganizations, publicSponsorshipPackages, targetWindow } from "@/lib/queries";
+import { publicOrganizations, publicSponsorshipPackages, targetWindow } from "@/lib/content";
 
-export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Sponsor the room",
   description: "Partner with The Believing Room, an early-career recruitment show and podcast. Proposed founding partnership formats, how the venue and production are supported, and a working enquiry form.",
@@ -26,9 +21,10 @@ const WHY = [
   { title: "Transparent reporting", body: "After the event, a report against the deliverables that were actually agreed. Nothing more is claimed." },
 ];
 
-export default async function Sponsors() {
-  const [packages, recruiters, target] = await Promise.all([publicSponsorshipPackages(), publicOrganizations("recruitment"), targetWindow()]);
-  const hasProspectus = (await prospectusApproved()) && existsSync(path.join(/*turbopackIgnore: true*/ process.cwd(), ...PROSPECTUS_FILE));
+export default function Sponsors() {
+  const packages = publicSponsorshipPackages();
+  const recruiters = publicOrganizations("recruitment");
+  const target = targetWindow();
   return (
     <PageShell
       eyebrow="Sponsors and partners"
@@ -37,11 +33,7 @@ export default async function Sponsors() {
       actions={
         <>
           <LiquidButton href="#enquiry" variant="primary" size="lg">Start a conversation</LiquidButton>
-          {hasProspectus ? (
-            <LiquidButton href={PROSPECTUS_ROUTE} variant="glass" size="lg" download><ArrowDownToLine size={18} aria-hidden /> Download the prospectus</LiquidButton>
-          ) : (
-            <LiquidButton href="#prospectus" variant="glass" size="lg">Request the prospectus</LiquidButton>
-          )}
+          <LiquidButton href="#prospectus" variant="glass" size="lg">Request the prospectus</LiquidButton>
         </>
       }
     >
@@ -161,14 +153,8 @@ export default async function Sponsors() {
         <Reveal>
           <p className="eyebrow">Prospectus</p>
           <h2 id="prospectus-h" className="display h-lg mt-4 max-w-[16ch]">The sponsorship deck</h2>
-          {hasProspectus ? (
-            <div className="mt-8"><LiquidButton href={PROSPECTUS_ROUTE} variant="primary" size="lg" download><ArrowDownToLine size={18} aria-hidden /> Download the prospectus (PDF)</LiquidButton></div>
-          ) : (
-            <>
-              <p className="lede mt-5">The reviewed public prospectus is not yet available to download. Send an enquiry below and we will send it to you directly as soon as it is ready.</p>
-              <div className="mt-8"><LiquidButton href="#enquiry" variant="primary" size="lg">Request the prospectus</LiquidButton></div>
-            </>
-          )}
+          <p className="lede mt-5">The reviewed public prospectus is not yet available to download. Send an enquiry below and we will send it to you directly as soon as it is ready.</p>
+          <div className="mt-8"><LiquidButton href="#enquiry" variant="primary" size="lg">Request the prospectus</LiquidButton></div>
         </Reveal>
       </section>
 

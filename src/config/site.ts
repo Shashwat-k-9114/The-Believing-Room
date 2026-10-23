@@ -111,18 +111,6 @@ export type EventStatus =
 export const PUBLIC_EVENT_STATUSES: EventStatus[] = ["announced", "registration_open", "registration_closed", "upcoming", "live", "completed", "cancelled"];
 
 /**
- * Payment collection needs both provider keys and an explicit PAYMENTS_ENABLED=true. Keys alone must never open
- * collection: the switch is flipped only once the provider account is verified and the fee and refund terms are final.
- */
-export function paymentsConfigured(): boolean {
-  return process.env.PAYMENTS_ENABLED === "true" && Boolean(process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET);
-}
-
-export function emailConfigured(): boolean {
-  return Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_FROM);
-}
-
-/**
  * Inclusions are taken from the reference page's terms ("lunch and goodies for
  * all attendees"). FLAGGED: operational confirmation required before publishing
  * anything beyond food.

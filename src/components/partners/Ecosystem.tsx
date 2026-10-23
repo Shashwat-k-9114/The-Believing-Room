@@ -1,7 +1,7 @@
 import { ArrowUpRight } from "lucide-react";
 import { ORG_CATEGORY_META, ORG_CATEGORY_ORDER } from "@/config/ecosystem";
 import { industries } from "@/content/industries";
-import { publicOrganizations, publicPanelists, type PublicOrganization } from "@/lib/queries";
+import { publicOrganizations, publicPanelists, type PublicOrganization } from "@/lib/content";
 import { LiquidButton } from "../liquid/LiquidButton";
 import { Reveal } from "../liquid/Reveal";
 import { OrgMark } from "./OrgMark";

@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { formatINR, pricing } from "@/config/site";
 import { phaseMeta } from "@/config/ecosystem";
-import { seasonPhase } from "@/lib/queries";
+import { seasonPhase } from "@/lib/content";
 import { LiquidButton, MagneticCTA } from "../liquid/LiquidButton";
 import { RibbonArt } from "./RibbonArt";
 
-export async function Hero() {
-  const phase = phaseMeta(await seasonPhase());
+export function Hero() {
+  const phase = phaseMeta(seasonPhase());
   return (
     <section data-theme="dark" aria-labelledby="hero-title" className="relative isolate min-h-svh overflow-hidden">
       <div aria-hidden className="absolute inset-0 -z-10 bg-[radial-gradient(70%_60%_at_78%_72%,rgb(203_174_118/0.16),transparent_70%),radial-gradient(60%_50%_at_10%_0%,rgb(140_122_155/0.2),transparent_70%)]" />

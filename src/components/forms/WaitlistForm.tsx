@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { LiquidButton } from "../liquid/LiquidButton";
-import { Check, FormAlert, postJson, readForm, TextField, type Errors } from "./ui";
+import { Check, FormAlert, Honeypot, postJson, readForm, TextField, type Errors } from "./ui";
 
 export function WaitlistForm({ kind, cta = "Notify me", note }: { kind: "audience" | "student" | "updates"; cta?: string; note?: string }) {
   const [state, setState] = useState<"idle" | "sending" | "done">("idle");
@@ -14,7 +14,7 @@ export function WaitlistForm({ kind, cta = "Notify me", note }: { kind: "audienc
     setState("sending");
     setErrors({});
     setFail("");
-    const { ok, data } = await postJson("/api/waitlist", { ...readForm(e.currentTarget), kind });
+    const { ok, data } = await postJson("/api/submit/waitlist", { ...readForm(e.currentTarget), kind });
     if (ok) return setState("done");
     setState("idle");
     if (data.fields) setErrors(data.fields);
@@ -34,6 +34,7 @@ export function WaitlistForm({ kind, cta = "Notify me", note }: { kind: "audienc
       <Check name="consentContact" required error={errors.consentContact}>
         Email me about {note ?? "this event"}. No spam, no sharing, unsubscribe any time.
       </Check>
+      <Honeypot />
       {fail && <FormAlert>{fail}</FormAlert>}
       <LiquidButton type="submit" variant="primary" disabled={state === "sending"}>
         {state === "sending" ? "Saving…" : cta}

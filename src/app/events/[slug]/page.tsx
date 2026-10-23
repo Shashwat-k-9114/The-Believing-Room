@@ -2,14 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { formatINR, pricing, type EventStatus } from "@/config/site";
 import { industries } from "@/content/industries";
-import { publicEvent } from "@/lib/queries";
+import { publicEvent } from "@/lib/content";
 import { EVENT_STATUS_LABEL, formatEventDate, formatEventTime } from "@/lib/event-ui";
 import { LiquidButton } from "@/components/liquid/LiquidButton";
 import { PageShell } from "@/components/layout/PageShell";
 import { ElasticPill } from "@/components/liquid/surfaces";
 import { brand } from "@/config/site";
 
-export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const e = await publicEvent((await params).slug);

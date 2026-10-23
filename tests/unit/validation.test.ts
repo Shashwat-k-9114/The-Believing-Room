@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { audienceSchema, phone, studentSchema } from "@/lib/validation";
 import { priceBreakdown, pricing } from "@/config/site";
-import { validateResume } from "@/lib/storage";
 
 const validStudent = {
   fullName: "Asha Rao",
@@ -62,19 +61,5 @@ describe("audienceSchema and pricing", () => {
   it("computes totals from config only", () => {
     expect(priceBreakdown("audience", 2).total).toBe(pricing.audience.amount * 2);
     expect(priceBreakdown("candidate").total).toBe(pricing.candidate.amount);
-  });
-});
-
-describe("validateResume", () => {
-  const pdf = Buffer.from("%PDF-1.7\n...");
-  it("accepts a PDF", () => expect(validateResume(new File([pdf], "cv.pdf", { type: "application/pdf" }), pdf)).toBeNull());
-  it("rejects a renamed non-PDF", () => {
-    const exe = Buffer.from("MZ\x90\x00");
-    expect(validateResume(new File([exe], "cv.pdf", { type: "application/pdf" }), exe)).toMatch(/PDF/);
-  });
-  it("rejects oversize and empty", () => {
-    const big = Buffer.concat([pdf, Buffer.alloc(2 * 1024 * 1024)]);
-    expect(validateResume(new File([big], "cv.pdf"), big)).toMatch(/2 MB/);
-    expect(validateResume(new File([], "cv.pdf"), Buffer.alloc(0))).toMatch(/empty/);
   });
 });

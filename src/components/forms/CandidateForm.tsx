@@ -6,14 +6,14 @@ import { industries, industryOptions } from "@/content/industries";
 import { formatINR, pricing } from "@/config/site";
 import { studentSchema, fieldErrors } from "@/lib/validation";
 import { LiquidButton } from "../liquid/LiquidButton";
-import { Check, FormAlert, SelectField, SuccessPanel, TextArea, TextField, type Errors } from "./ui";
+import { Check, FormAlert, Honeypot, SelectField, SuccessPanel, TextArea, TextField, type Errors } from "./ui";
 
 const DRAFT_KEY = "arena-student-draft-v1";
 const thisYear = new Date().getFullYear();
 
 const initial = {
   fullName: "", email: "", phone: "", college: "", course: "", gradYear: String(thisYear + 1),
-  industry: "", skills: "", portfolioUrl: "", githubUrl: "", linkedinUrl: "",
+  industry: "", skills: "", portfolioUrl: "", githubUrl: "", linkedinUrl: "", resumeUrl: "",
   pitchSummary: "", experience: "",
   consentTerms: false, consentPrivacy: false, consentFilming: false,
   consentPublishPitch: false, consentShowNameCollege: false, consentPromoClips: false,
@@ -23,7 +23,7 @@ type Values = typeof initial;
 const STEPS = [
   { title: "You", fields: ["fullName", "email", "phone", "college", "course", "gradYear"] },
   { title: "Your discipline", fields: ["industry", "skills", "portfolioUrl", "githubUrl", "linkedinUrl"] },
-  { title: "Your pitch", fields: ["pitchSummary", "experience", "resume"] },
+  { title: "Your pitch", fields: ["pitchSummary", "experience", "resumeUrl"] },
   { title: "Consent & send", fields: ["consentTerms", "consentPrivacy"] },
 ] as const;
 
@@ -33,13 +33,11 @@ export function CandidateForm({ defaultIndustry }: { defaultIndustry?: string })
   const [errors, setErrors] = useState<Errors>({});
   const [sending, setSending] = useState(false);
   const [fail, setFail] = useState("");
-  const [done, setDone] = useState<{ ref: string; emailSent: boolean; payUrl?: string } | null>(null);
+  const [done, setDone] = useState<{ ref: string } | null>(null);
   const [resumed, setResumed] = useState(false);
-  const file = useRef<File | null>(null);
-  const [fileName, setFileName] = useState("");
   const heading = useRef<HTMLHeadingElement>(null);
 
-  // Save & resume: text answers only. Never consents, never the file.
+  // Save & resume: text answers only. Never consents.
   useEffect(() => {
     try {
       const raw = localStorage.getItem(DRAFT_KEY);
@@ -63,10 +61,6 @@ export function CandidateForm({ defaultIndustry }: { defaultIndustry?: string })
     const r = studentSchema.safeParse(v);
     const all: Errors = r.success ? {} : fieldErrors(r.error);
     const out: Errors = only ? Object.fromEntries(Object.entries(all).filter(([k]) => only.includes(k))) : all;
-    if (only?.includes("resume") || !only) {
-      const f = file.current;
-      if (f && (f.size > 2 * 1024 * 1024 || (f.type && f.type !== "application/pdf"))) out.resume = "Résumé must be a PDF of 2 MB or less.";
-    }
     return out;
   };
 
@@ -93,15 +87,13 @@ export function CandidateForm({ defaultIndustry }: { defaultIndustry?: string })
     }
     setSending(true);
     setFail("");
-    const fd = new FormData();
-    fd.set("data", JSON.stringify(v));
-    if (file.current) fd.set("resume", file.current);
+    const website = (e.currentTarget as HTMLFormElement).elements.namedItem("website") as HTMLInputElement | null;
     try {
-      const res = await fetch("/api/candidate", { method: "POST", body: fd });
+      const res = await fetch("/api/submit/candidate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...v, website: website?.value ?? "" }) });
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
         try { localStorage.removeItem(DRAFT_KEY); } catch {}
-        setDone({ ref: data.ref!, emailSent: !!data.emailSent, payUrl: data.payUrl });
+        setDone({ ref: data.ref! });
         return;
       }
       if (data.fields) {
@@ -123,16 +115,10 @@ export function CandidateForm({ defaultIndustry }: { defaultIndustry?: string })
           Your reference is <strong className="mono text-[var(--fg)]">{done.ref}</strong>. Keep it: it’s how we’ll identify you.
         </p>
         <p>
-          {done.emailSent
-            ? "A receipt is on its way to your inbox."
-            : "Email confirmations aren’t switched on for this server yet, so no receipt was sent. Please note your reference above."}
-        </p>
-        <p>
           <strong className="text-[var(--fg)]">What happens next:</strong> organisers screen applications against the published criteria for your industry. Being received is not
           being selected. Applying costs nothing; the {formatINR(pricing.candidate.amount)} Candidate ticket (food included) is requested only if you are shortlisted.
         </p>
         <div className="mt-2 flex flex-wrap gap-3">
-          {done.payUrl && <LiquidButton href={done.payUrl} variant="primary">Confirm your place</LiquidButton>}
           <LiquidButton href="/how-it-works" variant="glass">How it works</LiquidButton>
           <LiquidButton href="/" variant="quiet">Back home</LiquidButton>
         </div>
@@ -183,16 +169,7 @@ export function CandidateForm({ defaultIndustry }: { defaultIndustry?: string })
         <div className="grid gap-5">
           <TextArea name="pitchSummary" label="Your pitch in a few sentences" required rows={6} maxLength={1200} hint="What will you show or argue on stage, and why should a panel care? (40+ characters)" value={v.pitchSummary} onChange={set("pitchSummary")} error={errors.pitchSummary} />
           <TextArea name="experience" label="Relevant projects or experience" rows={5} maxLength={1500} value={v.experience} onChange={set("experience")} error={errors.experience} />
-          <div className="field">
-            <label htmlFor="resume">Résumé (optional, PDF, up to 2 MB)</label>
-            <input
-              id="resume" name="resume" type="file" accept="application/pdf" className="input !py-3"
-              aria-invalid={!!errors.resume}
-              onChange={(e) => { file.current = e.target.files?.[0] ?? null; setFileName(file.current?.name ?? ""); setErrors((p) => ({ ...p, resume: "" })); }}
-            />
-            {fileName && !errors.resume && <p className="hint">Selected: {fileName}</p>}
-            {errors.resume && <p role="alert" className="error-text">{errors.resume}</p>}
-          </div>
+          <TextField name="resumeUrl" label="Résumé link (optional)" type="url" inputMode="url" placeholder="https://" hint="A shareable link, e.g. Google Drive with view access." value={v.resumeUrl} onChange={set("resumeUrl")} error={errors.resumeUrl} />
         </div>
       )}
 
@@ -221,6 +198,7 @@ export function CandidateForm({ defaultIndustry }: { defaultIndustry?: string })
         </div>
       )}
 
+      <Honeypot />
       {fail && <FormAlert>{fail}</FormAlert>}
 
       <div className="flex flex-wrap items-center gap-3">

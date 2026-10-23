@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { BUDGET_RANGES, SPONSOR_INTERESTS } from "@/config/ecosystem";
 import { LiquidButton } from "../liquid/LiquidButton";
-import { Check, FormAlert, postJson, readForm, SelectField, SuccessPanel, TextArea, TextField, type Errors } from "./ui";
+import { Check, FormAlert, Honeypot, postJson, readForm, SelectField, SuccessPanel, TextArea, TextField, type Errors } from "./ui";
 
 const TYPES = [
   { value: "business", label: "A business or brand" },
@@ -18,16 +18,16 @@ export function SponsorForm({ defaultInterest }: { defaultInterest?: string }) {
   const [errors, setErrors] = useState<Errors>({});
   const [fail, setFail] = useState("");
   const [busy, setBusy] = useState(false);
-  const [done, setDone] = useState<{ ref?: string; receiptEmailed?: boolean } | null>(null);
+  const [done, setDone] = useState<{ ref?: string } | null>(null);
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setBusy(true);
     setErrors({});
     setFail("");
-    const { ok, data } = await postJson("/api/enquiry/sponsor", readForm(e.currentTarget));
+    const { ok, data } = await postJson("/api/submit/sponsor", readForm(e.currentTarget));
     setBusy(false);
-    if (ok) return setDone({ ref: data.ref, receiptEmailed: (data as { receiptEmailed?: boolean }).receiptEmailed });
+    if (ok) return setDone({ ref: data.ref });
     if (data.fields) setErrors(data.fields);
     else setFail(data.message ?? "Something went wrong. Please try again.");
   }
@@ -36,7 +36,7 @@ export function SponsorForm({ defaultInterest }: { defaultInterest?: string }) {
     return (
       <SuccessPanel title="Enquiry received.">
         <p>Reference <strong className="mono text-[var(--fg)]">{done.ref}</strong>. It has been saved and a member of the team will review it and reply to the email you gave.</p>
-        <p>{done.receiptEmailed ? "A receipt has been emailed to you." : "We have not been able to send an automatic receipt, so please keep this reference."} This is not an agreement; formats are proposals until agreed in writing.</p>
+        <p>Please keep this reference. This is not an agreement; formats are proposals until agreed in writing.</p>
       </SuccessPanel>
     );
 
@@ -60,6 +60,7 @@ export function SponsorForm({ defaultInterest }: { defaultInterest?: string }) {
         <Check name="consentContact" required error={errors.consentContact}>I agree to be contacted about this enquiry.</Check>
         <Check name="consentNoGuarantee" required error={errors.consentNoGuarantee}>I understand that formats are proposals until agreed in writing, and that no audience reach, views or recruitment outcomes are guaranteed.</Check>
       </div>
+      <Honeypot />
       {fail && <FormAlert>{fail}</FormAlert>}
       <div><LiquidButton type="submit" variant="primary" size="lg" disabled={busy} aria-busy={busy}>{busy ? "Sending…" : "Send partnership enquiry"}</LiquidButton></div>
     </form>

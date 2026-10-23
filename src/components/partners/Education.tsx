@@ -1,5 +1,5 @@
 import { industries } from "@/content/industries";
-import { publicEducation, publicOpportunities } from "@/lib/queries";
+import { publicEducation, publicOpportunities } from "@/lib/content";
 import { Reveal } from "../liquid/Reveal";
 
 /**
