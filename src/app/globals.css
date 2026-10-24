@@ -462,16 +462,15 @@ html:not(.js) .reveal { opacity: 1; transform: none; }
   padding-inline-end: max(0.75rem, env(safe-area-inset-right));
 }
 .site-nav-shell > nav,
-.site-nav-shell > ul { min-width: 0; }
-.site-nav-shell > ul { scroll-padding-inline: 0.75rem; }
+.site-nav-shell > nav > ul { min-width: 0; }
 .liquid-button { max-width: 100%; }
 .liquid-button > span { min-width: 0; max-width: 100%; }
 .action-group { min-width: 0; }
 
 @media (max-width: 639px) {
   html { scroll-padding-top: 8rem; }
-  .site-nav-shell > nav:first-of-type { padding-inline-start: 0.75rem; }
-  .site-nav-shell > ul { margin-inline: 0; }
+  .site-nav-shell > nav { padding-inline-start: 0.75rem; }
+  .site-nav-shell > nav > ul[aria-label="Sections"] { margin-inline: 0; }
   .action-group { width: 100%; }
   .action-group > .liquid-button { width: 100%; }
   .liquid-button { white-space: normal; text-align: center; }

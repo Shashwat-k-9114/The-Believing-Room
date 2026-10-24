@@ -62,7 +62,7 @@ test.describe("public site", () => {
     for (const banned of ["65,000", "65000", "quotation", "advance"]) expect(text, banned).not.toContain(banned);
   });
 
-  test("navigation: no hamburger menu, links are in the bar, footer carries the site map and social logos", async ({ page }) => {
+  test("navigation: mobile links are fully visible without a carousel, footer carries the site map and social logos", async ({ page }) => {
     await skipIntro(page);
     await page.goto("/");
     await expect(page.getByRole("button", { name: /menu/i })).toHaveCount(0);
@@ -74,6 +74,20 @@ test.describe("public site", () => {
     await expect(footer.getByRole("link", { name: /^Season 01$/ })).toHaveCount(0);
     await expect(footer.getByRole("list", { name: "Social channels" }).getByRole("link")).toHaveCount(5);
     await expect(footer.getByRole("list", { name: "Social channels" }).locator("svg")).toHaveCount(5);
+
+    await page.setViewportSize({ width: 375, height: 800 });
+    await page.goto("/");
+    const mobileSections = page.getByRole("list", { name: "Sections" });
+    await expect(mobileSections).toBeVisible();
+    for (const label of ["Disciplines", "Partners", "The Show", "Sponsors"]) {
+      const link = mobileSections.getByRole("link", { name: label });
+      await expect(link, label).toBeVisible();
+      const box = await link.boundingBox();
+      expect(box, `${label} has a mobile bounding box`).not.toBeNull();
+      expect(box!.x + box!.width, `${label} is inside the viewport`).toBeLessThanOrEqual(375);
+    }
+    expect(await mobileSections.evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(0);
+
     await footer.getByRole("link", { name: "Questions" }).click();
     await expect(page).toHaveURL(/\/faq/);
   });

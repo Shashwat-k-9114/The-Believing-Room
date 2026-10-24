@@ -11,7 +11,7 @@ export function Hero() {
     <section data-theme="dark" aria-labelledby="hero-title" className="relative isolate overflow-hidden">
       <div aria-hidden className="absolute inset-0 -z-10 bg-[radial-gradient(60%_55%_at_80%_55%,rgb(203_174_118/0.18),transparent_70%),radial-gradient(55%_45%_at_8%_0%,rgb(140_122_155/0.22),transparent_70%)]" />
 
-      <div className="wrap grid items-center gap-10 pb-16 pt-40 lg:min-h-svh lg:grid-cols-[1.2fr_0.8fr] lg:gap-6 lg:pb-12 lg:pt-28">
+      <div className="wrap grid items-center gap-10 pb-16 pt-48 sm:pt-40 lg:min-h-svh lg:grid-cols-[1.2fr_0.8fr] lg:gap-6 lg:pb-12 lg:pt-28">
         <div className="relative z-10">
           <p className="eyebrow hero-eyebrow mb-6 flex items-center gap-4">
             <span aria-hidden className="h-px w-10 bg-[var(--accent)]" />
