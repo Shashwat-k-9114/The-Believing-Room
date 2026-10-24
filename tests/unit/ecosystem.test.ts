@@ -74,7 +74,7 @@ describe("ecosystem content (confirmed facts only)", () => {
 
   it("shows no sponsorship prices", () => {
     const pkgs = publicSponsorshipPackages();
-    expect(pkgs.map((p) => p.name)).toContain("Founding Presenting Partner");
+    expect(pkgs.map((p) => p.name)).toContain("Presenting Partner");
     expect(pkgs.every((p) => p.price === null)).toBe(true);
   });
 });

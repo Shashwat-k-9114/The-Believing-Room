@@ -42,7 +42,7 @@ test.describe("public site", () => {
     const hero = page.locator("#hero-title").locator("xpath=ancestor::section");
     await expect(hero).toContainText("₹1,000");
     await expect(hero).toContainText("₹300");
-    await expect(hero).toContainText(/food included/i);
+    await expect(hero).toContainText(/food and goodies included/i);
     const main = page.locator("main");
     for (const org of ["Manacle", "KRVVY", "Immverse AI", "Galvanic", "BIT Noida"]) {
       await expect(main, org).toContainText(org);
@@ -61,26 +61,20 @@ test.describe("public site", () => {
     for (const banned of ["65,000", "65000", "quotation", "advance"]) expect(text, banned).not.toContain(banned);
   });
 
-  test("menu dialog: opens, traps focus, Escape closes and returns focus, links navigate", async ({ page }) => {
+  test("navigation: no hamburger menu, links are in the bar, footer carries the site map and social logos", async ({ page }) => {
     await skipIntro(page);
     await page.goto("/");
-    const opener = page.getByRole("button", { name: "Open menu" });
-    await opener.click();
-    const dlg = page.getByRole("dialog");
-    await expect(dlg).toBeVisible();
-    await expect(opener).toHaveAttribute("aria-expanded", "true");
-    for (let i = 0; i < 30; i++) {
-      await page.keyboard.press("Tab");
-      const inside = await page.evaluate(() => !document.activeElement || document.activeElement === document.body || !!document.activeElement.closest("dialog"));
-      expect(inside, `tab ${i} left the dialog`).toBe(true);
-    }
-    await page.keyboard.press("Escape");
-    await expect(dlg).toBeHidden();
-    await expect(opener).toBeFocused();
-    await opener.click();
-    await dlg.getByRole("link", { name: "Questions" }).click();
+    await expect(page.getByRole("button", { name: /menu/i })).toHaveCount(0);
+    const nav = page.getByRole("navigation", { name: "Primary" });
+    await expect(nav.getByRole("link", { name: "Disciplines" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "How it works" })).toHaveCount(0);
+    const footer = page.locator("footer");
+    await expect(footer.getByRole("link", { name: "Episodes" })).toHaveCount(0);
+    await expect(footer.getByRole("link", { name: /^Season 01$/ })).toHaveCount(0);
+    await expect(footer.getByRole("list", { name: "Social channels" }).getByRole("link")).toHaveCount(5);
+    await expect(footer.getByRole("list", { name: "Social channels" }).locator("svg")).toHaveCount(5);
+    await footer.getByRole("link", { name: "Questions" }).click();
     await expect(page).toHaveURL(/\/faq/);
-    await expect(page.getByRole("dialog")).toBeHidden();
   });
 
   test("sponsor enquiry: validates, saves, and gives an honest reference", async ({ page }) => {
@@ -190,7 +184,7 @@ test.describe("public site", () => {
   });
 
   test("prices appear consistently from config", async ({ page }) => {
-    for (const r of ["/", "/register/audience", "/faq"]) {
+    for (const r of ["/", "/register/audience", "/terms"]) {
       await page.goto(r);
       const text = await page.locator("body").innerText();
       expect(text, r).toContain("₹300");

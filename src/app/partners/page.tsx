@@ -16,7 +16,8 @@ export default function Partners() {
     <PageShell
       eyebrow="Partners"
       title={<>The people and organisations <em>in the room.</em></>}
-      lede="Each organisation is listed under the role it actually plays, and described only as far as it has been confirmed. Logos appear only where the organisation has approved their use."
+      lede="Each organisation under the role it actually plays. Logos only where approved."
+      art="partners"
       actions={
         <>
           <LiquidButton href="/sponsors" variant="primary" size="lg">Become a partner</LiquidButton>

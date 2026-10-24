@@ -113,7 +113,7 @@ export const publicEducation = () =>
 
 export const publicSponsorshipPackages = (): { id: string; slug: string; name: string; summary: string; deliverables: string[]; price: string | null }[] => [
   {
-    id: "founding-presenting-partner", slug: "founding-presenting-partner", name: "Founding Presenting Partner", price: null,
+    id: "presenting-partner", slug: "presenting-partner", name: "Presenting Partner", price: null,
     summary: "The lead association with Season 01: a place at the front of the first season of an early-career hiring show.",
     deliverables: ["Presenting credit on published episodes, subject to agreement", "Acknowledgement across the website and show description", "Stage branding, subject to venue authorisation", "A sponsor message or segment agreed in advance", "Post-event reporting on agreed deliverables"],
   },

@@ -49,11 +49,10 @@ export const pricing = {
   gstPercent: 0,
   platformFeePercent: 0,
   /**
-   * OPEN OWNER DECISION: the handwritten note says "after 5 -> custom" with a crossed-out "6". Quick-pick buttons
-   * stop at `quickPickMax`; larger orders use the custom field up to `maxPerOrder`. Change both numbers here and
-   * the form and the server validation follow. `maxPerOrder` is still the previous limit until the owner decides.
+   * Quick-pick buttons stop at `quickPickMax`; "More" opens a custom field with no limit shown to the visitor.
+   * `maxPerOrder` is only a technical ceiling so the server rejects absurd values (typos, abuse).
    */
-  audienceTickets: { quickPickMax: 5, maxPerOrder: 6 },
+  audienceTickets: { quickPickMax: 5, maxPerOrder: 1000 },
   /**
    * OPEN OWNER DECISION. The reference page says registration is complete only
    * after payment, while its process lists Shortlist before Pitch. Default:
@@ -121,9 +120,9 @@ export const PUBLIC_EVENT_STATUSES: EventStatus[] = ["announced", "registration_
  * anything beyond food.
  */
 export const inclusions = {
-  both: ["Food included"],
+  both: ["Food and goodies included"],
   candidate: ["Panel review and guidance for every candidate"],
-  /** Reference mentions goodies; unconfirmed, so it is not shown publicly. */
-  unconfirmed: ["Goodies for all attendees"],
+  /** Goodies are now confirmed by the owner and included in `both`. */
+  unconfirmed: [] as string[],
 };
 

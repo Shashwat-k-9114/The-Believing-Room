@@ -28,7 +28,7 @@ export default function Terms() {
             ))}
           </dl>
           <p className="mt-6 text-sm text-[var(--fg-dim)]">
-            Candidate ticket {formatINR(pricing.candidate.amount)} · Audience ticket {formatINR(pricing.audience.amount)} · Food included. A ticket buys a place and a meal, not selection or an offer.
+            Candidate ticket {formatINR(pricing.candidate.amount)} · Audience ticket {formatINR(pricing.audience.amount)} · Food and goodies included. A ticket buys a place, food and goodies, not selection or an offer.
           </p>
         </aside>
         <ol className="divide-y divide-[var(--line)] border-y border-[var(--line)]">

@@ -118,7 +118,7 @@ export function CandidateForm({ defaultIndustry }: { defaultIndustry?: string })
         </p>
         <p>
           <strong className="text-[var(--fg)]">What happens next:</strong> organisers screen applications against the published criteria for your industry. Being received is not
-          being selected. Applying costs nothing; the {formatINR(pricing.candidate.amount)} Candidate ticket (food included) is requested only if you are shortlisted.
+          being selected. Applying costs nothing; the {formatINR(pricing.candidate.amount)} Candidate ticket (food and goodies included) is requested only if you are shortlisted.
         </p>
         <div className="mt-2 flex flex-wrap gap-3">
           <LiquidButton href="/how-it-works" variant="glass">How it works</LiquidButton>
@@ -195,7 +195,7 @@ export function CandidateForm({ defaultIndustry }: { defaultIndustry?: string })
             <Check name="consentPromoClips" checked={v.consentPromoClips} onChange={set("consentPromoClips")}>You may use short clips of me in promotion and social media.</Check>
           </fieldset>
           <p className="text-sm text-[var(--fg-dim)]">
-            Cost: applying is free. If shortlisted, the Candidate ticket is {formatINR(pricing.candidate.amount)}, food included, requested only then.
+            Cost: applying is free. If shortlisted, the Candidate ticket is {formatINR(pricing.candidate.amount)}, food and goodies included, requested only then.
           </p>
         </div>
       )}

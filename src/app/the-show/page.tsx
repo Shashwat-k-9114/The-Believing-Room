@@ -15,12 +15,12 @@ export const metadata: Metadata = {
 };
 
 const FORMATS = [
-  ["Full episodes", "Candidate pitches, panel questions and hiring discussion from an event."],
-  ["Best pitches", "A single standout pitch, cut for rewatching."],
-  ["Industry highlights", "What each arena rewarded, in ten minutes."],
-  ["Behind the scenes", "Preparation, nerves and the room before the doors open."],
-  ["Panel conversations", "Panelists on what they look for, away from the stage."],
-  ["Short clips", "Vertical highlights for the feed."],
+  ["Full episodes", "Pitches, panel questions and hiring talk."],
+  ["Best pitches", "One standout pitch, cut to rewatch."],
+  ["Industry highlights", "What each panel rewarded."],
+  ["Behind the scenes", "Nerves and the room before the doors open."],
+  ["Panel conversations", "What panelists look for."],
+  ["Short clips", "Vertical highlights."],
 ];
 
 export default async function TheShow() {
@@ -31,7 +31,8 @@ export default async function TheShow() {
     <PageShell
       eyebrow="The Show"
       title={<>Every pitch is <em>a story.</em></>}
-      lede="The event is filmed as a series. Full episodes live on YouTube; the best moments are cut into shorter films. Nothing is published without the participant’s separate permission."
+      lede="Filmed as a series for YouTube. Nothing is published without the participant’s permission."
+      art="show"
       actions={<LiquidButton href="/episodes" variant="glass" size="lg">Browse episodes</LiquidButton>}
       body="dark"
     >

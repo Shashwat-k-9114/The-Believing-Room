@@ -1,7 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { brand, formatINR, inclusions, pricing, socialLinks } from "@/config/site";
+import { brand, formatINR, pricing } from "@/config/site";
 import { industries } from "@/content/industries";
 import { LiquidButton, MagneticCTA } from "../liquid/LiquidButton";
 import { Lines, Reveal } from "../liquid/Reveal";
@@ -9,7 +8,8 @@ import { COLOR, Curve } from "./Curve";
 import { DisciplineMark } from "./DisciplineMark";
 import { ShowShelf } from "./HomeDynamic";
 import { EcosystemHome } from "../partners/Ecosystem";
-import { Journey } from "./Journey";
+import { ShowFlow } from "./ShowFlow";
+import { WayArt } from "./WayArt";
 import { LogoBadge } from "../layout/Wordmark";
 
 const Eyebrow = ({ children }: { children: React.ReactNode }) => (
@@ -19,59 +19,72 @@ const Eyebrow = ({ children }: { children: React.ReactNode }) => (
   </p>
 );
 
-/* ------------------------- Act II: The philosophy -------------------------- */
-export function ActPhilosophy() {
+/* ------------------------ How it works: four lit steps --------------------- */
+export function ActHow() {
   return (
-    <>
-      <Curve from={COLOR.aubergine} to={COLOR.ivory} shape="swell" />
-      <section data-theme="light" aria-labelledby="act-philosophy" className="section !pt-16 sm:!pt-24">
-        <div className="wrap grid gap-16 lg:grid-cols-[1.35fr_1fr] lg:gap-24">
-          <div>
-            <Reveal><Eyebrow>The philosophy</Eyebrow></Reveal>
-            <Lines
-              id="act-philosophy"
-              as="h2"
-              className="display h-xl mt-8"
-              lines={["Your resume opens the door.", <span key="e">Your potential makes you <em>stand out.</em></span>]}
-            />
-            <Reveal delay={0.2}>
-              <p className="lede mt-10">
-                A résumé tells a company what you have done. It cannot show how you think, how you speak, or how you respond when someone asks a hard question. The Believing Room gives candidates the chance to do exactly that, in front of the people who hire.
-              </p>
-            </Reveal>
-          </div>
-          <Reveal delay={0.25} className="self-end">
-            <dl className="border-t border-[var(--fg)]">
-              {[
-                ["Conventional screening", "Behind closed doors. A document, a keyword filter, a decision you rarely see."],
-                ["The Believing Room", "In the room. A conversation, a fair chance to be heard, and a constructive next step whatever the result."],
-              ].map(([t, d], i) => (
-                <div key={t} className="grid gap-1 border-b border-[var(--line)] py-6">
-                  <dt className={`eyebrow ${i ? "!text-[var(--accent)]" : ""}`}>{t}</dt>
-                  <dd className="display text-2xl leading-snug">{d}</dd>
-                </div>
-              ))}
-            </dl>
-          </Reveal>
-        </div>
-      </section>
-    </>
+    <section data-theme="dark" aria-labelledby="act-how" className="section cv-auto !pt-8 sm:!pt-12">
+      <div className="wrap">
+        <Reveal><Eyebrow>How it works</Eyebrow></Reveal>
+        <Lines id="act-how" as="h2" className="display h-xl mt-6 max-w-[16ch]" lines={["Four steps", <em key="e">to the spotlight.</em>]} />
+        <div className="mt-14 sm:mt-20"><ShowFlow /></div>
+        <Reveal delay={0.1}>
+          <p className="mt-14 max-w-[60ch] text-sm text-[var(--fg-faint)]">
+            Shortlisting and offers are never guaranteed. Hiring decisions rest with each company. <Link href="/how-it-works" className="link-u text-[var(--fg)]">The full process</Link>
+          </p>
+        </Reveal>
+      </div>
+    </section>
   );
 }
 
-/* -------------------------- Scene IV: The candidate journey ---------------- */
-export function ActProcess() {
+/* ------------------------ Three ways in ------------------------------------ */
+const WAYS = [
+  { kind: "candidate", who: "Candidates", a: "Get Seen.", b: "Get Discovered.", href: "/register/candidate", cta: "Apply as a Candidate" },
+  { kind: "audience", who: "Audience", a: "Watch. Learn.", b: "Grow.", href: "/register/audience", cta: "Get Audience Tickets" },
+  { kind: "recruiter", who: "Recruiters", a: "Discover. Evaluate.", b: "Hire.", href: "/for-recruiters", cta: "Partner as a Recruiter" },
+] as const;
+
+const WAY_CARD = "way hover-lift flex h-full flex-col overflow-hidden rounded-[1.3rem] border bg-[var(--bg-raised)]";
+
+export function ActWays() {
+  const afterShortlist = pricing.candidatePaymentStage === "after_shortlist";
+  const facts: Record<(typeof WAYS)[number]["kind"], string> = {
+    candidate: afterShortlist
+      ? `Apply free. ${formatINR(pricing.candidate.amount)} ticket if shortlisted. Food and goodies included.`
+      : `${formatINR(pricing.candidate.amount)} ticket. Food and goodies included.`,
+    audience: `${formatINR(pricing.audience.amount)} ticket. Food and goodies included.`,
+    recruiter: "Participation by enquiry.",
+  };
   return (
     <>
-      <Curve from={COLOR.pearl} to={COLOR.aubergine} shape="tide" flip />
-      <section data-theme="dark" aria-labelledby="act-process" className="section cv-auto !pt-16 sm:!pt-24">
+      <Curve from={COLOR.aubergine} to={COLOR.ivory} shape="swell" flip />
+      <section data-theme="light" aria-labelledby="act-ways" className="section cv-auto !pt-16 sm:!pt-24">
         <div className="wrap">
-          <Reveal><Eyebrow>The candidate journey</Eyebrow></Reveal>
-          <Lines id="act-process" as="h2" className="display h-xl mt-8 max-w-[14ch]" lines={["From application", <em key="e">to opportunity.</em>]} />
-          <Reveal delay={0.1}><Journey /></Reveal>
+          <Reveal><Eyebrow>Choose your seat</Eyebrow></Reveal>
+          <Lines id="act-ways" as="h2" className="display h-xl mt-6" lines={["Three ways in.", <em key="e">One room.</em>]} />
+
+          <div className="mt-14 grid gap-6 lg:grid-cols-3 lg:gap-8">
+            {WAYS.map((w, i) => (
+              <Reveal key={w.kind} delay={i * 0.1}>
+                <article className={`${WAY_CARD} ${w.kind === "candidate" ? "hover-lift-gold relative border-[#b8975a] shadow-[0_0_0_1px_#b8975a,0_24px_60px_-24px_rgb(184_151_90/0.55)]" : "border-[var(--line)]"}`}>
+                  <div className="relative aspect-[16/9] overflow-hidden">
+                    <WayArt kind={w.kind} className="absolute inset-0 h-full w-full" />
+                  </div>
+                  <div className="flex flex-1 flex-col p-7 sm:p-8">
+                    <p className="eyebrow">{w.who}</p>
+                    <h3 className="display mt-3 text-[2.1rem] leading-[1.02] sm:text-[2.4rem]">{w.a} <em>{w.b}</em></h3>
+                    <p className="mt-4 text-sm text-[var(--fg-faint)]">{facts[w.kind]}</p>
+                    <div className="mt-auto pt-7">
+                      <LiquidButton href={w.href} variant="primary" size="lg" className="w-full">{w.cta}</LiquidButton>
+                    </div>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
           <Reveal delay={0.1}>
-            <p className="mt-16 max-w-[60ch] text-sm text-[var(--fg-faint)]">
-              Employment decisions remain with the participating employers. Registration and payment do not guarantee an offer. <Link href="/how-it-works" className="link-u text-[var(--fg)]">The full process</Link>
+            <p className="mt-8 max-w-[64ch] text-sm text-[var(--fg-faint)]">
+              No offer is guaranteed. Selection is the panel’s decision, and hiring is each company’s own.
             </p>
           </Reveal>
         </div>
@@ -80,7 +93,6 @@ export function ActProcess() {
   );
 }
 
-/* ------------------------ Act V: Four disciplines -------------------------- */
 const PANEL_TONE: Record<string, { bg: string; theme: "dark" | "light" }> = {
   "it-technology": { bg: "#2a2033", theme: "dark" },
   "finance-accounting": { bg: "#e3cfa8", theme: "light" },
@@ -91,14 +103,10 @@ const PANEL_TONE: Record<string, { bg: string; theme: "dark" | "light" }> = {
 export function ActDisciplines() {
   return (
     <>
-      <Curve from={COLOR.aubergine} to={COLOR.ivory} shape="arc" />
       <section data-theme="light" aria-labelledby="act-disciplines" className="section cv-auto !pt-16 sm:!pt-24">
         <div className="wrap">
-          <Reveal><Eyebrow>Season 01 · Four disciplines</Eyebrow></Reveal>
-          <Lines id="act-disciplines" as="h2" className="display h-xl mt-8 max-w-[16ch]" lines={["Four categories.", <em key="e">Real decisions.</em>]} />
-          <Reveal delay={0.1}>
-            <p className="lede mt-8">The first season focuses on four internship categories and gives candidates a transparent opportunity to demonstrate their skills.</p>
-          </Reveal>
+          <Reveal><Eyebrow>Multiple disciplines</Eyebrow></Reveal>
+          <Lines id="act-disciplines" as="h2" className="display h-xl mt-6 max-w-[16ch]" lines={["Four categories.", <em key="e">Real decisions.</em>]} />
           <Reveal delay={0.15} className="mt-16">
             <ul className="panels overflow-hidden rounded-[1.2rem]">
               {industries.map((i) => {
@@ -132,205 +140,105 @@ export function ActDisciplines() {
   );
 }
 
-/* ----------------------- Act VI: Inside the experience --------------------- */
-const MOMENTS = [
-  ["Candidate pitches", "A short introduction, a demonstration, a story."],
-  ["Industry evaluation", "Panelists assess skills, communication and potential."],
-  ["Real conversations", "Questions that go further than a résumé can."],
-  ["Panel questions", "Where thinking becomes visible."],
-  ["Audience learning", "Everyone in the room learns what hiring looks like."],
-  ["Possible decisions", "Offers, where a panel sees fit, are the company’s call."],
-];
-
-export function ActInside() {
-  return (
-    <>
-      <Curve from={COLOR.ivory} to={COLOR.aubergine} shape="tide" />
-      <section data-theme="dark" aria-labelledby="act-inside" className="relative isolate overflow-hidden">
-        <div aria-hidden className="absolute inset-0 -z-10">
-          <Image src="/images/concept-stage.jpg" alt="" fill sizes="100vw" className="object-cover object-[50%_40%] opacity-60" />
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#160f1c_8%,rgb(22_15_28/0.8)_45%,rgb(22_15_28/0.35)_100%),linear-gradient(to_bottom,#160f1c,transparent_25%,transparent_70%,#160f1c)]" />
-        </div>
-        <div className="wrap section cv-auto !pt-12">
-          <Reveal><Eyebrow>Inside the experience</Eyebrow></Reveal>
-          <Lines id="act-inside" as="h2" className="display h-xl mt-8 max-w-[12ch]" lines={["A room where", <em key="e">people are heard.</em>]} />
-          <ul className="mt-16 grid max-w-3xl gap-x-12 sm:grid-cols-2">
-            {MOMENTS.map(([t, d], i) => (
-              <Reveal as="li" key={t} delay={i * 0.06} className="border-t border-[var(--line)] py-5">
-                <h3 className="display text-2xl">{t}</h3>
-                <p className="mt-1 text-sm text-[var(--fg-dim)]">{d}</p>
-              </Reveal>
-            ))}
-          </ul>
-          <p className="eyebrow mt-10">Conceptual imagery · not footage from an event</p>
-        </div>
-      </section>
-    </>
-  );
-}
-
-const CARD = "hover-lift flex h-full flex-col rounded-[1.2rem] border p-8 sm:p-9";
-
-/* ------------------------ Act VII: Your place ------------------------------ */
-export function ActPlace() {
-  const afterShortlist = pricing.candidatePaymentStage === "after_shortlist";
-  return (
-    <>
-      <Curve from={COLOR.aubergine} to={COLOR.ivory} shape="swell" flip />
-      <section data-theme="light" aria-labelledby="act-place" className="section cv-auto !pt-16 sm:!pt-24">
-        <div className="wrap">
-          <Reveal><Eyebrow>Three ways in</Eyebrow></Reveal>
-          <Lines id="act-place" as="h2" className="display h-xl mt-8 max-w-[14ch]" lines={["There is a place", <em key="e">for you in the room.</em>]} />
-
-          <div className="mt-16 grid gap-6 lg:grid-cols-3 lg:gap-8">
-            {/* Three cards of one family; the candidate card is the highlighted one. */}
-            <Reveal>
-              <article className={`${CARD} hover-lift-gold relative border-[#b8975a] bg-[var(--bg-raised)] shadow-[0_0_0_1px_#b8975a,0_24px_60px_-24px_rgb(184_151_90/0.55)]`}>
-                <span aria-hidden className="absolute inset-x-8 top-0 h-[3px] rounded-b-full bg-[#b8975a]" />
-                <p className="eyebrow">Candidate</p>
-                <p className="display mt-3 text-6xl leading-none" aria-label={`${formatINR(pricing.candidate.amount)} candidate ticket`}>{formatINR(pricing.candidate.amount)}</p>
-                <p className="mt-2 text-sm text-[var(--fg-faint)]">Candidate ticket · food included</p>
-                <p className="mt-6 text-[var(--fg-dim)]">Put your skills, story and personality in front of real hiring decision-makers.</p>
-                <ul className="mt-5 grid gap-2 text-sm text-[var(--fg-dim)]">
-                  {[...inclusions.both, ...inclusions.candidate].map((f) => <li key={f} className="border-t border-[var(--line)] pt-2">{f}</li>)}
-                </ul>
-                <p className="mt-5 text-xs text-[var(--fg-faint)]">
-                  {afterShortlist ? "Applying is free; the ticket is requested after you are shortlisted. " : "Payable when you register. "}Not a guarantee of an offer. Selection depends entirely on the panel’s decision.
-                </p>
-                <div className="mt-auto pt-8"><LiquidButton href="/register/candidate" variant="primary" size="lg" className="w-full">Apply as a Candidate</LiquidButton></div>
-              </article>
-            </Reveal>
-
-            <Reveal delay={0.1}>
-              <article className={`${CARD} border-[var(--line)] bg-[var(--bg-raised)]`}>
-                <p className="eyebrow">Hiring companies</p>
-                <h3 className="display mt-3 text-6xl leading-none">Recruiter</h3>
-                <p className="mt-2 text-sm text-[var(--fg-faint)]">Participation by enquiry</p>
-                <p className="mt-6 text-[var(--fg-dim)]">Meet candidates, evaluate their potential and offer meaningful internship opportunities.</p>
-                <p className="mt-5 text-xs text-[var(--fg-faint)]">No hiring outcome or media reach is promised.</p>
-                <div className="mt-auto pt-8"><LiquidButton href="/for-recruiters" variant="glass" size="lg" className="w-full">Apply as a Recruiter</LiquidButton></div>
-              </article>
-            </Reveal>
-
-            <Reveal delay={0.2}>
-              <article className={`${CARD} border-[var(--line)] bg-[var(--bg-raised)]`}>
-                <p className="eyebrow">Audience</p>
-                <p className="display mt-3 text-6xl leading-none" aria-label={`${formatINR(pricing.audience.amount)} audience ticket`}>{formatINR(pricing.audience.amount)}</p>
-                <p className="mt-2 text-sm text-[var(--fg-faint)]">Audience ticket · food included</p>
-                <p className="mt-6 text-[var(--fg-dim)]">Follow the journey, learn from real interviews and join the community.</p>
-                <div className="mt-auto pt-8"><LiquidButton href="/register/audience" variant="glass" size="lg" className="w-full">Audience tickets</LiquidButton></div>
-              </article>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-    </>
-  );
-}
-
-/* ------------------------ Act X: The show ---------------------------------- */
-export function ActShow() {
-  return (
-    <>
-      <Curve from={COLOR.ivory} to={COLOR.aubergine} shape="tide" />
-      <section data-theme="dark" aria-labelledby="act-show" className="section cv-auto !pt-16 sm:!pt-24">
-        <div className="wrap">
-          <Reveal><Eyebrow>The Show</Eyebrow></Reveal>
-          <Lines id="act-show" as="h2" className="display h-xl mt-8 max-w-[14ch]" lines={["Hiring,", <em key="e">on camera.</em>]} />
-          <Reveal delay={0.1}>
-            <p className="lede mt-8">The live event is filmed and published on YouTube: full episodes, candidate pitches, panel conversations, highlights and behind the scenes, always with participants’ permission.</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <LiquidButton href={brand.social.youtube} external variant="primary" size="lg">Visit @thebelievingroom</LiquidButton>
-              <LiquidButton href="/the-show" variant="glass" size="lg">About the show</LiquidButton>
-            </div>
-          </Reveal>
-          <div className="mt-16"><ShowShelf /></div>
-        </div>
-      </section>
-    </>
-  );
-}
-
-/* ------------------------ Act XI: The podcast ------------------------------ */
-const POD_THEMES = ["The first opportunity", "What recruiters evaluate", "Life before the first job", "Founders and hiring", "Career mistakes", "Creative careers"];
-
-export function ActPodcast() {
-  return (
-    <>
-      <Curve from={COLOR.aubergine} to={COLOR.pearl} shape="swell" flip />
-      <section data-theme="light" aria-labelledby="act-podcast" className="section cv-auto !bg-[var(--bg-raised)] !pt-16 sm:!pt-24" style={{ ["--bg" as string]: COLOR.pearl }}>
-        <div className="wrap grid gap-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-24">
-          <div>
-            <Reveal><Eyebrow>The Podcast</Eyebrow></Reveal>
-            <Lines id="act-podcast" as="h2" className="display h-xl mt-8" lines={["Conversations before", <em key="e">the first job.</em>]} />
-            <Reveal delay={0.15}>
-              <p className="lede mt-8">Long-form interviews with founders, hiring managers, interns and mentors about ambition, recruitment and how careers actually begin. Intelligent and conversational, not motivational.</p>
-              <p className="mt-6 max-w-[56ch] text-sm text-[var(--fg-faint)]">Recording location to be announced. Equipment and production are arranged by The Believing Room.</p>
-              <p className="eyebrow mt-6">Coming soon · no episodes published yet</p>
-              <div className="mt-8"><LiquidButton href="/podcast" variant="glass" size="lg">The podcast</LiquidButton></div>
-            </Reveal>
-          </div>
-          <Reveal delay={0.1} className="self-end">
-            <ul className="border-t border-[var(--fg)]">
-              {POD_THEMES.map((t, i) => (
-                <li key={t} className="display flex items-baseline gap-5 border-b border-[var(--line)] py-4 text-2xl sm:text-3xl">
-                  <span className="eyebrow w-6">{String(i + 1).padStart(2, "0")}</span>{t}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-        </div>
-      </section>
-    </>
-  );
-}
-
 /* ------------------------ Scene III: The confirmed ecosystem ---------------- */
 export function ActEcosystem() {
   return (
     <section data-theme="light" aria-labelledby="act-ecosystem" className="section cv-auto !bg-[var(--bg-raised)] !pt-16 sm:!pt-24" style={{ ["--bg" as string]: COLOR.pearl }}>
       <div className="wrap">
-        <Reveal><Eyebrow>The confirmed ecosystem</Eyebrow></Reveal>
-        <Lines id="act-ecosystem" as="h2" className="display h-xl mt-8 max-w-[24ch]" lines={["The people and organisations", <em key="e">helping bring the room to life.</em>]} />
+        <Reveal><Eyebrow>Confirmed participants</Eyebrow></Reveal>
+        <Lines id="act-ecosystem" as="h2" className="display h-xl mt-8 max-w-[24ch]" lines={["Who is", <em key="e">in the room.</em>]} />
         <div className="mt-16"><EcosystemHome /></div>
       </div>
     </section>
   );
 }
 
-/* ------------------------ Scene XI: Sponsor the room ----------------------- */
-export function ActSponsor() {
+/* ------------------------ Act X: The show ---------------------------------- */
+export function ActMedia() {
   return (
     <>
-      <Curve from={COLOR.pearl} to={COLOR.aubergine} shape="veil" />
-      <section data-theme="dark" aria-labelledby="act-sponsor" className="section cv-auto !pt-16 sm:!pt-24">
-        <div className="wrap grid gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-24">
+      <Curve from={COLOR.pearl} to={COLOR.aubergine} shape="tide" />
+      <section data-theme="dark" aria-labelledby="act-media" className="section cv-auto !pt-16 sm:!pt-24">
+        <div className="wrap">
+          <Reveal><Eyebrow>Filmed and recorded</Eyebrow></Reveal>
+          <Lines id="act-media" as="h2" className="display h-xl mt-6 max-w-[16ch]" lines={["Hiring,", <em key="e">on camera and on air.</em>]} />
+
+          <div className="mt-14 grid gap-6 lg:grid-cols-2 lg:gap-8">
+            {[
+              {
+                kind: "show" as const, who: "The Show", a: "Every pitch,", b: "published.",
+                line: "Each edition is filmed for YouTube, always with participants’ permission.",
+                status: "Nothing is published yet. The first episode follows the first event.",
+                actions: (
+                  <>
+                    <LiquidButton href="/the-show" variant="primary">About the show</LiquidButton>
+                    <LiquidButton href={brand.social.youtube} external variant="glass">YouTube channel</LiquidButton>
+                  </>
+                ),
+              },
+              {
+                kind: "podcast" as const, who: "The Podcast", a: "Before the", b: "first job.",
+                line: "Founders, hiring managers, interns and mentors on how careers really begin.",
+                status: "Coming soon. No episodes are published yet.",
+                actions: <LiquidButton href="/podcast" variant="glass">About the podcast</LiquidButton>,
+              },
+            ].map((m, i) => (
+              <Reveal key={m.kind} delay={i * 0.1}>
+                <article className="way hover-lift flex h-full flex-col overflow-hidden rounded-[1.3rem] border border-[var(--line)] bg-[var(--bg-raised)]">
+                  <div className="relative aspect-[16/9] overflow-hidden">
+                    <WayArt kind={m.kind} className="absolute inset-0 h-full w-full" />
+                  </div>
+                  <div className="flex flex-1 flex-col p-7 sm:p-8">
+                    <p className="eyebrow">{m.who}</p>
+                    <h3 className="display mt-3 text-[2.1rem] leading-[1.02] sm:text-[2.4rem]">{m.a} <em>{m.b}</em></h3>
+                    <p className="mt-4 text-[var(--fg-dim)]">{m.line}</p>
+                    <p className="mt-3 text-sm text-[var(--fg-faint)]">{m.status}</p>
+                    <div className="mt-auto flex flex-wrap gap-3 pt-7">{m.actions}</div>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+
+          {/* Appears only once episodes are published */}
+          <ShowShelf />
+        </div>
+      </section>
+    </>
+  );
+}
+
+export function ActSponsor() {
+  return (
+    <section data-theme="dark" aria-labelledby="act-sponsor" className="section cv-auto !pt-8 sm:!pt-12">
+      <div className="wrap">
+        <div className="hairline mb-16 sm:mb-24" />
+        <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
           <div>
             <Reveal><Eyebrow>Sponsor the room</Eyebrow></Reveal>
-            <Lines id="act-sponsor" as="h2" className="display h-xl mt-8" lines={["Help make", <em key="e">opportunity visible.</em>]} />
+            <Lines id="act-sponsor" as="h2" className="display h-xl mt-6" lines={["Help make", <em key="e">opportunity visible.</em>]} />
             <Reveal delay={0.15}>
-              <p className="lede mt-8">
-                The venue is yet to be announced. Filming, audio, lighting, postproduction, hospitality and event operations still need support. Founding partners are being invited to help produce a first season that is honest, well made and useful to students.
-              </p>
-              <div className="mt-9 flex flex-wrap gap-3">
+              <p className="lede mt-7">The venue is yet to be announced. Founding partners are invited to help produce Season 01.</p>
+              <ul className="mt-6 flex flex-wrap gap-2" aria-label="What partners help produce">
+                {["Filming and audio", "Hospitality", "Media production"].map((t) => (
+                  <li key={t} className="rounded-full border border-[var(--line)] px-4 py-1.5 text-sm text-[var(--fg-dim)]">{t}</li>
+                ))}
+              </ul>
+              <p className="eyebrow mt-4">Proposed formats · subject to agreement</p>
+              <div className="mt-8 flex flex-wrap gap-3">
                 <LiquidButton href="/sponsors" variant="primary" size="lg">Explore partnership</LiquidButton>
                 <LiquidButton href="/sponsors#enquiry" variant="glass" size="lg">Start a conversation</LiquidButton>
               </div>
             </Reveal>
           </div>
           <Reveal delay={0.1}>
-            <ul className="border-t border-[var(--fg)]">
-              {["Professional filming and audio", "Candidate and guest hospitality", "Educational content", "Responsible media production"].map((t, i) => (
-                <li key={t} className="display flex items-baseline gap-5 border-b border-[var(--line)] py-4 text-2xl sm:text-3xl">
-                  <span className="eyebrow w-6">{String(i + 1).padStart(2, "0")}</span>{t}
-                </li>
-              ))}
-            </ul>
-            <p className="eyebrow mt-4">Proposed formats · subject to agreement</p>
+            <div className="relative aspect-[16/10] overflow-hidden rounded-[1.4rem] border border-[#cbae76]/35 shadow-[0_36px_80px_-40px_rgb(0_0_0/0.85)]">
+              <WayArt kind="partners" className="absolute inset-0 h-full w-full" />
+            </div>
           </Reveal>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }
 
@@ -345,17 +253,12 @@ export function ActManifesto() {
           <LogoBadge size={88} />
           <Lines id="act-manifesto" as="h2" className="display h-xl mt-10 max-w-[16ch]" lines={["Talent is everywhere.", <em key="e">Opportunity shouldn’t be hidden.</em>]} />
           <Reveal delay={0.2}>
-            <p className="lede mx-auto mt-8">Be one of the first candidates, companies or supporters to help build a different hiring experience.</p>
+            <p className="lede mx-auto mt-8">Be one of the first in the room.</p>
             <div className="mt-10 flex flex-wrap justify-center gap-3">
               <MagneticCTA href="/register/candidate">Apply as a Candidate</MagneticCTA>
               <LiquidButton href="/for-recruiters" variant="glass" size="lg">I’m Hiring</LiquidButton>
             </div>
-            <ul className="mt-14 flex flex-wrap justify-center gap-x-7 gap-y-2" aria-label="Follow the journey">
-              {socialLinks.map((s) => (
-                <li key={s.key}><a href={s.href} target="_blank" rel="noopener noreferrer" className="link-u text-sm text-[var(--fg-dim)] hover:text-[var(--fg)]">{s.label} · {s.handle}</a></li>
-              ))}
-            </ul>
-            <a className="link-u mt-5 inline-block text-sm" href={`mailto:${brand.contactEmail}`}>{brand.contactEmail}</a>
+            <a className="link-u mt-14 inline-block text-sm" href={`mailto:${brand.contactEmail}`}>{brand.contactEmail}</a>
           </Reveal>
         </div>
       </section>

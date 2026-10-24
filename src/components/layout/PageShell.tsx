@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { COLOR, Curve } from "../sections/Curve";
-import { RibbonArt } from "../sections/RibbonArt";
+import { WayArt, type SceneKind } from "../sections/WayArt";
 
 /** Dark cinematic title block followed by a luminous (or dark) content body. */
 export function PageShell({
@@ -11,6 +11,8 @@ export function PageShell({
   body = "light",
   accent,
   actions,
+  art,
+  longTitle = false,
 }: {
   eyebrow: string;
   title: ReactNode;
@@ -19,10 +21,14 @@ export function PageShell({
   body?: "light" | "dark";
   accent?: string;
   actions?: ReactNode;
+  /** An illustration for the title block. Pages without one (the legal pages) stay text only. */
+  art?: SceneKind;
+  /** A long, two-sentence title: set it one size smaller so it does not run to five lines. */
+  longTitle?: boolean;
 }) {
   return (
     <>
-      <section data-theme="dark" className="relative isolate overflow-hidden pb-16 pt-40 sm:pb-24 sm:pt-48" style={accent ? ({ ["--accent" as string]: accent } as React.CSSProperties) : undefined}>
+      <section data-theme="dark" className="relative isolate overflow-hidden pb-16 pt-40 sm:pb-24 sm:pt-44" style={accent ? ({ ["--accent" as string]: accent } as React.CSSProperties) : undefined}>
         <div
           aria-hidden
           className="absolute inset-0 -z-10"
@@ -31,24 +37,23 @@ export function PageShell({
             background: `linear-gradient(to bottom, transparent 62%, #160f1c 100%), radial-gradient(60% 80% at 82% 0%, color-mix(in srgb, ${accent ?? "#8c7a9b"} 26%, transparent), transparent 70%), radial-gradient(50% 60% at 0% 100%, rgb(203 174 118 / 0.1), transparent 70%), #160f1c`,
           }}
         />
-        {/* A quiet, static fragment of the homepage sculpture: identity without competing with the title. Wide screens only. */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 right-0 -z-10 hidden w-[46%] opacity-[0.42] lg:block"
-          style={{ maskImage: "linear-gradient(to right, transparent 0%, #000 42%), linear-gradient(to bottom, #000 55%, transparent 100%)", maskComposite: "intersect", WebkitMaskComposite: "source-in" }}
-        >
-          <RibbonArt still className="h-full w-full" />
-        </div>
-        <div className="wrap">
+        <div className={`wrap ${art ? "grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14" : ""}`}>
           <div className="enter">
             <p className="eyebrow flex items-center gap-3">
               <span aria-hidden className="h-px w-8 bg-[var(--accent)]" />
               {eyebrow}
             </p>
-            <h1 className="display h-xl mt-6 max-w-[18ch]">{title}</h1>
-            {lede && <p className="lede mt-7">{lede}</p>}
-            {actions && <div className="mt-9 flex flex-wrap gap-3">{actions}</div>}
+            <h1 className={`display ${longTitle ? "h-lg" : "h-xl"} mt-6 max-w-[24ch]`}>{title}</h1>
+            {lede && <p className="lede mt-6">{lede}</p>}
+            {actions && <div className="mt-8 flex flex-wrap gap-3">{actions}</div>}
           </div>
+          {art && (
+            <div className="enter relative mx-auto w-full max-w-[34rem] lg:max-w-none" style={{ animationDelay: "0.15s" }}>
+              <div className="relative aspect-[16/9] overflow-hidden rounded-[1.4rem] border border-[#cbae76]/35 shadow-[0_36px_80px_-40px_rgb(0_0_0/0.85)]">
+                <WayArt kind={art} className="absolute inset-0 h-full w-full" />
+              </div>
+            </div>
+          )}
         </div>
       </section>
       {children && body === "light" && <Curve from={COLOR.aubergine} to={COLOR.ivory} shape="swell" />}

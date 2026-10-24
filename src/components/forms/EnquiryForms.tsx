@@ -24,7 +24,7 @@ function useEnquiry(url: string) {
   return { errors, fail, busy, done, submit };
 }
 
-const COMPANY_INTERESTS = ["Hire interns", "Be a panelist", "Sponsor / brand visibility", "Appear on the show or podcast"];
+const COMPANY_INTERESTS = ["Be a panelist", "Sponsor / brand visibility", "Appear on the show or podcast"];
 const COLLEGE_INTERESTS = ["Send students to pitch", "Coordinated registrations", "Campus outreach", "Host a screening round"];
 
 function Interests({ name, options }: { name: string; options: string[] }) {

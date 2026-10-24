@@ -38,7 +38,7 @@ export function AudienceForm() {
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (custom && (q < quickPickMax + 1 || q > maxPerOrder)) {
-      setErrors({ quantity: `Enter a whole number from ${quickPickMax + 1} to ${maxPerOrder}.` });
+      setErrors({ quantity: `Enter a whole number of ${quickPickMax + 1} or more.` });
       return;
     }
     const website = (e.currentTarget.elements.namedItem("website") as HTMLInputElement | null)?.value ?? "";
@@ -65,7 +65,7 @@ export function AudienceForm() {
         />
         {custom && (
           <TextField
-            name="customQty" label={`How many tickets? (${quickPickMax + 1} to ${maxPerOrder})`} inputMode="numeric" required
+            name="customQty" label={`How many tickets? (${quickPickMax + 1} or more)`} inputMode="numeric" required
             value={customQty} onChange={setCustomQty} error={errors.quantity}
             hint="Enter the whole number of tickets you need."
           />
@@ -75,7 +75,7 @@ export function AudienceForm() {
           <TextField name="phone" label="Mobile number" type="tel" inputMode="tel" required autoComplete="tel" value={v.phone} onChange={set("phone")} error={errors.phone} />
           <div className="sm:col-span-2"><TextField name="email" label="Email" type="email" required autoComplete="email" value={v.email} onChange={set("email")} error={errors.email} /></div>
         </div>
-        {q > 1 && (
+        {q > 1 && q <= 20 && (
           <fieldset className="grid gap-4">
             <legend className="eyebrow mb-1">Names on tickets (optional)</legend>
             {Array.from({ length: q }, (_, i) => (
@@ -96,7 +96,7 @@ export function AudienceForm() {
         <p className="eyebrow">Planned price</p>
         <p className="display mt-3 text-4xl">{formatINR(pricing.audience.amount)} <span className="text-base text-[var(--fg-dim)]">per ticket</span></p>
         <ul className="mt-5 grid gap-1 text-sm text-[var(--fg-dim)]">{inclusions.both.map((i) => <li key={i}>✓ {i}</li>)}</ul>
-        <p className="mt-5 text-xs text-[var(--fg-faint)]">Nothing is charged now. Entry and food only: not a guarantee of selection, an internship or any hiring outcome.</p>
+        <p className="mt-5 text-xs text-[var(--fg-faint)]">Nothing is charged now. Entry, food and goodies only: not a guarantee of selection, an internship or any hiring outcome.</p>
       </aside>
     </form>
   );

@@ -1,32 +1,15 @@
 import { Hero } from "@/components/sections/Hero";
-import { StageBanner } from "@/components/sections/StageBanner";
-import {
-  ActDisciplines,
-  ActEcosystem,
-  ActInside,
-  ActManifesto,
-  ActPhilosophy,
-  ActPlace,
-  ActPodcast,
-  ActProcess,
-  ActShow,
-  ActSponsor,
-} from "@/components/sections/Acts";
-
+import { ActDisciplines, ActEcosystem, ActHow, ActManifesto, ActMedia, ActSponsor, ActWays } from "@/components/sections/Acts";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <StageBanner />
-      <ActPhilosophy />
-      <ActEcosystem />
-      <ActProcess />
+      <ActHow />
+      <ActWays />
       <ActDisciplines />
-      <ActInside />
-      <ActPlace />
-      <ActShow />
-      <ActPodcast />
+      <ActEcosystem />
+      <ActMedia />
       <ActSponsor />
       <ActManifesto />
     </>

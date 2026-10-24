@@ -26,7 +26,7 @@ export default async function Episodes({ searchParams }: { searchParams: Promise
   const chip = (active: boolean) => `inline-flex min-h-11 items-center rounded-full border px-4 text-sm transition-colors ${active ? "border-[var(--accent)] bg-[var(--accent)]/15 text-[var(--fg)]" : "border-white/15 text-[var(--fg-dim)] hover:text-[var(--fg)]"}`;
 
   return (
-    <PageShell eyebrow="Archive" title={<>All <em>episodes.</em></>} lede={all.length ? `${all.length} published.` : "The archive opens with the first edition."} body="dark">
+    <PageShell eyebrow="Archive" art="show" title={<>All <em>episodes.</em></>} lede={all.length ? `${all.length} published.` : "The archive opens with the first edition."} body="dark">
       {all.length === 0 ? (
         <Prelaunch what="Episodes" />
       ) : (

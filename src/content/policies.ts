@@ -37,7 +37,7 @@ export const registrationTerms: PolicyItem[] = [
     id: "included",
     title: "What’s included",
     body: "Food for all attendees, and panel review and guidance for all candidates. An offer letter for selected candidates only. Selection depends entirely on the panel’s decision, and registration does not guarantee an offer.",
-    needsDecision: "The source says “lunch and goodies”. Goodies are unconfirmed and are not shown publicly. The owner confirmed ‘food included’ only.",
+    needsDecision: "The source says “lunch and goodies”. Goodies are unconfirmed and are not shown publicly. The owner confirmed ‘food and goodies included’ only.",
   },
   {
     id: "recording",

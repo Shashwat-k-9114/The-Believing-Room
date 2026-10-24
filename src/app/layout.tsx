@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant, Hanken_Grotesk } from "next/font/google";
+import { DM_Sans, Space_Grotesk } from "next/font/google";
 import { brand, socialLinks } from "@/config/site";
 import { isIndexable } from "@/lib/indexing";
 import { CURTAIN_GUARD, CurtainIntro } from "@/components/layout/CurtainIntro";
@@ -7,9 +7,9 @@ import { Footer } from "@/components/layout/Footer";
 import { GlassNavigation } from "@/components/layout/GlassNavigation";
 import "./globals.css";
 
-const grotesk = Hanken_Grotesk({ subsets: ["latin"], variable: "--font-grotesk", display: "swap" });
-// Display serif: Cormorant (SIL OFL). Used large only; body copy is always the grotesk.
-const serif = Cormorant({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-serif", display: "swap" });
+// Body and UI: DM Sans. Headlines: Space Grotesk, bold and slightly condensed in spacing, for the stage-show voice (both SIL OFL).
+const body = DM_Sans({ subsets: ["latin"], style: ["normal", "italic"], variable: "--font-grotesk", display: "swap" });
+const head = Space_Grotesk({ subsets: ["latin"], variable: "--font-head", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(brand.url),
@@ -51,7 +51,7 @@ if((navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=2)d.class
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" className={`${grotesk.variable} ${serif.variable}`} suppressHydrationWarning>
+    <html lang="en-IN" className={`${body.variable} ${head.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
         <script dangerouslySetInnerHTML={{ __html: CURTAIN_GUARD }} />

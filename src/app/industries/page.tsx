@@ -13,7 +13,8 @@ export const metadata: Metadata = {
 
 export default function Industries() {
   return (
-    <PageShell eyebrow="Four disciplines" title={<>One stage. <em>Four industries.</em></>} lede="Each discipline has its own panel, its own pitch formats and its own idea of what good looks like. Pick the one where you can show, not just tell.">
+    <PageShell eyebrow="Multiple disciplines" title={<>One stage. <em>Four industries.</em></>} lede="Four panels. Pick the one where you can show, not just tell."
+      art="candidate">
       <ul className="grid gap-px overflow-hidden rounded-[2rem] border border-[var(--line)] bg-[var(--line)] md:grid-cols-2">
         {industries.map((i) => (
           <li key={i.slug} className="bg-[var(--bg)]">

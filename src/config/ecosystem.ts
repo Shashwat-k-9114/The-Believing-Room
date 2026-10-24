@@ -63,7 +63,7 @@ export const phaseMeta = (key: string | null | undefined) =>
 
 /** Sponsorship enquiry options. */
 export const SPONSOR_INTERESTS = [
-  "Founding Presenting Partner",
+  "Presenting Partner",
   "Industry Partner",
   "Community / Supporting Partner",
   "In-Kind Production Partner",

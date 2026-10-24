@@ -34,24 +34,13 @@ test.describe("cross-browser", () => {
     }
   });
 
-  test("menu: opens, Escape closes, focus returns, Tab never reaches the page behind", async ({ page }) => {
+  test("navigation: the bar links are keyboard reachable and there is no menu dialog", async ({ page }) => {
     await skipIntro(page);
     await page.goto("/");
-    const opener = page.getByRole("button", { name: "Open menu" });
-    await opener.click();
-    const dlg = page.getByRole("dialog");
-    await expect(dlg).toBeVisible();
-    for (let i = 0; i < 28; i++) {
-      await page.keyboard.press("Tab");
-      const behind = await page.evaluate(() => {
-        const a = document.activeElement;
-        return !!a && a !== document.body && a !== document.documentElement && !a.closest("dialog");
-      });
-      expect(behind, `Tab ${i} reached the page behind the dialog`).toBe(false);
-    }
-    await page.keyboard.press("Escape");
-    await expect(dlg).toBeHidden();
-    await expect(opener).toBeFocused();
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Disciplines" }).focus();
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/\/industries/);
   });
 
   test("sponsor enquiry persists and the confirmation saves and confirms with a reference", async ({ page, browserName }) => {

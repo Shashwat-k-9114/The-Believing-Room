@@ -28,7 +28,8 @@ export default async function Podcast() {
     <PageShell
       eyebrow="Podcast · provisional title"
       title={<>{p.name}<em>.</em></>}
-      lede="A premium interview series: founders, hiring managers, interns and mentors, talking plainly about how careers start and what people get wrong. Recorded as video for YouTube, distributed as audio."
+      lede="Founders, hiring managers, interns and mentors on how careers really start."
+      art="podcast"
       body="dark"
       actions={
         <>
@@ -51,10 +52,13 @@ export default async function Podcast() {
           <p className="eyebrow">Editorial themes</p>
           <ul className="mt-4 divide-y divide-white/10 border-y border-white/10">{THEMES.map((t) => <li key={t} className="display py-4 text-2xl">{t}</li>)}</ul>
         </div>
-        <div className="prose-arena">
-          <p className="eyebrow">How it will be made</p>
-          <p>Full-length episodes are modelled separately from clips, so each can live in its own YouTube playlist and be distributed to audio platforms later without restructuring anything.</p>
-          <p>The series title above is provisional. Guests are named only once they have agreed, and transcripts are published when available. Spotify and Apple Podcasts links will appear here as each is set up.</p>
+        <div>
+          <p className="eyebrow">Good to know</p>
+          <ul className="mt-4 grid gap-3 text-[var(--fg-dim)]">
+            <li>The series title is provisional.</li>
+            <li>Guests are named only once they agree.</li>
+            <li>Recorded as video for YouTube, then shared as audio.</li>
+          </ul>
         </div>
       </div>
     </PageShell>

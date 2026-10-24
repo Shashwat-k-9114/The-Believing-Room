@@ -72,7 +72,7 @@ export default async function EventPage({ params }: { params: Promise<{ slug: st
           <ul className="mt-6 divide-y divide-[var(--line)] border-y border-[var(--line)]">
             {([["candidate", e.studentTicketsOpen], ["audience", e.audienceTicketsOpen]] as const).map(([k, open]) => (
               <li key={k} className="flex items-center justify-between gap-4 py-5">
-                <div><p className="display text-2xl">{pricing[k].label}</p><p className="text-sm text-[var(--fg-faint)]">Food included</p></div>
+                <div><p className="display text-2xl">{pricing[k].label}</p><p className="text-sm text-[var(--fg-faint)]">Food and goodies included</p></div>
                 <div className="text-right"><p className="display text-3xl">{formatINR(pricing[k].amount)}</p><ElasticPill tone={open && status === "registration_open" ? "live" : "neutral"}>{open && status === "registration_open" ? "Open" : "Not open"}</ElasticPill></div>
               </li>
             ))}

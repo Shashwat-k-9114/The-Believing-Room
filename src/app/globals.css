@@ -18,7 +18,7 @@
   --color-gold: #a98a4f;
 
   --font-sans: var(--font-grotesk), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-serif), "Cormorant Garamond", Georgia, serif;
+  --font-display: var(--font-head), ui-sans-serif, system-ui, sans-serif;
 
   --ease-cinema: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -59,7 +59,7 @@ body {
   color: var(--fg);
   font-family: var(--font-sans);
   font-size: 1.0625rem;
-  line-height: 1.6;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: clip;
@@ -87,17 +87,15 @@ header[data-theme] {
 
 .display {
   font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: -0.012em;
-  line-height: 1.02;
-  font-optical-sizing: auto;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
   text-wrap: balance;
 }
-.display em {
-  font-style: italic;
-  color: var(--accent);
-  font-weight: 400;
-}
+/* Space Grotesk has no italic: emphasis is colour, never a faked slant. */
+.display, .display.italic, .display em { font-style: normal; }
+.display em { color: var(--accent); font-weight: inherit; }
+.h-mega, .h-hero, .h-xl, .h-lg { font-weight: 700; letter-spacing: -0.04em; }
 .eyebrow,
 .mono {
   font-family: var(--font-sans);
@@ -114,10 +112,11 @@ header[data-theme] {
   max-width: 58ch;
   text-wrap: pretty;
 }
-.h-mega { font-size: clamp(3rem, min(8.4vw, 13.5svh), 9.5rem); }
-.h-xl { font-size: clamp(2.6rem, 1.4rem + 4.2vw, 5.6rem); }
-.h-lg { font-size: clamp(2rem, 1.2rem + 2.8vw, 3.8rem); }
-.h-md { font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.4rem); }
+.h-mega { font-size: clamp(2.6rem, min(7vw, 12svh), 7.4rem); }
+.h-hero { font-size: clamp(2.35rem, min(4.7vw, 10.5svh), 4.9rem); line-height: 1; }
+.h-xl { font-size: clamp(2.2rem, 1.2rem + 3.5vw, 4.6rem); }
+.h-lg { font-size: clamp(1.8rem, 1.1rem + 2.4vw, 3.1rem); }
+.h-md { font-size: clamp(1.4rem, 1.1rem + 1.1vw, 2.1rem); }
 
 .prose-arena p {
   color: var(--fg-dim);
@@ -150,7 +149,7 @@ header[data-theme] {
   padding-inline: clamp(1.25rem, 4.5vw, 3.5rem);
 }
 .section {
-  padding-block: clamp(5.5rem, 12vw, 12rem);
+  padding-block: clamp(4rem, 8vw, 8rem);
   position: relative;
 }
 .hairline { height: 1px; background: var(--line); }
@@ -288,7 +287,7 @@ html.low-gfx .glass::before { display: none; }
 html:not(.js) .reveal { opacity: 1; transform: none; }
 
 /* Line-by-line typographic mask: each .ml rises out of its own clip */
-.ml { display: block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.ml { display: block; overflow: hidden; padding-bottom: 0.22em; margin-bottom: -0.22em; }
 .ml > span { display: block; }
 .js .reveal .ml > span {
   transform: translateY(108%);
@@ -316,7 +315,7 @@ html:not(.js) .reveal { opacity: 1; transform: none; }
 @keyframes hero-wipe { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
 @keyframes drift { 0%, 100% { transform: translate3d(0, 0, 0); } 50% { transform: translate3d(0, -10px, 0); } }
 
-.hero-line { display: block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.hero-line { display: block; overflow: hidden; padding-bottom: 0.22em; margin-bottom: -0.22em; }
 .hero-line > span { display: block; animation: hero-line 1.3s var(--ease-cinema) calc(0.15s + var(--i, 0) * 0.14s) both; }
 .hero-fade { animation: hero-rise 1.1s var(--ease-cinema) calc(0.7s + var(--d, 0s)) both; }
 .hero-eyebrow { animation: hero-rise 1s var(--ease-cinema) 0.05s both; }
@@ -353,6 +352,97 @@ html:not(.js) .reveal { opacity: 1; transform: none; }
   .hover-lift-gold:hover, .hover-lift-gold:focus-within { transform: translateY(-8px); box-shadow: 0 0 0 1px #b8975a, 0 34px 64px -24px rgb(184 151 90 / 0.7); border-color: #b8975a; }
 }
 
+/* ---- Stage scene: lights come on, then sway very slowly ---- */
+.beam { transform-box: fill-box; transform-origin: 50% 0; opacity: 0; animation: beam-on 1.4s var(--ease-cinema) 0.5s forwards, beam-sway-a 9s ease-in-out 1.9s infinite alternate; }
+.beam-b { animation: beam-on 1.4s var(--ease-cinema) 0.8s forwards, beam-sway-b 11s ease-in-out 2.2s infinite alternate; }
+.pool { transform-box: fill-box; transform-origin: center; animation: pool 6s ease-in-out infinite alternate; }
+.mote { transform-box: fill-box; opacity: 0; animation: mote 6s ease-in-out infinite; }
+@keyframes beam-on { to { opacity: 1; } }
+@keyframes beam-sway-a { from { transform: rotate(-2.2deg); } to { transform: rotate(2.4deg); } }
+@keyframes beam-sway-b { from { transform: rotate(2.4deg); } to { transform: rotate(-2.2deg); } }
+@keyframes pool { from { opacity: 0.72; transform: scale(0.96); } to { opacity: 1; transform: scale(1.05); } }
+@keyframes mote { 0%, 100% { opacity: 0; transform: translateY(0); } 50% { opacity: 0.85; transform: translateY(-12px); } }
+/* A touch of depth: the lights drift up a little slower than the page. Only where scroll-driven animation exists. */
+@keyframes parallax-slow { to { transform: translateY(28px); } }
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) { .parallax-slow { animation: parallax-slow linear both; animation-timeline: scroll(root); animation-range: 0 90vh; } }
+}
+@media (prefers-reduced-motion: reduce) {
+  .beam { animation: none; opacity: 1; }
+  .pool { animation: none; }
+  .mote { animation: none; opacity: 0.5; }
+}
+
+/* ---- Hero tags: what each part of the picture is ---- */
+.pitch-tags { position: absolute; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+.pitch-tag {
+  position: absolute; display: inline-flex; align-items: center; gap: 0.45rem; white-space: nowrap;
+  padding: 0.38rem 0.75rem; border-radius: 999px; font-size: 0.72rem; font-weight: 500; line-height: 1.2; letter-spacing: 0.01em;
+  color: #f4eee4; background: rgb(22 15 28 / 0.88); border: 1px solid rgb(203 174 118 / 0.55);
+  animation: hero-rise 0.9s var(--ease-cinema) var(--d, 1.5s) both;
+}
+.pitch-tag > span { width: 0.42rem; height: 0.42rem; border-radius: 999px; background: #cbae76; box-shadow: 0 0 8px 1px rgb(243 217 143 / 0.7); }
+@media (min-width: 1024px) { .pitch-tag { font-size: 0.78rem; padding: 0.42rem 0.85rem; } }
+@keyframes bar-rise { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+.pitch-bar { transform-box: fill-box; transform-origin: 50% 100%; animation: bar-rise 1.1s var(--ease-cinema) both; }
+@media (prefers-reduced-motion: reduce) { .pitch-tag, .pitch-bar { animation: none; } }
+
+/* ---- How it works: four steps on one line, lit in turn ---- */
+.flow { position: relative; display: grid; gap: 2.75rem; }
+.flow-track { position: absolute; left: calc(2.25rem - 1px); top: 2.25rem; bottom: 2.25rem; width: 2px; background: var(--line); }
+.flow-fill { position: absolute; inset: 0; transform-origin: top; transform: scaleY(var(--p, 1)); background: linear-gradient(#f3d98f, #cbae76); transition: transform 0.55s var(--ease-cinema); }
+.flow-step { position: relative; z-index: 1; display: grid; grid-template-columns: auto 1fr; gap: 1.25rem; align-items: start; align-content: start; }
+.flow-orb {
+  display: grid; place-items: center; width: 4.5rem; height: 4.5rem; border-radius: 999px; color: #160f1c;
+  background: radial-gradient(circle at 50% 30%, #fbe7a6, #cbae76 80%);
+  box-shadow: 0 0 0 6px rgb(203 174 118 / 0.14), 0 0 38px 6px rgb(243 217 143 / 0.4);
+  transition: background 0.6s var(--ease-cinema), color 0.6s var(--ease-cinema), box-shadow 0.6s var(--ease-cinema), transform 0.6s var(--ease-cinema);
+}
+.flow-copy { padding-top: 0.35rem; transition: opacity 0.6s var(--ease-cinema), transform 0.6s var(--ease-cinema); }
+.flow-cone { display: none; }
+/* Dimmed only while the animation is running (data-armed). Without JS or with reduced motion everything stays lit. */
+.flow[data-armed] .flow-step[data-lit="false"] .flow-orb { color: #cbae76; background: radial-gradient(circle at 50% 35%, #2d2238, #160f1c 70%); box-shadow: inset 0 0 0 1.5px rgb(203 174 118 / 0.4); transform: scale(0.94); }
+.flow[data-armed] .flow-step[data-lit="false"] .flow-copy { transform: translateY(6px); }
+@media (min-width: 1024px) {
+  .flow { grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+  .flow-track { left: 12.5%; right: 12.5%; top: 5.25rem; bottom: auto; width: auto; height: 2px; }
+  .flow-fill { transform-origin: left; transform: scaleX(var(--p, 1)); }
+  .flow-step { grid-template-columns: 1fr; justify-items: center; text-align: center; gap: 1.5rem; padding-top: 2.5rem; }
+  .flow-orb { width: 5.5rem; height: 5.5rem; }
+  .flow-cone {
+    display: block; position: absolute; left: 50%; top: -1.25rem; width: 11rem; height: 5rem; transform: translateX(-50%); pointer-events: none;
+    background: linear-gradient(to bottom, transparent, rgb(243 217 143 / 0.22)); clip-path: polygon(42% 0, 58% 0, 100% 100%, 0 100%); transition: opacity 0.8s var(--ease-cinema);
+  }
+  .flow[data-armed] .flow-step[data-lit="false"] .flow-cone { opacity: 0; }
+}
+.flow-glyph { width: 2.25rem; height: 2.25rem; }
+@media (min-width: 640px) { .flow-glyph { width: 2.5rem; height: 2.5rem; } }
+/* Compact: the same flow, smaller, for pages where a form should stay close to the top */
+.flow-compact { gap: 1.75rem; }
+.flow-compact .flow-orb { width: 3.5rem; height: 3.5rem; box-shadow: 0 0 0 4px rgb(203 174 118 / 0.14), 0 0 26px 3px rgb(243 217 143 / 0.4); }
+.flow-compact .flow-glyph { width: 1.6rem; height: 1.6rem; }
+.flow-compact .flow-track { left: calc(1.75rem - 1px); top: 1.75rem; bottom: 1.75rem; }
+@media (min-width: 1024px) {
+  .flow-compact { gap: 1.5rem; }
+  .flow-compact .flow-step { padding-top: 1.5rem; gap: 1rem; }
+  .flow-compact .flow-orb { width: 3.75rem; height: 3.75rem; }
+  .flow-compact .flow-track { left: 12.5%; top: 3.375rem; }
+  .flow-compact .flow-cone { width: 8rem; height: 3.25rem; top: -0.25rem; }
+}
+@media (prefers-reduced-motion: reduce) { .flow-fill, .flow-orb, .flow-copy, .flow-cone { transition: none; } }
+
+/* ---- Three ways in: the picture reacts when the card is hovered or focused ---- */
+.way .art-beam { opacity: 0.6; transition: opacity 0.6s var(--ease-cinema); }
+.way .art-hi { transition: fill 0.5s var(--ease-cinema); }
+.way .art-hi-stroke { opacity: 0.55; transition: opacity 0.5s var(--ease-cinema); }
+.way svg { transition: transform 1.2s var(--ease-cinema); }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .way:hover .art-beam, .way:focus-within .art-beam { opacity: 1; }
+  .way:hover .art-hi, .way:focus-within .art-hi { fill: #cbae76; }
+  .way:hover .art-hi-stroke, .way:focus-within .art-hi-stroke { opacity: 1; }
+  .way:hover svg, .way:focus-within svg { transform: scale(1.05); }
+}
+
 /* Underlined editorial link */
 .link-u { background-image: linear-gradient(currentColor, currentColor); background-size: 100% 1px; background-position: 0 100%; background-repeat: no-repeat; background-origin: content-box; padding-block: 0.65rem; /* hit area only: vertical padding on an inline link does not move the lines around it */ transition: background-size 0.5s var(--ease-cinema); }
 .link-u:hover { background-size: 0 1px; background-position: 100% 100%; }
@@ -364,9 +454,10 @@ html:not(.js) .reveal { opacity: 1; transform: none; }
   .panels > li { flex: 1 1 0; min-width: 0; transition: flex-grow 0.9s var(--ease-cinema); }
   .panels:not(:has(li:hover, li:focus-within)) > li:first-child,
   .panels > li:hover, .panels > li:focus-within { flex-grow: 2.6; }
-  .panel-title { font-size: 1.45rem; line-height: 1.1; transition: font-size 0.9s var(--ease-cinema); }
+  .panels .panel { padding: 1.5rem; }
+  .panels .panel-title { font-size: 1.2rem; line-height: 1.1; overflow-wrap: break-word; transition: font-size 0.9s var(--ease-cinema); }
   .panels:not(:has(li:hover, li:focus-within)) > li:first-child .panel-title,
-  .panels > li:hover .panel-title, .panels > li:focus-within .panel-title { font-size: 3rem; }
+  .panels > li:hover .panel-title, .panels > li:focus-within .panel-title { font-size: 2.6rem; }
   .panel-more { opacity: 0; transform: translateY(8px); transition: opacity 0.6s var(--ease-cinema) 0.15s, transform 0.6s var(--ease-cinema) 0.15s; }
   .panels:not(:has(li:hover, li:focus-within)) > li:first-child .panel-more,
   .panels > li:hover .panel-more, .panels > li:focus-within .panel-more { opacity: 1; transform: none; }

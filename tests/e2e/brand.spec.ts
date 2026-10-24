@@ -41,12 +41,7 @@ test.describe("brand assets and identity", () => {
     await home.hover();
     await page.mouse.wheel(0, 600);
     await expect(home).toBeVisible();
-    const opener = page.getByRole("button", { name: "Open menu" });
-    await opener.click();
-    await expect(page.getByRole("dialog")).toBeVisible();
-    await page.keyboard.press("Escape");
-    await expect(page.getByRole("dialog")).toBeHidden();
-    await expect(opener).toBeFocused();
+    await expect(page.getByRole("button", { name: /menu/i })).toHaveCount(0);
   });
 
   test("reduced motion removes the logo tilt", async ({ browser }) => {
@@ -88,14 +83,17 @@ test.describe("brand assets and identity", () => {
     await expect(page.locator("footer")).toContainText("Where Opportunity Meets Belief.");
   });
 
-  test("hero says what the show is, who it is for and that it is not a job board", async ({ page }) => {
+  test("hero says what the show is, offers three ways in and says it is not a job board", async ({ page }) => {
     await skipIntro(page);
     await page.goto("/");
     const hero = page.locator("#hero-title").locator("xpath=ancestor::section");
-    await expect(hero).toContainText(/live internship-pitching show/i);
-    await expect(hero).toContainText(/students present/i);
+    await expect(hero.getByRole("heading", { level: 1 })).toHaveText(/Your Talent\.\s*Your Stage\.\s*Your Opportunity\./);
+    await expect(hero).toContainText("Pitch live. Meet recruiters. Unlock opportunities.");
+    await expect(hero).toContainText(/live pitch show/i);
     await expect(hero).toContainText(/not a job board/i);
-    await expect(hero.getByRole("link", { name: "Enter the Room" })).toBeVisible();
+    await expect(hero.getByRole("link", { name: "Apply as a Candidate" })).toHaveAttribute("href", "/register/candidate");
+    await expect(hero.getByRole("link", { name: "Join the Audience" })).toHaveAttribute("href", "/register/audience");
+    await expect(hero.getByRole("link", { name: "Partner as a Recruiter" })).toHaveAttribute("href", "/for-recruiters");
   });
 
   test("sponsor enquiry accepts the reduced field set (role is optional)", async ({ request }) => {

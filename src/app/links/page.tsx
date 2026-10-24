@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 
 const take = [
   { href: "/register/candidate", title: "Apply to pitch", note: "Free to apply. Stand up in front of industry panels.", icon: Mic, featured: true },
-  { href: "/register/audience", title: "Audience tickets", note: "Be in the room. Food included.", icon: Ticket },
+  { href: "/register/audience", title: "Audience tickets", note: "Be in the room. Food and goodies included.", icon: Ticket },
   { href: "/for-recruiters", title: "Hire with us", note: "Meet early-career talent in person.", icon: Handshake },
   { href: "/sponsors", title: "Partner or sponsor", note: "Help make opportunity visible.", icon: Handshake },
   { href: "/for-colleges", title: "Bring your college", note: "Send your students to be heard.", icon: GraduationCap },
@@ -60,7 +60,7 @@ export default function LinksPage() {
             A live recruitment show where students pitch their skills, projects and potential straight to industry professionals. Filmed for YouTube, with a podcast to follow.
           </p>
           <ul className="links-facts lk" style={step()} aria-label="At a glance">
-            <li>Live pitches</li><li>Four industries</li><li>Filmed for YouTube</li><li>Season 01</li>
+            <li>Live pitches</li><li>Multiple industries</li><li>Filmed for YouTube</li><li>Season 01</li>
           </ul>
         </div>
 

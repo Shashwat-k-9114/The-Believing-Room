@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { Building2, Megaphone, Presentation, Users } from "lucide-react";
 import { CollegeForm } from "@/components/forms/EnquiryForms";
-import { ListRows, PageShell } from "@/components/layout/PageShell";
+import { FactCards, HonestNote } from "@/components/layout/FactCards";
+import { PageShell } from "@/components/layout/PageShell";
+import { ShowFlow, type FlowStep } from "@/components/sections/ShowFlow";
 
 export const metadata: Metadata = {
   title: "For colleges",
@@ -8,27 +11,35 @@ export const metadata: Metadata = {
   alternates: { canonical: "/for-colleges" },
 };
 
+const STEPS: FlowStep[] = [
+  { t: "Enquire", d: "Tell us about your institution.", icon: "mail" },
+  { t: "Agree", d: "Arrangements are set per edition.", icon: "handshake" },
+  { t: "Students apply", d: "Each student applies individually.", icon: "apply" },
+  { t: "Attend", d: "Pitch, or watch from the audience.", icon: "watch" },
+];
+
 export default function ForColleges() {
   return (
     <PageShell
       eyebrow="For colleges"
       title={<>Give your students <em>a room</em> to be seen in.</>}
-      lede="Placement cells open doors; this opens a stage. Your students pitch to industry panels and meet the people who hire."
+      lede="Placement cells open doors. This opens a stage."
+      art="college"
     >
-      <div className="grid gap-16 lg:grid-cols-[1fr_1.1fr]">
-        <div>
-          <ListRows
+      <ShowFlow steps={STEPS} compact label="How colleges take part" />
+
+      <div className="mt-16 grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:gap-14">
+        <div className="grid content-start gap-8">
+          <FactCards
+            cols={2}
             items={[
-              { title: "Student participation", body: "Students apply individually, in any of the four disciplines. A college can encourage and coordinate, not select on their behalf." },
-              { title: "Industry interaction", body: "Direct exposure to hiring managers and founders, in a format that rewards preparation." },
-              { title: "Coordinated registrations", body: "We can discuss group arrangements for audience attendance. Terms are agreed per edition." },
-              { title: "Campus outreach", body: "Briefing sessions for interested students, if your institution would like one." },
+              { icon: Users, title: "Students apply themselves", body: "In any of multiple disciplines. A college encourages, it does not select." },
+              { icon: Presentation, title: "Industry exposure", body: "Hiring managers and founders, in a format that rewards preparation." },
+              { icon: Building2, title: "Group attendance", body: "We can discuss audience groups. Terms are agreed per edition." },
+              { icon: Megaphone, title: "Campus briefings", body: "A session for interested students, if you would like one." },
             ]}
           />
-          <div className="prose-arena mt-10">
-            <h2>Honest expectations</h2>
-            <p>Participation does not guarantee any student a slot, an offer or a placement. We will not publish a student’s name, college or pitch without that student’s own permission, even if the college has partnered with us.</p>
-          </div>
+          <HonestNote title="Honest expectations">Participation does not guarantee any student a slot, an offer or a placement. We never publish a student’s name, college or pitch without that student’s own permission, even if the college has partnered with us.</HonestNote>
         </div>
         <div className="glass glass-frost p-7 sm:p-10 [--r:1.8rem]">
           <h2 className="display text-4xl">College enquiry</h2>

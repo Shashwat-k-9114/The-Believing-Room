@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { SponsorForm } from "@/components/forms/SponsorForm";
-import { ListRows, PageShell } from "@/components/layout/PageShell";
+import { PageShell } from "@/components/layout/PageShell";
+import { FactCards } from "@/components/layout/FactCards";
+import { BadgeCheck, BarChart3, Building2, GraduationCap, Heart, Sparkles } from "lucide-react";
 import { LiquidButton } from "@/components/liquid/LiquidButton";
 import { Lines, Reveal } from "@/components/liquid/Reveal";
 import { EcosystemHome } from "@/components/partners/Ecosystem";
@@ -14,12 +16,12 @@ export const metadata: Metadata = {
 };
 
 const WHY = [
-  { title: "Association with early-career development", body: "Be part of a show built around giving students a fair, visible chance to be heard by the people who hire." },
-  { title: "Relevant student engagement", body: "A direct, respectful connection with motivated candidates across four industries, introduced with their participation and consent." },
-  { title: "Professional brand visibility", body: "Defined, agreed credits across the event and published content. Visibility is by agreement; no audience figure is promised." },
-  { title: "Employer-branding opportunities", body: "For hiring organisations, a setting in which your team is seen engaging with early-career talent." },
-  { title: "Ethical student engagement", body: "Candidates are never marketed to without their permission, and their footage is published only with consent." },
-  { title: "Transparent reporting", body: "After the event, a report against the deliverables that were actually agreed. Nothing more is claimed." },
+  { icon: Heart, title: "Early-career development", body: "Back a show that gives students a fair, visible chance." },
+  { icon: GraduationCap, title: "Relevant student engagement", body: "Motivated candidates across four industries, with their consent." },
+  { icon: Sparkles, title: "Professional visibility", body: "Agreed credits across the event and content. No audience figure is promised." },
+  { icon: Building2, title: "Employer branding", body: "Be seen engaging with early-career talent." },
+  { icon: BadgeCheck, title: "Ethical engagement", body: "Candidates are never marketed to or filmed without permission." },
+  { icon: BarChart3, title: "Honest reporting", body: "A report against what was actually agreed. Nothing more is claimed." },
 ];
 
 export default function Sponsors() {
@@ -30,7 +32,8 @@ export default function Sponsors() {
     <PageShell
       eyebrow="Sponsors and partners"
       title={<>Help make <em>opportunity visible.</em></>}
-      lede="The Believing Room is preparing its first season: students pitching live to hiring professionals, filmed for YouTube and accompanied by a podcast. We are inviting founding partners to help produce it well."
+      lede="Season 01 is in preparation: students pitching live to hiring professionals, filmed for YouTube. Founding partners are invited."
+      art="partners"
       actions={
         <>
           <LiquidButton href="#enquiry" variant="primary" size="lg">Start a conversation</LiquidButton>
@@ -62,10 +65,7 @@ export default function Sponsors() {
         </Reveal>
         <Reveal delay={0.1}>
           <p className="lede">
-            Candidates apply, are shortlisted, and pitch in person to panels of professionals across four industries: IT &amp; Technology, Finance &amp; Accounting, Sales &amp; Marketing, and Animation &amp; Multimedia. The sessions are filmed for a YouTube show and accompanied by a podcast.
-          </p>
-          <p className="mt-5 max-w-[58ch] text-[var(--fg-dim)]">
-            Season 01 is still in preparation. Dates are not yet announced, and the figures in the proposed format are plans, not commitments. Partnerships made now are founding partnerships: you help shape the first edition.
+            Season 01 is still in preparation. Dates are not announced, and the format figures are plans, not commitments. Founding partners help shape the first edition.
           </p>
         </Reveal>
       </section>
@@ -85,7 +85,7 @@ export default function Sponsors() {
           <p className="eyebrow">Why partner</p>
           <h2 id="why" className="display h-lg mt-4 max-w-[16ch]">What a partnership offers</h2>
         </Reveal>
-        <div className="mt-10"><ListRows items={WHY} /></div>
+        <div className="mt-10"><FactCards items={WHY} /></div>
       </section>
 
       {/* Formats */}
@@ -121,11 +121,9 @@ export default function Sponsors() {
         </Reveal>
         <Reveal delay={0.1}>
           <p className="lede">
-            The venue is yet to be announced. Producing a season takes professional filming, audio, lighting, postproduction, hospitality for candidates and guests, educational content and event operations.
+            The venue is yet to be announced. Filming, audio, lighting, hospitality and operations all need support.
           </p>
-          <p className="mt-5 max-w-[58ch] text-[var(--fg-dim)]">
-            Founding commercial partners are being sought to help meet those costs. We do not claim that any funding has been secured.
-          </p>
+          <p className="mt-4 max-w-[58ch] text-sm text-[var(--fg-faint)]">We do not claim that any funding has been secured.</p>
         </Reveal>
       </section>
 
@@ -154,7 +152,7 @@ export default function Sponsors() {
         <Reveal>
           <p className="eyebrow">Prospectus</p>
           <h2 id="prospectus-h" className="display h-lg mt-4 max-w-[16ch]">The sponsorship deck</h2>
-          <p className="lede mt-5">The reviewed public prospectus is not yet available to download. Send an enquiry below and we will send it to you directly as soon as it is ready.</p>
+          <p className="lede mt-5">The reviewed prospectus is not ready to download. Enquire below and we will send it when it is.</p>
           <div className="mt-8"><LiquidButton href="#enquiry" variant="primary" size="lg">Request the prospectus</LiquidButton></div>
         </Reveal>
       </section>
