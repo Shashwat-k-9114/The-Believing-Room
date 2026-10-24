@@ -45,7 +45,7 @@ export function PageShell({
             </p>
             <h1 className={`display ${longTitle ? "h-lg" : "h-xl"} mt-6 max-w-[24ch]`}>{title}</h1>
             {lede && <p className="lede mt-6">{lede}</p>}
-            {actions && <div className="mt-8 flex flex-wrap gap-3">{actions}</div>}
+            {actions && <div className="action-group mt-8 flex flex-wrap gap-3">{actions}</div>}
           </div>
           {art && (
             <div className="enter relative mx-auto w-full max-w-[34rem] lg:max-w-none" style={{ animationDelay: "0.15s" }}>

@@ -19,7 +19,7 @@ type ButtonProps = Common & { href?: undefined } & Omit<ComponentPropsWithoutRef
 type AnchorProps = Common & { href: string; external?: boolean } & Omit<ComponentPropsWithoutRef<"a">, "children" | "className" | "href">;
 
 const base =
-  "relative inline-flex items-center justify-center gap-2 overflow-hidden whitespace-nowrap font-medium select-none touch-manipulation will-change-transform disabled:opacity-50 disabled:pointer-events-none";
+  "liquid-button relative inline-flex min-w-0 max-w-full items-center justify-center gap-2 overflow-hidden whitespace-nowrap font-medium select-none touch-manipulation will-change-transform disabled:opacity-50 disabled:pointer-events-none";
 const sizes: Record<Size, string> = {
   md: "min-h-12 px-6 text-[0.95rem] [--r:999px]",
   lg: "min-h-14 px-8 text-base [--r:999px]",

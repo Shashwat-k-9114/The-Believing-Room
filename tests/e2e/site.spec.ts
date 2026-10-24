@@ -44,9 +44,10 @@ test.describe("public site", () => {
     await expect(hero).toContainText("₹300");
     await expect(hero).toContainText(/food and goodies included/i);
     const main = page.locator("main");
-    for (const org of ["Manacle", "KRVVY", "Immverse AI", "Galvanic", "BIT Noida"]) {
+    for (const org of ["Manacle", "Immverse AI", "Galvanic"]) {
       await expect(main, org).toContainText(org);
     }
+    await expect(main).not.toContainText(/KRVVY|BIT Noida/i);
     await page.getByRole("link", { name: "Apply as a Candidate" }).first().click();
     await expect(page).toHaveURL(/\/register\/candidate/);
   });

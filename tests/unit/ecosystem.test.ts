@@ -50,10 +50,10 @@ describe("ecosystem content (confirmed facts only)", () => {
   it("lists exactly the confirmed organisations under the right roles, without logos", () => {
     const orgs = publicOrganizations();
     const by = (c: string) => orgs.filter((o) => o.category === c).map((o) => o.name).sort();
-    expect(by("recruitment")).toEqual(["Galvanic", "Immverse AI", "KRVVY", "Manacle"]);
+    expect(by("recruitment")).toEqual(["Galvanic", "Immverse AI", "Manacle"]);
     expect(by("venue")).toEqual([]);
     expect(by("education")).toEqual(["Futured Innovation Studios"]);
-    expect(by("outreach")).toEqual(["BIT Noida"]);
+    expect(by("outreach")).toEqual([]);
     expect(orgs.every((o) => o.logoPath === null)).toBe(true);
   });
 

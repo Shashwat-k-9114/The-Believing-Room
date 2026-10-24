@@ -28,7 +28,7 @@ export function Hero() {
             Pitch live. Meet recruiters. Unlock opportunities.
           </p>
 
-          <div className="hero-fade mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap" style={{ ["--d" as string]: "0.14s" }}>
+          <div className="action-group hero-fade mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap" style={{ ["--d" as string]: "0.14s" }}>
             <MagneticCTA href="/register/candidate">Apply as a Candidate</MagneticCTA>
             <LiquidButton href="/register/audience" variant="glass" size="lg">Join the Audience</LiquidButton>
             <LiquidButton href="/for-recruiters" variant="glass" size="lg">Partner as a Recruiter</LiquidButton>

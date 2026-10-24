@@ -83,14 +83,9 @@ const org = (o: Omit<PublicOrganization, "id" | "description" | "websiteUrl" | "
 const RECRUITING = "Confirmed internship-recruiting participant.";
 const organizations: PublicOrganization[] = [
   org({ slug: "manacle", name: "Manacle", category: "recruitment", role: RECRUITING }),
-  org({ slug: "krvvy", name: "KRVVY", category: "recruitment", role: RECRUITING }),
   org({ slug: "immverse-ai", name: "Immverse AI", category: "recruitment", role: RECRUITING }),
   org({ slug: "galvanic", name: "Galvanic", category: "recruitment", role: RECRUITING }),
   org({ slug: "futured-innovation-studios", name: "Futured Innovation Studios", category: "education", role: "Provides its courses to candidates free of charge." }),
-  org({
-    slug: "bit-noida", name: "BIT Noida", category: "outreach",
-    role: "Has agreed to let The Believing Room reach its students to invite candidates and audience members.",
-  }),
 ];
 
 export const publicOrganizations = (category?: OrgCategory) => (category ? organizations.filter((o) => o.category === category) : organizations);

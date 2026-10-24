@@ -225,7 +225,7 @@ export function ActSponsor() {
                 ))}
               </ul>
               <p className="eyebrow mt-4">Proposed formats · subject to agreement</p>
-              <div className="mt-8 flex flex-wrap gap-3">
+              <div className="action-group mt-8 flex flex-wrap gap-3">
                 <LiquidButton href="/sponsors" variant="primary" size="lg">Explore partnership</LiquidButton>
                 <LiquidButton href="/sponsors#enquiry" variant="glass" size="lg">Start a conversation</LiquidButton>
               </div>
@@ -254,7 +254,7 @@ export function ActManifesto() {
           <Lines id="act-manifesto" as="h2" className="display h-xl mt-10 max-w-[16ch]" lines={["Talent is everywhere.", <em key="e">Opportunity shouldn’t be hidden.</em>]} />
           <Reveal delay={0.2}>
             <p className="lede mx-auto mt-8">Be one of the first in the room.</p>
-            <div className="mt-10 flex flex-wrap justify-center gap-3">
+            <div className="action-group mt-10 flex flex-wrap justify-center gap-3">
               <MagneticCTA href="/register/candidate">Apply as a Candidate</MagneticCTA>
               <LiquidButton href="/for-recruiters" variant="glass" size="lg">I’m Hiring</LiquidButton>
             </div>

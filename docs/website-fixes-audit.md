@@ -13,7 +13,7 @@ Scope note: since commit `b4ac735` the site is **frontend only**. There is no da
 | BR-05 | Name on ticket | No tickets are generated. | Payments and tickets removed. | None. | BLOCKED |
 | BR-06 | Terms and No Show | "No-show" wording exists in `policies.ts` ("No refunds") and `faq.ts`. | n/a | Proposal below. Not published. | PROPOSAL ONLY |
 | BR-07 | Enquiry button | "Enquire about this format" was a bare `#enquiry` anchor: it scrolled but did not say which format. | No link between button and form. | Button now passes `?interest=<format>`, form pre-selects it. Submission path unchanged. | IMPLEMENTED, e2e passed |
-| BR-08 | BIT Noida, Amity, KRVVY | See list below. | n/a | Report only, no claim changed. | REPORT |
+| BR-08 | Partner mentions | Two partner records were published without a current confirmation decision. | n/a | Removed the unconfirmed partner records from public organization data and reference markup. | IMPLEMENTED |
 | BR-09 | Two-month test | No reference found anywhere in `src`. | n/a | Nothing invented. Needs the intended rule. | BLOCKED (info) |
 | BR-10 | Dates and places | No date or venue is published (`season.date` and `season.venue` are `null`, shown as "to be announced"). One target window string exists. | n/a | See below. | REPORT |
 
@@ -31,15 +31,14 @@ Proposed wording (needs owner and legal approval before any publish):
 
 When approved: change all three places together, add a `termsVersion` and date, and store the accepted version with each submission (the sheet currently records only that the box was ticked).
 
-## BR-08 Mentions today
+## BR-08 Removed partner mentions
 
-| Name | Where | Current claim |
+| Surface | Previous state | Current state |
 |---|---|---|
-| KRVVY | `src/lib/content.ts`; homepage ecosystem, `/partners` | "Confirmed internship-recruiting participant." |
-| BIT Noida | `src/lib/content.ts`; homepage ecosystem, `/partners` | "Has agreed to let The Believing Room reach its students." (outreach only; page says not co-hosting, sponsorship or endorsement) |
-| Amity Greater Noida | Not present anywhere in the site | n/a |
+| Public organization data | Included unconfirmed partner records | Only currently approved organization records remain |
+| Static reference markup | Included an unconfirmed partner logo entry | Unconfirmed partner logo entries removed |
 
-The claims are already narrow. The handwritten note "No mention with confirmation" is ambiguous (remove until confirmed, or show only with confirmation?). I changed nothing. Please confirm written confirmation exists for KRVVY and BIT Noida, or tell me to remove them.
+The unconfirmed records and reference markup were removed at the owner's request. They can be restored later only after written confirmation is available.
 
 ## BR-09 Two-month test
 

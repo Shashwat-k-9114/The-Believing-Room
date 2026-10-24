@@ -17,7 +17,7 @@ Date: 21 October 2026. Branch `believing-room-redesign`. Local commit only: noth
 | Pricing calculator | **Rejected** | Irrelevant to this venture. |
 | Short lead form (name plus WhatsApp) | **Partly implemented** | Sponsor enquiry reduced from six required fields to five (organisation, contact, email, category and interest; role, phone and budget are now optional and grouped separately). Server validation, storage, rate limiting, consent and honest receipt text are unchanged. Name plus WhatsApp alone was rejected: it cannot distinguish a genuine sponsor. |
 | Floating WhatsApp button | **Deferred** | No founder-approved business number exists, and none was invented. Add it when one is supplied. It must be subtle and never cover forms or the mobile menu. |
-| Social-proof marquee ("Trusted by 500+…") | **Rejected** | No verified figures exist. The existing static, typographic ecosystem presentation (recruitment participants, Futured, Amity and BIT Noida in separate roles, no logos without permission) stays. |
+| Social-proof marquee ("Trusted by 500+…") | **Rejected** | No verified figures exist. The existing static, typographic ecosystem presentation (recruitment participants, Futured and Amity in separate roles, no logos without permission) stays. |
 | GA4 and Meta Pixel | **Deferred, strategy written** | Nothing exists in code; see `ANALYTICS-AND-PIXELS-STRATEGY.md` for the approvals needed. |
 | Mobile load under 1.5 s | **Not achieved; not claimed** | Measured below. |
 | WebP images | **Implemented where it helps** | New artwork ships as WebP with JPEG fallback, plus responsive sizes. |

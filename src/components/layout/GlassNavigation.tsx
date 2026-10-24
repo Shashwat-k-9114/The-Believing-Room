@@ -42,7 +42,7 @@ export function GlassNavigation() {
     });
 
   return (
-    <header data-theme="dark" className="pointer-events-none fixed inset-x-0 top-0 z-50 !bg-transparent px-3 pt-3 sm:px-5 sm:pt-4">
+    <header data-theme="dark" className="site-nav-shell pointer-events-none fixed inset-x-0 top-0 z-50 !bg-transparent px-3 pt-3 sm:px-5 sm:pt-4">
       <nav
         aria-label="Primary"
         className={`glass glass-nav pointer-events-auto mx-auto flex max-w-[1180px] items-center justify-between gap-3 py-2 pl-5 pr-2 transition-[max-width] duration-700 [--r:999px] ${scrolled ? "max-w-[960px]" : ""}`}

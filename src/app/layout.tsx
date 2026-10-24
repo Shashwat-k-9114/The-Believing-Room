@@ -51,7 +51,7 @@ if((navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=2)d.class
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-IN" className={`${body.variable} ${head.variable}`} suppressHydrationWarning>
+    <html lang="en-IN" data-scroll-behavior="smooth" className={`${body.variable} ${head.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
         <script dangerouslySetInnerHTML={{ __html: CURTAIN_GUARD }} />

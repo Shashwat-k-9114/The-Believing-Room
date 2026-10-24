@@ -72,8 +72,8 @@ rendering), fades into the background with a transparency mask rather than a col
 
 ## 6. Partnership ecosystem
 
-Roles remain distinct on both the homepage and `/partners`: Recruitment participants (Manacle, KRVVY, Immverse AI, Galvanic), Educational contribution
-(Futured Innovation Studios), Venue facilities (Amity Greater Noida), Student outreach (BIT Noida). Each category states what the relationship is not.
+Roles remain distinct on both the homepage and `/partners`: Recruitment participants (Manacle, Immverse AI, Galvanic), Educational contribution
+(Futured Innovation Studios), and Venue facilities (Amity Greater Noida). No student-outreach organization is currently published. Each category states what the relationship is not.
 No logos are shown. `OrgMark` renders an approved logo only when permission is recorded as `approved` **and** a path is set, falls back to type if the file fails to load, and the
 plate's logo slot has a fixed height so an authorised logo replaces the typeset name without moving anything. Participation is "confirmed by the organiser"; nothing implies funding or endorsement.
 
