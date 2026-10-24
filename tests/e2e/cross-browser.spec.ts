@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
 /**
- * Browser-sensitive behaviour, run on Chromium, Firefox and WebKit: the native <dialog> menu, focus handling,
+ * Browser-sensitive behaviour, run on Chromium, Firefox and WebKit: the responsive menu, focus handling,
  * form submission, reduced motion, and layout at phone width. (The full suite stays Chromium-only.)
  */
 const ROUTES = ["/", "/partners", "/sponsors", "/events", "/register/candidate", "/industries/finance-accounting", "/the-show", "/podcast", "/faq", "/contact"];
@@ -34,10 +34,20 @@ test.describe("cross-browser", () => {
     }
   });
 
-  test("navigation: the bar links are keyboard reachable and there is no menu dialog", async ({ page }) => {
+  test("navigation: the compact menu is keyboard reachable and closes predictably", async ({ page }) => {
     await skipIntro(page);
+    await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/");
-    await expect(page.getByRole("dialog")).toHaveCount(0);
+    const open = page.getByRole("button", { name: "Open navigation menu" });
+    await expect(open).toBeVisible();
+    await open.focus();
+    await page.keyboard.press("Enter");
+    await expect(page.getByRole("button", { name: "Close navigation menu" })).toHaveAttribute("aria-expanded", "true");
+    await expect(page.locator("#mobile-primary-menu")).toBeVisible();
+    await expect(page.locator("#mobile-primary-menu").getByRole("link", { name: "Disciplines" })).toBeFocused();
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("button", { name: "Open navigation menu" })).toBeFocused();
+    await expect(page.locator("#mobile-primary-menu")).toBeHidden();
     await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "Disciplines" }).focus();
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(/\/industries/);

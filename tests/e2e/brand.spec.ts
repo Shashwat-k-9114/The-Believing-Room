@@ -33,7 +33,7 @@ test.describe("brand assets and identity", () => {
     expect(JSON.stringify(ld)).not.toMatch(/startDate|aggregateRating|review|\d{4}-\d{2}-\d{2}/);
   });
 
-  test("header shows the show logo in an accessible home link and keeps the menu working", async ({ page }) => {
+  test("header shows the show logo in an accessible home link and keeps the menu available", async ({ page }) => {
     await skipIntro(page);
     await page.goto("/the-show");
     const home = page.getByRole("link", { name: /The Believing Room, home/ });
@@ -41,7 +41,9 @@ test.describe("brand assets and identity", () => {
     await home.hover();
     await page.mouse.wheel(0, 600);
     await expect(home).toBeVisible();
-    await expect(page.getByRole("button", { name: /menu/i })).toHaveCount(0);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.reload();
+    await expect(page.getByRole("button", { name: "Open navigation menu" })).toBeVisible();
   });
 
   test("reduced motion removes the logo tilt", async ({ browser }) => {

@@ -62,10 +62,10 @@ test.describe("public site", () => {
     for (const banned of ["65,000", "65000", "quotation", "advance"]) expect(text, banned).not.toContain(banned);
   });
 
-  test("navigation: mobile links are fully visible without a carousel, footer carries the site map and social logos", async ({ page }) => {
+  test("navigation: mobile header uses an accessible compact menu, footer carries the site map and social logos", async ({ page }) => {
     await skipIntro(page);
     await page.goto("/");
-    await expect(page.getByRole("button", { name: /menu/i })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: /navigation menu/i })).toBeHidden();
     const nav = page.getByRole("navigation", { name: "Primary" });
     await expect(nav.getByRole("link", { name: "Disciplines" })).toBeVisible();
     await expect(page.getByRole("link", { name: "How it works" })).toHaveCount(0);
@@ -77,9 +77,15 @@ test.describe("public site", () => {
 
     await page.setViewportSize({ width: 375, height: 800 });
     await page.goto("/");
-    const mobileSections = page.getByRole("list", { name: "Sections" });
+    const mobileMenuButton = page.getByRole("button", { name: "Open navigation menu" });
+    await expect(mobileMenuButton).toBeVisible();
+    await expect(mobileMenuButton).toHaveAttribute("aria-expanded", "false");
+    const mobileSections = page.locator("#mobile-primary-menu");
+    await expect(mobileSections).toBeHidden();
+    await mobileMenuButton.click();
+    await expect(page.getByRole("button", { name: "Close navigation menu" })).toHaveAttribute("aria-expanded", "true");
     await expect(mobileSections).toBeVisible();
-    for (const label of ["Disciplines", "Partners", "The Show", "Sponsors"]) {
+    for (const label of ["Disciplines", "The Show", "Partners", "Sponsors"]) {
       const link = mobileSections.getByRole("link", { name: label });
       await expect(link, label).toBeVisible();
       const box = await link.boundingBox();
@@ -87,6 +93,15 @@ test.describe("public site", () => {
       expect(box!.x + box!.width, `${label} is inside the viewport`).toBeLessThanOrEqual(375);
     }
     expect(await mobileSections.evaluate((el) => el.scrollWidth - el.clientWidth)).toBeLessThanOrEqual(0);
+
+    await page.keyboard.press("Escape");
+    await expect(page.getByRole("button", { name: "Open navigation menu" })).toBeFocused();
+    await expect(mobileSections).toBeHidden();
+
+    await mobileMenuButton.click();
+    await mobileSections.getByRole("link", { name: "The Show" }).click();
+    await expect(page).toHaveURL(/\/the-show/);
+    await expect(mobileSections).toBeHidden();
 
     await footer.getByRole("link", { name: "Questions" }).click();
     await expect(page).toHaveURL(/\/faq/);

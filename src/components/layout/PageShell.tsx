@@ -28,7 +28,7 @@ export function PageShell({
 }) {
   return (
     <>
-      <section data-theme="dark" className="relative isolate overflow-hidden pb-16 pt-48 sm:pb-24 sm:pt-44" style={accent ? ({ ["--accent" as string]: accent } as React.CSSProperties) : undefined}>
+      <section data-theme="dark" className="relative isolate overflow-hidden pb-16 pt-28 md:pb-24 md:pt-44" style={accent ? ({ ["--accent" as string]: accent } as React.CSSProperties) : undefined}>
         <div
           aria-hidden
           className="absolute inset-0 -z-10"
