@@ -13,7 +13,7 @@ export const brand = {
   locale: "en-IN",
   /** Set NEXT_PUBLIC_SITE_URL in production. */
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-  contactEmail: "thebelievingroom@gmail.com",
+  contactEmail: "connect@thebelievingroom.com",
   /** Owner-supplied channels. Edit here only. */
   social: {
     youtube: "https://youtube.com/@thebelievingroom",
