@@ -14,8 +14,7 @@ export const registrationTerms: PolicyItem[] = [
   {
     id: "seat-lock",
     title: "Seat lock",
-    body: "Your registration fee (₹1,000 for candidates, ₹300 for audience) confirms your seat. A registration is complete only after payment is received and confirmed.",
-    needsDecision: "The source implies payment at registration, while its process lists Shortlist before Pitch. Default in this build: candidates pay after shortlisting (config: pricing.candidatePaymentStage).",
+    body: "Season 01 tickets are free for candidates and audience. A registration confirms your seat once we have written to you to confirm it.",
   },
   { id: "no-refunds", title: "No refunds", body: "All fees are non-refundable, including for no-shows, late arrivals and personal cancellations." },
   {

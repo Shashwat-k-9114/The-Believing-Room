@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { formatINR, pricing } from "@/config/site";
 import { LiquidButton } from "@/components/liquid/LiquidButton";
 import { PageShell } from "@/components/layout/PageShell";
 import { ShowFlow } from "@/components/sections/ShowFlow";
@@ -10,12 +9,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/how-it-works" },
 };
 
-const afterShortlist = pricing.candidatePaymentStage === "after_shortlist";
-
 // The full rules stay here, one tap away, so the page itself can be read in seconds.
 const steps = [
-  { t: "Apply", s: "Open now", d: "Tell us about your skills and ambitions: who you are, your discipline, a short description of your pitch, and optionally links and a PDF résumé. Applying is free and you receive a reference straight away." },
-  { t: "Shortlist", s: "Team review", d: `Our team reviews applications and shortlists candidates for panel fit. Being shortlisted does not guarantee a live slot or an offer. ${afterShortlist ? `Shortlisted candidates are then asked to confirm their place with the candidate ticket (${formatINR(pricing.candidate.amount)}, food and goodies included).` : `The candidate ticket (${formatINR(pricing.candidate.amount)}, food and goodies included) is paid at registration.`}` },
+  { t: "Apply", s: "Open now", d: "Tell us about your skills and ambitions: who you are, your discipline, a short description of your pitch, a résumé link, and optionally other links. Applying is free and you receive a reference straight away." },
+  { t: "Shortlist", s: "Team review", d: `Our team reviews applications and shortlists candidates for panel fit. Being shortlisted does not guarantee a live slot or an offer. Shortlisted candidates are then asked to confirm their place. The candidate ticket is free, food and goodies included.` },
   { t: "Pitch", s: "Planned", d: "Introduce yourself, present your abilities and answer the panel’s questions, live, in front of recruiters and an audience. Format and time limits are finalised per edition." },
   { t: "Decision", s: "Companies decide", d: "Companies evaluate candidates’ skills, communication and potential. Each company decides for itself." },
   { t: "The Result", s: "Company decision", d: "Selected candidates may receive an internship offer. Others receive constructive review guidance. No outcome is guaranteed by registration or payment." },

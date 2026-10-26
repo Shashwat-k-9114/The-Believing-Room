@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { industries, industryOptions } from "@/content/industries";
-import { formatINR, pricing } from "@/config/site";
 import { studentSchema, fieldErrors } from "@/lib/validation";
 import { LiquidButton } from "../liquid/LiquidButton";
 import { Check, FormAlert, Honeypot, SelectField, SuccessPanel, TextArea, TextField, type Errors } from "./ui";
@@ -118,7 +117,7 @@ export function CandidateForm({ defaultIndustry }: { defaultIndustry?: string })
         </p>
         <p>
           <strong className="text-[var(--fg)]">What happens next:</strong> organisers screen applications against the published criteria for your industry. Being received is not
-          being selected. Applying costs nothing; the {formatINR(pricing.candidate.amount)} Candidate ticket (food and goodies included) is requested only if you are shortlisted.
+          being selected. Applying costs nothing, and the Candidate ticket is free too, food and goodies included.
         </p>
         <div className="mt-2 flex flex-wrap gap-3">
           <LiquidButton href="/how-it-works" variant="glass">How it works</LiquidButton>
@@ -171,7 +170,7 @@ export function CandidateForm({ defaultIndustry }: { defaultIndustry?: string })
         <div className="grid gap-5">
           <TextArea name="pitchSummary" label="Your pitch in a few sentences" required rows={6} maxLength={1200} hint="What will you show or argue on stage, and why should a panel care? (40+ characters)" value={v.pitchSummary} onChange={set("pitchSummary")} error={errors.pitchSummary} />
           <TextArea name="experience" label="Relevant projects or experience" rows={5} maxLength={1500} value={v.experience} onChange={set("experience")} error={errors.experience} />
-          <TextField name="resumeUrl" label="Résumé link (optional)" type="url" inputMode="url" placeholder="https://" hint="A shareable link, e.g. Google Drive with view access." value={v.resumeUrl} onChange={set("resumeUrl")} error={errors.resumeUrl} />
+          <TextField name="resumeUrl" label="Résumé link" required type="url" inputMode="url" placeholder="https://" hint="A shareable link, e.g. Google Drive with view access." value={v.resumeUrl} onChange={set("resumeUrl")} error={errors.resumeUrl} />
         </div>
       )}
 
@@ -195,7 +194,7 @@ export function CandidateForm({ defaultIndustry }: { defaultIndustry?: string })
             <Check name="consentPromoClips" checked={v.consentPromoClips} onChange={set("consentPromoClips")}>You may use short clips of me in promotion and social media.</Check>
           </fieldset>
           <p className="text-sm text-[var(--fg-dim)]">
-            Cost: applying is free. If shortlisted, the Candidate ticket is {formatINR(pricing.candidate.amount)}, food and goodies included, requested only then.
+            Cost: applying is free, and so is the Candidate ticket, food and goodies included.
           </p>
         </div>
       )}

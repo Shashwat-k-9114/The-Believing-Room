@@ -17,6 +17,8 @@ function SocialIcon({ name }: { name: (typeof socialLinks)[number]["key"] }) {
       return <svg {...svg} {...line}><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>;
     case "x":
       return <svg {...svg} fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>;
+    case "facebook":
+      return <svg {...svg} fill="currentColor"><path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.87.25-1.46 1.5-1.46h1.6V4.46A21 21 0 0 0 14.28 4.4c-2.3 0-3.88 1.4-3.88 3.98v2.12H7.8v3h2.6V21h3.1Z" /></svg>;
     case "reddit":
       return <svg {...svg} {...line}><ellipse cx="12" cy="14" rx="8" ry="5.5" /><circle cx="9" cy="13.5" r="1" fill="currentColor" /><circle cx="15" cy="13.5" r="1" fill="currentColor" /><path d="M9.2 16.6c1.7 1.1 3.9 1.1 5.6 0M12 8.5l1.4-5.2 4 1" /><circle cx="18" cy="4.6" r="1.4" /><circle cx="4.4" cy="11.4" r="1.7" /><circle cx="19.6" cy="11.4" r="1.7" /></svg>;
   }

@@ -10,7 +10,7 @@ export default function Privacy() {
       <Prose>
         <h2>What we collect</h2>
         <ul>
-          <li><strong>Student applications:</strong> name, email, phone, college, course, graduation year, industry, skills, optional links, pitch summary, optional experience and optional PDF résumé.</li>
+          <li><strong>Student applications:</strong> name, email, phone, college, course, graduation year, industry, skills, résumé link, optional links, pitch summary and optional experience.</li>
           <li><strong>Audience orders:</strong> name, email, phone, attendee names, quantity and payment status. Card and bank details are handled by the payment provider and never reach our servers.</li>
           <li><strong>Enquiries and contact messages</strong> from companies, colleges and visitors, and email addresses on waitlists.</li>
           <li><strong>Consent records:</strong> each consent you give or decline, with the time it was recorded.</li>

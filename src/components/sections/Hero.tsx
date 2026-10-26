@@ -1,4 +1,3 @@
-import { formatINR, pricing } from "@/config/site";
 import { phaseMeta } from "@/config/ecosystem";
 import { seasonPhase } from "@/lib/content";
 import { LiquidButton, MagneticCTA } from "../liquid/LiquidButton";
@@ -38,7 +37,7 @@ export function Hero() {
             Season 01 · {phase.label}
           </p>
           <p className="hero-fade mt-2 max-w-[34rem] text-xs text-[var(--fg-faint)]" style={{ ["--d" as string]: "0.36s" }}>
-            Not a job board. No placement is promised. Candidate {formatINR(pricing.candidate.amount)}, audience {formatINR(pricing.audience.amount)}, food and goodies included.
+            Not a job board. No placement is promised. Candidate and audience tickets are free, food and goodies included.
           </p>
         </div>
 

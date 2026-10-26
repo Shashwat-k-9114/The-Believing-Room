@@ -40,8 +40,7 @@ test.describe("public site", () => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toContainText(/opportunity/i);
     const hero = page.locator("#hero-title").locator("xpath=ancestor::section");
-    await expect(hero).toContainText("₹1,000");
-    await expect(hero).toContainText("₹300");
+    await expect(hero).toContainText(/tickets are free/i);
     await expect(hero).toContainText(/food and goodies included/i);
     const main = page.locator("main");
     for (const org of ["Manacle", "Immverse AI", "Galvanic"]) {
@@ -217,7 +216,7 @@ test.describe("public site", () => {
     for (const r of ["/", "/register/audience", "/terms"]) {
       await page.goto(r);
       const text = await page.locator("body").innerText();
-      expect(text, r).toContain("₹300");
+      expect(text, r).toMatch(/free/i);
     }
   });
 });
@@ -241,6 +240,7 @@ test.describe("student application", () => {
     await page.getByLabel(/Key skills/).fill("Financial modelling, Excel");
     await page.getByRole("button", { name: "Continue" }).click();
 
+    await page.getByLabel(/Résumé link/).fill("https://drive.google.com/file/d/abc/view");
     await page.getByLabel(/Your pitch in a few sentences/).fill("I built a three-statement model of a listed retailer and will defend my margin assumptions live.");
     await page.getByRole("button", { name: "Continue" }).click();
 
@@ -262,7 +262,7 @@ test.describe("student application", () => {
   });
 
   test("server rejects bad input and wrong origin; accepts a valid application", async ({ request }) => {
-    const base = { fullName: "Test User", email: "t@example.com", phone: "9876543210", college: "X College", course: "BCA", gradYear: new Date().getFullYear() + 1, industry: "it-technology", skills: "Go, SQL", pitchSummary: "A short but sufficiently long pitch summary for the validator to accept.", consentTerms: true, consentPrivacy: true };
+    const base = { fullName: "Test User", email: "t@example.com", phone: "9876543210", college: "X College", course: "BCA", gradYear: new Date().getFullYear() + 1, industry: "it-technology", skills: "Go, SQL", resumeUrl: "https://example.com/cv.pdf", pitchSummary: "A short but sufficiently long pitch summary for the validator to accept.", consentTerms: true, consentPrivacy: true };
     const origin = { origin: "http://localhost:3217" };
 
     expect((await request.post("/api/submit/candidate", { data: base })).status()).toBe(403);
@@ -304,9 +304,10 @@ test.describe("links page", () => {
     await page.goto("/links");
     await expect(page.getByRole("heading", { level: 1 })).toContainText("The Believing Room");
     await expect(page.locator("header[data-theme=dark]").first()).toBeHidden(); // site navigation is hidden here
-    for (const name of ["YouTube", "Instagram", "LinkedIn", "X", "Reddit", "Email", "Apply to pitch"]) {
+    for (const name of ["YouTube", "Instagram", "LinkedIn", "X", "Reddit", "Facebook", "Email", "Apply to pitch"]) {
       await expect(page.getByRole("link", { name: new RegExp(name) }).first()).toBeVisible({ timeout: 8000 });
     }
+    await expect(page.getByRole("link", { name: /Facebook/ })).toHaveAttribute("href", "https://www.facebook.com/people/The-Believing-Room/61595893110286/");
     await expect(page.getByRole("link", { name: /LinkedIn/ })).toHaveAttribute("href", "https://www.linkedin.com/company/the-believing-room/");
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow).toBeLessThanOrEqual(0);

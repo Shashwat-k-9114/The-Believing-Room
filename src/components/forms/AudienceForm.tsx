@@ -93,7 +93,7 @@ export function AudienceForm() {
         <div><LiquidButton type="submit" variant="primary" size="lg" disabled={busy}>{busy ? "Sending…" : "Register interest"}</LiquidButton></div>
       </div>
       <aside aria-label="Ticket summary" className="glass glass-frost h-fit p-7 [--r:1.6rem] lg:sticky lg:top-28">
-        <p className="eyebrow">Planned price</p>
+        <p className="eyebrow">Price</p>
         <p className="display mt-3 text-4xl">{formatINR(pricing.audience.amount)} <span className="text-base text-[var(--fg-dim)]">per ticket</span></p>
         <ul className="mt-5 grid gap-1 text-sm text-[var(--fg-dim)]">{inclusions.both.map((i) => <li key={i}>✓ {i}</li>)}</ul>
         <p className="mt-5 text-xs text-[var(--fg-faint)]">Nothing is charged now. Entry, food and goodies only: not a guarantee of selection, an internship or any hiring outcome.</p>

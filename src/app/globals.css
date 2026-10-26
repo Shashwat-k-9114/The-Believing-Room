@@ -789,3 +789,35 @@ html[data-curtain="seen"] #curtain-intro { display: none; }
 }
 .reveal.in .stage-beam { animation: stage-sweep 2.2s cubic-bezier(0.5, 0, 0.3, 1) 0.4s both; }
 @media (prefers-reduced-motion: reduce) { .stage-beam { display: none; } }
+
+/* ---- Price slash: the old price is cut when its card scrolls into view, then "Free" lands ---- */
+.slash { position: relative; display: grid; justify-items: start; gap: 0.15rem; margin-top: 2.2rem; min-height: 5.6rem; }
+.slash-was {
+  position: relative; font-size: 1.35rem; line-height: 1; color: var(--fg-faint);
+  transform-origin: left bottom; opacity: 0.7;
+  transition: transform 0.5s var(--ease-cinema) 0.38s, color 0.4s 0.3s, opacity 0.4s 0.38s;
+}
+.slash-line {
+  position: absolute; left: -6%; right: -6%; top: 52%; height: 3px; border-radius: 2px;
+  background: linear-gradient(90deg, #d8434a, #f3d98f); box-shadow: 0 0 10px rgb(216 67 74 / 0.6);
+  transform: rotate(-9deg) scaleX(1); transform-origin: left center;
+  transition: transform 0.28s cubic-bezier(0.7, 0, 0.2, 1);
+}
+.slash-now {
+  position: relative; font-size: 3.2rem; line-height: 1; font-style: italic; color: #b8975a;
+  transform: scale(1); opacity: 1; transform-origin: left bottom;
+  transition: transform 0.55s cubic-bezier(0.2, 1.6, 0.4, 1) 0.6s, opacity 0.2s 0.6s;
+}
+.slash-flash {
+  position: absolute; inset: -30% -12%; border-radius: 999px; pointer-events: none; opacity: 0;
+  background: radial-gradient(closest-side, rgb(243 217 143 / 0.7), transparent);
+  animation: slash-flash 0.7s ease-out 0.6s both;
+}
+@keyframes slash-flash { 0% { opacity: 0; transform: scale(0.4); } 35% { opacity: 1; } 100% { opacity: 0; transform: scale(1.5); } }
+
+/* Before the cut: the full price, big, with no line through it and no "Free" yet */
+.slash[data-armed] .slash-was { transform: scale(2.1); color: var(--fg); opacity: 1; transition: none; }
+.slash[data-armed] .slash-line { transform: rotate(-9deg) scaleX(0); transition: none; }
+.slash[data-armed] .slash-now { transform: scale(0.4); opacity: 0; transition: none; }
+.slash[data-armed] .slash-flash { animation: none; }
+@media (prefers-reduced-motion: reduce) { .slash-was, .slash-line, .slash-now { transition: none; } .slash-flash { display: none; } }

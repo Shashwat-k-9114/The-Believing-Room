@@ -21,6 +21,7 @@ export const brand = {
     linkedin: "https://www.linkedin.com/company/the-believing-room/",
     x: "https://x.com/thbelievingroom",
     reddit: "https://www.reddit.com/user/thebelievingroom/",
+    facebook: "https://www.facebook.com/people/The-Believing-Room/61595893110286/",
   },
   podcast: {
     /** The podcast identity has not been supplied; this is a working title. */
@@ -37,13 +38,17 @@ export const socialLinks = [
   { key: "linkedin", label: "LinkedIn", handle: "The Believing Room", href: brand.social.linkedin },
   { key: "x", label: "X", handle: "@thbelievingroom", href: brand.social.x },
   { key: "reddit", label: "Reddit", handle: "u/thebelievingroom", href: brand.social.reddit },
+  { key: "facebook", label: "Facebook", handle: "The Believing Room", href: brand.social.facebook },
 ] as const;
 
-/** Owner-confirmed prices, whole rupees. Never hardcode a price anywhere else. */
+/**
+ * Whole rupees. `amount` is what is charged (Season 01 is free); `listPrice` is the
+ * former price, shown struck through by the scroll "slash". Never hardcode a price anywhere else.
+ */
 export const pricing = {
   currency: "INR",
-  candidate: { label: "Candidate ticket", amount: 1000 },
-  audience: { label: "Audience ticket", amount: 300 },
+  candidate: { label: "Candidate ticket", amount: 0, listPrice: 1000 },
+  audience: { label: "Audience ticket", amount: 0, listPrice: 300 },
   foodIncluded: true,
   /** Percentages applied on top of the base amount. */
   gstPercent: 0,
@@ -65,6 +70,7 @@ export const pricing = {
 export type PassKind = "candidate" | "audience";
 
 export function formatINR(amount: number): string {
+  if (amount === 0) return "Free";
   return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(amount);
 }
 

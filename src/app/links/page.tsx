@@ -20,7 +20,7 @@ const take = [
   { href: "/for-colleges", title: "Bring your college", note: "Send your students to be heard.", icon: GraduationCap },
 ] as const;
 
-const SOCIAL_ICON = { youtube: "youtube", instagram: "instagram", linkedin: "linkedin", x: "x", reddit: "reddit" } as const;
+const SOCIAL_ICON = { youtube: "youtube", instagram: "instagram", linkedin: "linkedin", x: "x", reddit: "reddit", facebook: "facebook" } as const;
 
 /** Spark positions on the stage. Fixed, so server and client agree. */
 const SPARKS = [

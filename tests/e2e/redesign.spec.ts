@@ -27,8 +27,8 @@ test.describe("visual-first redesign", () => {
     await expect(cards.nth(2).getByRole("link")).toHaveAttribute("href", "/for-recruiters");
     // The aspirational headline is always next to the honest limit.
     await expect(ways).toContainText(/no offer is guaranteed/i);
-    await expect(cards.nth(0)).toContainText("₹1,000");
-    await expect(cards.nth(1)).toContainText("₹300");
+    await expect(cards.nth(0)).toContainText("Free, was ₹1,000");
+    await expect(cards.nth(1)).toContainText("Free, was ₹300");
   });
 
   test("the step flow lights the stage step by step as it scrolls into view", async ({ page }) => {

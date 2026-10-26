@@ -1,5 +1,5 @@
 /** Simple monoline social marks. The icon set in use has no brand logos, so these are drawn here. */
-type Name = "youtube" | "instagram" | "linkedin" | "x" | "reddit";
+type Name = "youtube" | "instagram" | "linkedin" | "x" | "reddit" | "facebook";
 
 export function BrandIcon({ name, size = 22 }: { name: Name; size?: number }) {
   const common = { width: size, height: size, viewBox: "0 0 24 24", "aria-hidden": true } as const;
@@ -28,6 +28,12 @@ export function BrandIcon({ name, size = 22 }: { name: Name; size?: number }) {
       return (
         <svg {...common} fill="currentColor">
           <path d="M17.53 3H20.4l-6.27 7.17L21.5 21h-5.77l-4.52-5.9L6.03 21H3.15l6.7-7.66L2.8 3h5.92l4.08 5.4L17.53 3Zm-1 16.3h1.6L7.84 4.6H6.12l10.41 14.7Z" />
+        </svg>
+      );
+    case "facebook":
+      return (
+        <svg {...common} fill="currentColor">
+          <path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.87.25-1.46 1.5-1.46h1.6V4.46A21 21 0 0 0 14.28 4.4c-2.3 0-3.88 1.4-3.88 3.98v2.12H7.8v3h2.6V21h3.1Z" />
         </svg>
       );
     case "reddit":

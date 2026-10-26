@@ -82,7 +82,7 @@ export const studentSchema = z.object({
   portfolioUrl: httpUrl("Portfolio link"),
   githubUrl: httpUrl("GitHub link"),
   linkedinUrl: httpUrl("LinkedIn link"),
-  resumeUrl: httpUrl("Résumé link"),
+  resumeUrl: httpUrl("Résumé link").refine((v) => !!v, "Résumé link is required"),
   pitchSummary: text(40, 1200, "Pitch summary"),
   experience: optionalText(1500, "Experience"),
   consentTerms: mustAgree("You must accept the participation terms"),

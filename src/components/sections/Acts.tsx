@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { brand, formatINR, pricing } from "@/config/site";
+import { brand, pricing } from "@/config/site";
+import { PriceSlash } from "./PriceSlash";
 import { industries } from "@/content/industries";
 import { LiquidButton, MagneticCTA } from "../liquid/LiquidButton";
 import { Lines, Reveal } from "../liquid/Reveal";
@@ -47,12 +48,9 @@ const WAYS = [
 const WAY_CARD = "way hover-lift flex h-full flex-col overflow-hidden rounded-[1.3rem] border bg-[var(--bg-raised)]";
 
 export function ActWays() {
-  const afterShortlist = pricing.candidatePaymentStage === "after_shortlist";
   const facts: Record<(typeof WAYS)[number]["kind"], string> = {
-    candidate: afterShortlist
-      ? `Apply free. ${formatINR(pricing.candidate.amount)} ticket if shortlisted. Food and goodies included.`
-      : `${formatINR(pricing.candidate.amount)} ticket. Food and goodies included.`,
-    audience: `${formatINR(pricing.audience.amount)} ticket. Food and goodies included.`,
+    candidate: "Free to apply, free ticket. Food and goodies included.",
+    audience: "Free ticket. Food and goodies included.",
     recruiter: "Participation by enquiry.",
   };
   return (
@@ -73,6 +71,7 @@ export function ActWays() {
                   <div className="flex flex-1 flex-col p-7 sm:p-8">
                     <p className="eyebrow">{w.who}</p>
                     <h3 className="display mt-3 text-[2.1rem] leading-[1.02] sm:text-[2.4rem]">{w.a} <em>{w.b}</em></h3>
+                    {w.kind !== "recruiter" && <PriceSlash was={pricing[w.kind].listPrice} />}
                     <p className="mt-4 text-sm text-[var(--fg-faint)]">{facts[w.kind]}</p>
                     <div className="mt-auto pt-7">
                       <LiquidButton href={w.href} variant="primary" size="lg" className="w-full">{w.cta}</LiquidButton>
