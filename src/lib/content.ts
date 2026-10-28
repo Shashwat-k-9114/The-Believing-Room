@@ -90,6 +90,8 @@ const organizations: PublicOrganization[] = [
   org({ slug: "campusgarh", name: "CampusGarh", category: "recruitment", role: RECRUITING, logoPath: "/partners/campusgarh.png", logoOnDark: true }),
   org({ slug: "kashti-educare", name: "Kashti Educare", category: "recruitment", role: RECRUITING, logoPath: "/partners/kashti-educare.png" }),
   org({ slug: "kashti-adventures", name: "Kashti Adventures", category: "recruitment", role: RECRUITING, logoPath: "/partners/kashti-adventures.png" }),
+  org({ slug: "kribble", name: "Kribble", category: "recruitment", role: RECRUITING, logoPath: "/partners/kribble.png" }),
+  org({ slug: "kshemya", name: "Kshemya", category: "recruitment", role: RECRUITING, logoPath: "/partners/kshemya.png" }),
   org({ slug: "futured-innovation-studios", name: "Futured Innovation Studios", category: "education", role: "Provides its courses to candidates free of charge." }),
 ];
 
