@@ -821,3 +821,15 @@ html[data-curtain="seen"] #curtain-intro { display: none; }
 .slash[data-armed] .slash-now { transform: scale(0.4); opacity: 0; transition: none; }
 .slash[data-armed] .slash-flash { animation: none; }
 @media (prefers-reduced-motion: reduce) { .slash-was, .slash-line, .slash-now { transition: none; } .slash-flash { display: none; } }
+
+/* Partner logo plates: paper tile, gold registration corners that open on hover. */
+.logo-plate { position: relative; display: block; aspect-ratio: 5 / 3; width: 100%; background: #fff; border-radius: 2px; box-shadow: 0 1px 0 rgb(0 0 0 / 0.06), 0 14px 30px -18px rgb(0 0 0 / 0.55); overflow: hidden; isolation: isolate; transition: transform 0.6s var(--ease-cinema), box-shadow 0.6s var(--ease-cinema); }
+.logo-plate-lg { max-width: 18rem; }
+.logo-plate::before, .logo-plate::after { content: ""; position: absolute; z-index: 2; width: 0.7rem; height: 0.7rem; border: 0 solid #a98a4f; transition: width 0.6s var(--ease-cinema), height 0.6s var(--ease-cinema); pointer-events: none; }
+.logo-plate::before { top: 0.45rem; left: 0.45rem; border-top-width: 1px; border-left-width: 1px; }
+.logo-plate::after { right: 0.45rem; bottom: 0.45rem; border-right-width: 1px; border-bottom-width: 1px; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .group:hover > .logo-plate, .logo-plate:hover { transform: translateY(-4px); box-shadow: 0 1px 0 rgb(0 0 0 / 0.06), 0 22px 36px -16px rgb(169 138 79 / 0.55); }
+  .group:hover > .logo-plate::before, .group:hover > .logo-plate::after, .logo-plate:hover::before, .logo-plate:hover::after { width: 1.5rem; height: 1.5rem; }
+}
+.logo-plate-dark { background: #1e1626; box-shadow: 0 0 0 1px rgb(203 174 118 / 0.28), 0 14px 30px -18px rgb(0 0 0 / 0.55); }

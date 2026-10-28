@@ -74,6 +74,8 @@ export type PublicOrganization = {
   industry: string | null;
   /** Local path under /public/partners, set only once the organisation has approved its logo. Otherwise null: the name is set in type. */
   logoPath: string | null;
+  /** True when the artwork has white lettering and needs a dark plate. */
+  logoOnDark?: boolean;
 };
 
 const org = (o: Omit<PublicOrganization, "id" | "description" | "websiteUrl" | "industry" | "logoPath"> & Partial<PublicOrganization>): PublicOrganization => ({
@@ -82,12 +84,12 @@ const org = (o: Omit<PublicOrganization, "id" | "description" | "websiteUrl" | "
 
 const RECRUITING = "Confirmed internship-recruiting participant.";
 const organizations: PublicOrganization[] = [
-  org({ slug: "manacle", name: "Manacle", category: "recruitment", role: RECRUITING }),
-  org({ slug: "immverse-ai", name: "Immverse AI", category: "recruitment", role: RECRUITING }),
-  org({ slug: "galvanic", name: "Galvanic", category: "recruitment", role: RECRUITING }),
+  // Manacle, Immverse AI and Galvanic are confirmed but not listed until their logos arrive: add each here with its logoPath.
   org({ slug: "edurachna", name: "EduRachna", category: "recruitment", role: RECRUITING, logoPath: "/partners/edurachna.png" }),
   org({ slug: "pinaqtech", name: "Pinaqtech", category: "recruitment", role: RECRUITING, logoPath: "/partners/pinaqtech.png" }),
-  org({ slug: "campusgarh", name: "CampusGarh", category: "recruitment", role: RECRUITING, logoPath: "/partners/campusgarh.png" }),
+  org({ slug: "campusgarh", name: "CampusGarh", category: "recruitment", role: RECRUITING, logoPath: "/partners/campusgarh.png", logoOnDark: true }),
+  org({ slug: "kashti-educare", name: "Kashti Educare", category: "recruitment", role: RECRUITING, logoPath: "/partners/kashti-educare.png" }),
+  org({ slug: "kashti-adventures", name: "Kashti Adventures", category: "recruitment", role: RECRUITING, logoPath: "/partners/kashti-adventures.png" }),
   org({ slug: "futured-innovation-studios", name: "Futured Innovation Studios", category: "education", role: "Provides its courses to candidates free of charge." }),
 ];
 

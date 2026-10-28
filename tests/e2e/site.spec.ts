@@ -43,8 +43,8 @@ test.describe("public site", () => {
     await expect(hero).toContainText(/tickets are free/i);
     await expect(hero).toContainText(/food and goodies included/i);
     const main = page.locator("main");
-    for (const org of ["Manacle", "Immverse AI", "Galvanic"]) {
-      await expect(main, org).toContainText(org);
+    for (const org of ["EduRachna", "Pinaqtech", "CampusGarh", "Kashti Educare", "Kashti Adventures"]) {
+      await expect(main.getByRole("img", { name: org }), org).toBeVisible();
     }
     await expect(main).not.toContainText(/KRVVY|BIT Noida/i);
     await page.getByRole("link", { name: "Apply as a Candidate" }).first().click();

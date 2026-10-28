@@ -4,24 +4,25 @@ import Image from "next/image";
 import { useState } from "react";
 
 /**
- * An organisation's identity. The official logo is shown only when `logo` is passed, which the server does
- * only after logo permission was recorded as approved. Otherwise (or if the file fails to load) the name is
- * set in type. Logos are never recoloured, cropped or stretched: height is fixed, width follows the artwork.
+ * An organisation's identity, set on a paper plate like a slate in a title sequence: registration corners that
+ * open on hover, and a fixed aspect so wide and square artwork carry the same weight.
+ * The official logo is shown only when `logo` is passed. Otherwise (or if the file fails to load) the name is set in type.
+ * Logos are never recoloured, cropped or stretched: they are contained inside the plate with padding.
  */
-export function OrgMark({ name, logo, size = "md", className = "" }: { name: string; logo?: string | null; size?: "md" | "lg"; className?: string }) {
+export function OrgMark({ name, logo, size = "md", onDark = false, className = "" }: { name: string; logo?: string | null; size?: "md" | "lg"; onDark?: boolean; className?: string }) {
   const [failed, setFailed] = useState(false);
   if (logo && !failed) {
-    // Supplied artwork is drawn for a white ground (some has white lettering), so it sits on a white plate in both themes.
+    // Supplied artwork is drawn for a white ground, so it sits on a white plate in both themes; artwork with white lettering gets a dark plate.
     return (
-      <span className={`inline-flex items-center rounded-sm bg-white px-3 py-2 ${className}`}>
+      <span className={`logo-plate ${size === "lg" ? "logo-plate-lg" : ""} ${onDark ? "logo-plate-dark" : ""} ${className}`}>
         <Image
           src={logo}
           alt={name}
-          width={240}
-          height={72}
+          fill
+          sizes={size === "lg" ? "(min-width: 640px) 18rem, 70vw" : "(min-width: 640px) 12rem, 42vw"}
           unoptimized
           onError={() => setFailed(true)}
-          className={`w-auto max-w-[11rem] object-contain ${size === "lg" ? "h-10" : "h-8"}`}
+          className="object-contain p-[14%]"
         />
       </span>
     );
