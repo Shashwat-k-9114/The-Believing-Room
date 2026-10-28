@@ -85,6 +85,9 @@ const organizations: PublicOrganization[] = [
   org({ slug: "manacle", name: "Manacle", category: "recruitment", role: RECRUITING }),
   org({ slug: "immverse-ai", name: "Immverse AI", category: "recruitment", role: RECRUITING }),
   org({ slug: "galvanic", name: "Galvanic", category: "recruitment", role: RECRUITING }),
+  org({ slug: "edurachna", name: "EduRachna", category: "recruitment", role: RECRUITING, logoPath: "/partners/edurachna.png" }),
+  org({ slug: "pinaqtech", name: "Pinaqtech", category: "recruitment", role: RECRUITING, logoPath: "/partners/pinaqtech.png" }),
+  org({ slug: "campusgarh", name: "CampusGarh", category: "recruitment", role: RECRUITING, logoPath: "/partners/campusgarh.png" }),
   org({ slug: "futured-innovation-studios", name: "Futured Innovation Studios", category: "education", role: "Provides its courses to candidates free of charge." }),
 ];
 

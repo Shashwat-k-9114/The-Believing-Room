@@ -1,0 +1,76 @@
+﻿SLIDE 1  transition-in: none (2s)  advance-on-click: -1  auto-advance: 0
+    !!rib3                             Fade               after previous  delay 0.00s  dur 1.80s  exit=0
+    !!rib1                             Wipe               with previous   delay 0.20s  dur 2.40s  exit=0
+    !!rib2                             Wipe               with previous   delay 0.60s  dur 2.40s  exit=0
+    !!cone                             Fade               with previous   delay 0.70s  dur 2.80s  exit=0
+    Logo banner                        Faded Zoom         with previous   delay 0.90s  dur 2.40s  exit=0
+    Tagline: Your Talent.              Wipe               with previous   delay 3.30s  dur 0.80s  exit=0
+    Tagline: Your Stage.               Wipe               with previous   delay 4.00s  dur 0.80s  exit=0
+    Tagline: Your Opportunity.         Wipe               with previous   delay 4.70s  dur 0.80s  exit=0
+    Occasion                           Fade               with previous   delay 5.60s  dur 1.00s  exit=0
+SLIDE 2  transition-in: Morph (1.8s)  advance-on-click: -1  auto-advance: 0
+    Gold sweep over the resume         Wipe               on click        delay 0.00s  dur 1.10s  exit=0
+    Marker 1                           Fade               with previous   delay 0.70s  dur 0.60s  exit=0
+    Human line 1                       Ascend (float in)  with previous   delay 0.70s  dur 0.80s  exit=0
+    Marker 2                           Fade               with previous   delay 1.35s  dur 0.60s  exit=0
+    Human line 2                       Ascend (float in)  with previous   delay 1.35s  dur 0.80s  exit=0
+    Marker 3                           Fade               with previous   delay 2.00s  dur 0.60s  exit=0
+    Human line 3                       Ascend (float in)  with previous   delay 2.00s  dur 0.80s  exit=0
+SLIDE 3  transition-in: Doors (1.6s)  advance-on-click: -1  auto-advance: 0
+    Stage and candidate                Ascend (float in)  on click        delay 0.00s  dur 1.10s  exit=0
+    Label candidate                    Fade               with previous   delay 0.90s  dur 0.70s  exit=0
+    Recruiter panel                    Ascend (float in)  with previous   delay 1.10s  dur 1.00s  exit=0
+    Label panel                        Fade               with previous   delay 1.90s  dur 0.70s  exit=0
+    Audience                           Fade               with previous   delay 2.00s  dur 1.20s  exit=0
+SLIDE 4  transition-in: Morph (1.8s)  advance-on-click: -1  auto-advance: 0
+    Burst glow                         Faded Zoom         on click        delay 0.00s  dur 2.20s  exit=0
+    Halo ring 1                        Faded Zoom         with previous   delay 0.30s  dur 1.60s  exit=0
+    16                                 Faded Zoom         with previous   delay 0.50s  dur 1.70s  exit=0
+    Halo ring 2                        Faded Zoom         with previous   delay 0.65s  dur 1.60s  exit=0
+    Halo ring 3                        Faded Zoom         with previous   delay 1.00s  dur 1.60s  exit=0
+    Recruiters                         Ascend (float in)  with previous   delay 2.00s  dur 0.90s  exit=0
+    Secured                            Ascend (float in)  with previous   delay 2.35s  dur 0.90s  exit=0
+    Promise 1                          Fade               with previous   delay 3.20s  dur 0.80s  exit=0
+    Promise 2                          Fade               with previous   delay 3.75s  dur 0.80s  exit=0
+    Promise 3                          Fade               with previous   delay 4.30s  dur 0.80s  exit=0
+    Qualifier                          Fade               with previous   delay 5.10s  dur 0.90s  exit=0
+SLIDE 5  transition-in: Fade (smooth) (1.4s)  advance-on-click: -1  auto-advance: 0
+    Path: IT & Technology              Ascend (float in)  on click        delay 0.00s  dur 1.00s  exit=0
+    Path: Finance                      Ascend (float in)  with previous   delay 0.42s  dur 1.00s  exit=0
+    Path: Sales & Marketing            Ascend (float in)  with previous   delay 0.84s  dur 1.00s  exit=0
+    Path: Animation & Multimedia       Ascend (float in)  with previous   delay 1.26s  dur 1.00s  exit=0
+SLIDE 6  transition-in: Morph (1.6s)  advance-on-click: -1  auto-advance: 0
+    Step 1 marker                      Faded Zoom         on click        delay 0.00s  dur 0.70s  exit=0
+    Step 1 label                       Fade               with previous   delay 0.20s  dur 0.70s  exit=0
+    Path 1                             Wipe               with previous   delay 0.50s  dur 0.90s  exit=0
+    Step 2 marker                      Faded Zoom         with previous   delay 1.35s  dur 0.70s  exit=0
+    Step 2 label                       Fade               with previous   delay 1.50s  dur 0.70s  exit=0
+    Path 2                             Wipe               with previous   delay 1.90s  dur 0.90s  exit=0
+    Step 3 marker                      Faded Zoom         with previous   delay 2.75s  dur 0.70s  exit=0
+    Step 3 label                       Fade               with previous   delay 2.90s  dur 0.70s  exit=0
+    Path 3                             Wipe               on click        delay 0.00s  dur 0.90s  exit=0
+    Step 4 marker                      Faded Zoom         with previous   delay 0.85s  dur 0.70s  exit=0
+    Step 4 label                       Fade               with previous   delay 1.00s  dur 0.70s  exit=0
+    Path 4                             Wipe               with previous   delay 1.50s  dur 0.90s  exit=0
+    Step 5 marker                      Faded Zoom         with previous   delay 2.35s  dur 0.90s  exit=0
+    Step 5 label                       Fade               with previous   delay 2.50s  dur 0.80s  exit=0
+    Qualifier                          Fade               with previous   delay 3.30s  dur 0.70s  exit=0
+SLIDE 7  transition-in: Fade (smooth) (1.4s)  advance-on-click: -1  auto-advance: 0
+    Benefit 1                          Ascend (float in)  on click        delay 0.00s  dur 0.85s  exit=0
+    Benefit 2                          Ascend (float in)  with previous   delay 0.52s  dur 0.85s  exit=0
+    Benefit 3                          Ascend (float in)  with previous   delay 1.04s  dur 0.85s  exit=0
+    Benefit 4                          Ascend (float in)  with previous   delay 1.56s  dur 0.85s  exit=0
+    Benefit 5                          Ascend (float in)  with previous   delay 2.08s  dur 0.85s  exit=0
+SLIDE 8  transition-in: Fade (smooth) (1.6s)  advance-on-click: -1  auto-advance: 0
+    Headline                           Wipe               after previous  delay 0.40s  dur 1.40s  exit=0
+    Second line                        Wipe               on click        delay 0.00s  dur 1.50s  exit=0
+SLIDE 9  transition-in: Morph (1.8s)  advance-on-click: -1  auto-advance: 0
+    Scan label                         Fade               after previous  delay 0.20s  dur 0.90s  exit=0
+    QR card                            Faded Zoom         with previous   delay 0.30s  dur 1.30s  exit=0
+    Headline                           Wipe               with previous   delay 0.70s  dur 1.40s  exit=0
+    QR code                            Fade               with previous   delay 0.90s  dur 0.90s  exit=0
+    Call to action                     Ascend (float in)  with previous   delay 2.00s  dur 0.90s  exit=0
+    URL                                Fade               with previous   delay 2.50s  dur 0.80s  exit=0
+    Scan note                          Fade               with previous   delay 2.70s  dur 0.80s  exit=0
+
+Round-trip through PowerPoint SaveCopyAs: effects before = 65, after = 65

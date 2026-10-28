@@ -1,0 +1,10 @@
+import sys; sys.path.insert(0,'.')
+from ooxml import *
+ctx=Ctx(); s=Slide(ctx)
+a=s.add(shape(ctx,'!!a',1,1,3,3,geom=prst('ellipse'),fill=rad([(0,'CBAE76',.8),(1,'CBAE76',0)])))
+t=s.add(text(ctx,'t',5,2,6,1.5,[para(run('Hello 16',60,'F6F1E9',True,font='Georgia'))]))
+g=s.timing.group(auto=True); s.timing.add(g,a,'grow',0,1500); s.timing.add(g,t,'rise',600,900)
+g2=s.timing.group(); s.timing.add(g2,t,'wipe',0,800)
+ctx2=Ctx(); s2=Slide(ctx2,trans='morph'); s2.add(shape(ctx2,'!!a',6,2,2,2,geom=prst('ellipse'),fill=rad([(0,'CBAE76',.8),(1,'CBAE76',0)])))
+th=dict(name='T',major='Georgia',minor='Calibri',colors=dict(dk1='160F1C',lt1='F6F1E9',dk2='1E1626',lt2='EDE6DA',accent1='CBAE76',accent2='B7A9C4',accent3='D9B7A6',accent4='9C86B0',accent5='3F2C4D',accent6='A98A4F',hlink='E3CFA8',folHlink='B7A9C4'))
+write_package('smoke.pptx',[s,s2],{},th,'smoke','x')

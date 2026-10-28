@@ -47,14 +47,14 @@ describe("sponsor enquiry validation", () => {
 });
 
 describe("ecosystem content (confirmed facts only)", () => {
-  it("lists exactly the confirmed organisations under the right roles, without logos", () => {
+  it("lists exactly the confirmed organisations under the right roles, with logos only for approved ones", () => {
     const orgs = publicOrganizations();
     const by = (c: string) => orgs.filter((o) => o.category === c).map((o) => o.name).sort();
-    expect(by("recruitment")).toEqual(["Galvanic", "Immverse AI", "Manacle"]);
+    expect(by("recruitment")).toEqual(["CampusGarh", "EduRachna", "Galvanic", "Immverse AI", "Manacle", "Pinaqtech"]);
     expect(by("venue")).toEqual([]);
     expect(by("education")).toEqual(["Futured Innovation Studios"]);
     expect(by("outreach")).toEqual([]);
-    expect(orgs.every((o) => o.logoPath === null)).toBe(true);
+    expect(orgs.filter((o) => o.logoPath).map((o) => o.name).sort()).toEqual(["CampusGarh", "EduRachna", "Pinaqtech"]);
   });
 
   it("names no venue until one is confirmed", () => {
