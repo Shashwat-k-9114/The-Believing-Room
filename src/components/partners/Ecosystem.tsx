@@ -47,7 +47,7 @@ export async function EcosystemHome() {
               <ul className="grid grid-cols-2 gap-x-4 gap-y-5 sm:grid-cols-3 sm:gap-x-5 sm:[&>li:nth-child(3n+2)]:translate-y-5">
                 {g.orgs.map((o) => (
                   <li key={o.id} className="group">
-                    <OrgMark name={o.name} logo={o.logoPath} onDark={o.logoOnDark} />
+                    <OrgMark name={o.name} logo={o.logoPath} onDark={o.logoOnDark} href={o.websiteUrl} />
                     {o.role && !sharedRole && <p className="mt-2 max-w-[40ch] text-sm text-[var(--fg-dim)]">{o.role}</p>}
                   </li>
                 ))}
@@ -91,7 +91,7 @@ export async function PartnerProfiles() {
                     delay={i * 0.07}
                     className="flex flex-col justify-between gap-6 border-b border-[var(--line)] py-7 sm:gap-8 sm:px-9 sm:py-9 sm:[&:nth-child(odd)]:border-r sm:[&:nth-child(odd)]:pl-0"
                   >
-                    <OrgMark name={o.name} logo={o.logoPath} onDark={o.logoOnDark} size="lg" />
+                    <OrgMark name={o.name} logo={o.logoPath} onDark={o.logoOnDark} href={o.websiteUrl} size="lg" />
                     <div>
                       <p className="eyebrow">Participation confirmed by the organiser</p>
                       {o.description && <p className="mt-3 text-[var(--fg-dim)]">{o.description}</p>}
@@ -111,7 +111,7 @@ export async function PartnerProfiles() {
             {g.orgs.map((o, i) => (
               <Reveal as="li" key={o.id} delay={i * 0.06} className="grid gap-5 border-b border-[var(--line)] py-9 md:grid-cols-[1fr_1.2fr] md:gap-14">
                 <div>
-                  <OrgMark name={o.name} logo={o.logoPath} onDark={o.logoOnDark} size="lg" />
+                  <OrgMark name={o.name} logo={o.logoPath} onDark={o.logoOnDark} href={o.websiteUrl} size="lg" />
                   <p className="eyebrow mt-4">Participation confirmed by the organiser</p>
                 </div>
                 <div>

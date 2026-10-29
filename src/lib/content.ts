@@ -84,14 +84,17 @@ const org = (o: Omit<PublicOrganization, "id" | "description" | "websiteUrl" | "
 
 const RECRUITING = "Confirmed internship-recruiting participant.";
 const organizations: PublicOrganization[] = [
-  // Manacle, Immverse AI and Galvanic are confirmed but not listed until their logos arrive: add each here with its logoPath.
-  org({ slug: "edurachna", name: "EduRachna", category: "recruitment", role: RECRUITING, logoPath: "/partners/edurachna.png" }),
-  org({ slug: "pinaqtech", name: "Pinaqtech", category: "recruitment", role: RECRUITING, logoPath: "/partners/pinaqtech.png" }),
-  org({ slug: "campusgarh", name: "CampusGarh", category: "recruitment", role: RECRUITING, logoPath: "/partners/campusgarh.png", logoOnDark: true }),
-  org({ slug: "kashti-educare", name: "Kashti Educare", category: "recruitment", role: RECRUITING, logoPath: "/partners/kashti-educare.png" }),
-  org({ slug: "kashti-adventures", name: "Kashti Adventures", category: "recruitment", role: RECRUITING, logoPath: "/partners/kashti-adventures.png" }),
-  org({ slug: "kribble", name: "Kribble", category: "recruitment", role: RECRUITING, logoPath: "/partners/kribble.png" }),
-  org({ slug: "kshemya", name: "Kshemya", category: "recruitment", role: RECRUITING, logoPath: "/partners/kshemya.png" }),
+  org({ slug: "manacle", name: "Manacle", category: "recruitment", role: RECRUITING, websiteUrl: "https://www.manacle.in", logoPath: "/partners/manacle.png" }),
+  org({ slug: "immverse-ai", name: "Immverse AI", category: "recruitment", role: RECRUITING, websiteUrl: "https://immverse.ai", logoPath: "/partners/immverse.png" }),
+  org({ slug: "mahanadaya", name: "Mahanadaya", category: "recruitment", role: RECRUITING, websiteUrl: "https://mahanadaya.com", logoPath: "/partners/mahanadaya.png" }),
+  // Galvanic is confirmed but not listed until its logo arrives: add it here with its logoPath and websiteUrl.
+  org({ slug: "edurachna", name: "EduRachna", category: "recruitment", role: RECRUITING, websiteUrl: "https://www.edurachana.com/", logoPath: "/partners/edurachna.png" }),
+  org({ slug: "pinaqtech", name: "Pinaqtech", category: "recruitment", role: RECRUITING, websiteUrl: "https://pinaqtech.com", logoPath: "/partners/pinaqtech.png" }),
+  org({ slug: "campusgarh", name: "CampusGarh", category: "recruitment", role: RECRUITING, websiteUrl: "https://campusgarh.com", logoPath: "/partners/campusgarh.png", logoOnDark: true }),
+  org({ slug: "kashti-educare", name: "Kashti Educare", category: "recruitment", role: RECRUITING, websiteUrl: "https://kashtieducare.com", logoPath: "/partners/kashti-educare.png" }),
+  org({ slug: "kashti-adventures", name: "Kashti Adventures", category: "recruitment", role: RECRUITING, websiteUrl: "https://kashtiadventures.com", logoPath: "/partners/kashti-adventures.png" }),
+  org({ slug: "kribble", name: "Kribble", category: "recruitment", role: RECRUITING, websiteUrl: "https://kribblecare.com", logoPath: "/partners/kribble.png" }),
+  org({ slug: "kshemya", name: "Kshemya", category: "recruitment", role: RECRUITING, websiteUrl: "https://www.linkedin.com/company/kshemya/home/", logoPath: "/partners/kshemya.png" }),
   org({ slug: "futured-innovation-studios", name: "Futured Innovation Studios", category: "education", role: "Provides its courses to candidates free of charge." }),
 ];
 

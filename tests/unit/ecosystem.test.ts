@@ -50,11 +50,11 @@ describe("ecosystem content (confirmed facts only)", () => {
   it("lists exactly the confirmed organisations under the right roles, with logos only for approved ones", () => {
     const orgs = publicOrganizations();
     const by = (c: string) => orgs.filter((o) => o.category === c).map((o) => o.name).sort();
-    expect(by("recruitment")).toEqual(["CampusGarh", "EduRachna", "Kashti Adventures", "Kashti Educare", "Kribble", "Kshemya", "Pinaqtech"]);
+    expect(by("recruitment")).toEqual(["CampusGarh", "EduRachna", "Immverse AI", "Kashti Adventures", "Kashti Educare", "Kribble", "Kshemya", "Mahanadaya", "Manacle", "Pinaqtech"]);
     expect(by("venue")).toEqual([]);
     expect(by("education")).toEqual(["Futured Innovation Studios"]);
     expect(by("outreach")).toEqual([]);
-    expect(orgs.filter((o) => o.logoPath).map((o) => o.name).sort()).toEqual(["CampusGarh", "EduRachna", "Kashti Adventures", "Kashti Educare", "Kribble", "Kshemya", "Pinaqtech"]);
+    expect(orgs.filter((o) => o.logoPath).map((o) => o.name).sort()).toEqual(["CampusGarh", "EduRachna", "Immverse AI", "Kashti Adventures", "Kashti Educare", "Kribble", "Kshemya", "Mahanadaya", "Manacle", "Pinaqtech"]);
   });
 
   it("names no venue until one is confirmed", () => {

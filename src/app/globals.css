@@ -833,3 +833,8 @@ html[data-curtain="seen"] #curtain-intro { display: none; }
   .group:hover > .logo-plate::before, .group:hover > .logo-plate::after, .logo-plate:hover::before, .logo-plate:hover::after { width: 1.5rem; height: 1.5rem; }
 }
 .logo-plate-dark { background: #1e1626; box-shadow: 0 0 0 1px rgb(203 174 118 / 0.28), 0 14px 30px -18px rgb(0 0 0 / 0.55); }
+.logo-plate-link { cursor: pointer; text-decoration: none; }
+.logo-plate-link:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; }
+.logo-plate-go { position: absolute; z-index: 2; top: 0.45rem; right: 0.45rem; color: #a98a4f; opacity: 0; transform: translate(-3px, 3px); transition: opacity 0.4s var(--ease-cinema), transform 0.4s var(--ease-cinema); }
+.logo-plate-link:hover .logo-plate-go, .logo-plate-link:focus-visible .logo-plate-go { opacity: 1; transform: none; }
+@media (hover: none) { .logo-plate-go { opacity: 0.7; transform: none; } }
