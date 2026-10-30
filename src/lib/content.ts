@@ -87,7 +87,7 @@ const organizations: PublicOrganization[] = [
   org({ slug: "manacle", name: "Manacle", category: "recruitment", role: RECRUITING, websiteUrl: "https://www.manacle.in", logoPath: "/partners/manacle.png" }),
   org({ slug: "immverse-ai", name: "Immverse AI", category: "recruitment", role: RECRUITING, websiteUrl: "https://immverse.ai", logoPath: "/partners/immverse.png" }),
   org({ slug: "mahanadaya", name: "Mahanadaya", category: "recruitment", role: RECRUITING, websiteUrl: "https://mahanadaya.com", logoPath: "/partners/mahanadaya.png" }),
-  // Galvanic is confirmed but not listed until its logo arrives: add it here with its logoPath and websiteUrl.
+  org({ slug: "galvanic", name: "Galvanic", category: "recruitment", role: RECRUITING, websiteUrl: "https://baliniot.in", logoPath: "/partners/galvanic.png" }),
   org({ slug: "edurachna", name: "EduRachna", category: "recruitment", role: RECRUITING, websiteUrl: "https://www.edurachana.com/", logoPath: "/partners/edurachna.png" }),
   org({ slug: "pinaqtech", name: "Pinaqtech", category: "recruitment", role: RECRUITING, websiteUrl: "https://pinaqtech.com", logoPath: "/partners/pinaqtech.png" }),
   org({ slug: "campusgarh", name: "CampusGarh", category: "recruitment", role: RECRUITING, websiteUrl: "https://campusgarh.com", logoPath: "/partners/campusgarh.png", logoOnDark: true }),
