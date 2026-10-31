@@ -69,6 +69,14 @@ export const pricing = {
 
 export type PassKind = "candidate" | "audience";
 
+/**
+ * Submission freeze. While a flag is `false`, the form's page shows a "closed" notice and
+ * /api/submit/<form> refuses new rows. Flip back to `true` to reopen; nothing else changes.
+ */
+export const submissionsOpen: Record<PassKind, boolean> = { candidate: false, audience: false };
+
+export const SUBMISSIONS_CLOSED_MESSAGE = "Registrations are closed for now. Please check back soon or email us.";
+
 export function formatINR(amount: number): string {
   if (amount === 0) return "Free";
   return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(amount);

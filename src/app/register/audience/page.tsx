@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AudienceForm } from "@/components/forms/AudienceForm";
+import { brand, submissionsOpen, SUBMISSIONS_CLOSED_MESSAGE } from "@/config/site";
 import { PageShell } from "@/components/layout/PageShell";
 import { ShowFlow, type FlowStep } from "@/components/sections/ShowFlow";
 
@@ -25,7 +26,9 @@ export default function AudienceRegistration() {
       art="audience"
     >
       <div className="mb-16"><ShowFlow steps={STEPS} compact label="How audience tickets work" /></div>
-      <AudienceForm />
+      {submissionsOpen.audience ? <AudienceForm /> : (
+        <p role="status" className="mx-auto max-w-3xl rounded-2xl border border-white/15 p-6 text-center">{SUBMISSIONS_CLOSED_MESSAGE} <a className="underline" href={`mailto:${brand.contactEmail}`}>{brand.contactEmail}</a></p>
+      )}
     </PageShell>
   );
 }

@@ -1,4 +1,5 @@
 import type { ZodType } from "zod";
+import { submissionsOpen, SUBMISSIONS_CLOSED_MESSAGE, type PassKind } from "@/config/site";
 import { cell, FORMS, isFormKey } from "@/lib/forms";
 import { clientIp, json, limitHit, makeRef, readJson, sameOrigin } from "@/lib/security";
 import { appendRow, sheetsConfigured } from "@/lib/sheets";
@@ -10,6 +11,7 @@ export const runtime = "nodejs";
 export async function POST(req: Request, ctx: { params: Promise<{ form: string }> }) {
   const { form } = await ctx.params;
   if (!isFormKey(form)) return json({ error: "not_found", message: "Unknown form." }, 404);
+  if (form in submissionsOpen && !submissionsOpen[form as PassKind]) return json({ error: "closed", message: SUBMISSIONS_CLOSED_MESSAGE }, 403);
   if (!sameOrigin(req)) return json({ error: "forbidden", message: "Cross-site request blocked." }, 403);
   if (!limitHit(`${form}:${clientIp(req)}`, 6)) {
     return json({ error: "rate_limited", message: "Too many attempts. Please wait a minute and try again." }, 429, { "Retry-After": "60" });
