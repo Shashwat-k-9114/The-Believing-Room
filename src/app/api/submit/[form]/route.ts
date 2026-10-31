@@ -1,5 +1,5 @@
 import type { ZodType } from "zod";
-import { candidateRegistrationOpen, registration } from "@/config/site";
+import { candidateRegistrationOpen, submissionsOpen } from "@/config/site";
 import { cell, FORMS, isFormKey } from "@/lib/forms";
 import { clientIp, json, limitHit, makeRef, readJson, sameOrigin } from "@/lib/security";
 import { appendRow, sheetsConfigured } from "@/lib/sheets";
@@ -12,7 +12,7 @@ export async function POST(req: Request, ctx: { params: Promise<{ form: string }
   const { form } = await ctx.params;
   if (!isFormKey(form)) return json({ error: "not_found", message: "Unknown form." }, 404);
   if (!sameOrigin(req)) return json({ error: "forbidden", message: "Cross-site request blocked." }, 403);
-  if (form === "audience" && !registration.audienceOpen) {
+  if (form === "audience" && !submissionsOpen.audience) {
     return json({ error: "closed", message: "Audience registration is paused right now." }, 403);
   }
   if (form === "candidate" && !candidateRegistrationOpen()) {

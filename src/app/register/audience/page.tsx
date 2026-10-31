@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { AudienceForm } from "@/components/forms/AudienceForm";
 import { PageShell } from "@/components/layout/PageShell";
-import { registration } from "@/config/site";
+import { submissionsOpen } from "@/config/site";
 import { ShowFlow, type FlowStep } from "@/components/sections/ShowFlow";
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export default function AudienceRegistration() {
       lede="Free tickets, food and goodies included. Entry, food and goodies only: a ticket is not a route to selection or an internship."
       art="audience"
     >
-      {registration.audienceOpen ? (
+      {submissionsOpen.audience ? (
         <>
           <div className="mb-16"><ShowFlow steps={STEPS} compact label="How audience tickets work" /></div>
           <AudienceForm />

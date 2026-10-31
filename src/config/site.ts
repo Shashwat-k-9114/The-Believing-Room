@@ -69,19 +69,26 @@ export const pricing = {
 
 /**
  * Registration windows, enforced by the submit route and shown on the register pages.
- * `audienceOpen: false` pauses audience registration. `candidateClosesAt` is an ISO instant after which
- * candidate applications are refused; set it to null for no deadline.
+ * `candidateClosesAt` is an ISO instant after which candidate applications are refused; set it to null for
+ * no deadline. The on/off switch for each form is `submissionsOpen` below.
  */
 export const registration = {
-  audienceOpen: false,
   candidateClosesAt: "2026-10-31T18:55:35Z" as string | null,
 };
 
 export function candidateRegistrationOpen(now = Date.now()): boolean {
-  return registration.candidateClosesAt === null || now < Date.parse(registration.candidateClosesAt);
+  return submissionsOpen.candidate && (registration.candidateClosesAt === null || now < Date.parse(registration.candidateClosesAt));
 }
 
 export type PassKind = "candidate" | "audience";
+
+/**
+ * Submission freeze. While a flag is `false`, the form's page shows a "closed" notice and
+ * /api/submit/<form> refuses new rows. Flip back to `true` to reopen; nothing else changes.
+ */
+export const submissionsOpen: Record<PassKind, boolean> = { candidate: true, audience: false };
+
+export const SUBMISSIONS_CLOSED_MESSAGE = "Registrations are closed for now. Please check back soon or email us.";
 
 export function formatINR(amount: number): string {
   if (amount === 0) return "Free";
