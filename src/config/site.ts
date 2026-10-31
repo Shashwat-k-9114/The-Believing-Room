@@ -67,6 +67,20 @@ export const pricing = {
   candidatePaymentStage: "after_shortlist" as "after_shortlist" | "at_application",
 };
 
+/**
+ * Registration windows, enforced by the submit route and shown on the register pages.
+ * `audienceOpen: false` pauses audience registration. `candidateClosesAt` is an ISO instant after which
+ * candidate applications are refused; set it to null for no deadline.
+ */
+export const registration = {
+  audienceOpen: false,
+  candidateClosesAt: "2026-10-31T18:55:35Z" as string | null,
+};
+
+export function candidateRegistrationOpen(now = Date.now()): boolean {
+  return registration.candidateClosesAt === null || now < Date.parse(registration.candidateClosesAt);
+}
+
 export type PassKind = "candidate" | "audience";
 
 export function formatINR(amount: number): string {
