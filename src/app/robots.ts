@@ -5,7 +5,7 @@ import { isIndexable } from "@/lib/indexing";
 export default function robots(): MetadataRoute.Robots {
   if (!isIndexable()) return { rules: [{ userAgent: "*", disallow: "/" }] };
   return {
-    rules: [{ userAgent: "*", allow: "/", disallow: ["/api/"] }],
+    rules: [{ userAgent: "*", allow: "/", disallow: ["/api/", "/admin"] }],
     sitemap: `${brand.url}/sitemap.xml`,
   };
 }

@@ -6,11 +6,13 @@ A plain Next.js frontend. No database, no admin area, no payments, no accounts.
 - **Forms** (candidate, audience, waitlist, company, college, sponsor, contact) post to `/api/submit/<form>`. The route validates
   the input and appends one row to a tab of a Google Sheet through a small Apps Script web app.
   Setup takes about five minutes: see [`google-sheets/SETUP.md`](google-sheets/SETUP.md).
+- **Admin portal** (`/admin`): password-protected view of that same sheet, to search, filter, review, edit, delete, copy and export
+  every submission. The sheet is the database. Set `ADMIN_PASSWORD`; details in the same setup guide.
 
 ## Run
 
 ```bash
-cp .env.example .env.local   # fill in GOOGLE_SHEET_WEBHOOK_URL and GOOGLE_SHEET_SECRET
+cp .env.example .env.local   # fill in GOOGLE_SHEET_WEBHOOK_URL, GOOGLE_SHEET_SECRET and ADMIN_PASSWORD
 npm install
 npm run dev
 ```

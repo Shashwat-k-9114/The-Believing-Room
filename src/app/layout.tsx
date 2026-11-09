@@ -5,6 +5,7 @@ import { isIndexable } from "@/lib/indexing";
 import { CURTAIN_GUARD, CurtainIntro } from "@/components/layout/CurtainIntro";
 import { Footer } from "@/components/layout/Footer";
 import { GlassNavigation } from "@/components/layout/GlassNavigation";
+import { SiteChrome } from "@/components/layout/SiteChrome";
 import "./globals.css";
 
 // Body and UI: DM Sans. Headlines: Space Grotesk, bold and slightly condensed in spacing, for the stage-show voice (both SIL OFL).
@@ -58,11 +59,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd).replace(/</g, "\\u003c") }} />
       </head>
       <body suppressHydrationWarning>
-        <CurtainIntro />
-        <a href="#main" className="skip-link">Skip to content</a>
-        <GlassNavigation />
-        <main id="main">{children}</main>
-        <Footer />
+        <SiteChrome
+          before={
+            <>
+              <CurtainIntro />
+              <a href="#main" className="skip-link">Skip to content</a>
+              <GlassNavigation />
+            </>
+          }
+          after={<Footer />}
+        >
+          {children}
+        </SiteChrome>
       </body>
     </html>
   );
