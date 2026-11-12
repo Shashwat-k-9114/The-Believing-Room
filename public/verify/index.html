@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Certificate verification · The Believing Room</title>
+<meta name="description" content="Verify a certificate issued by The Believing Room.">
+<meta name="robots" content="noindex">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#2B1450">
+<link rel="icon" href="/verify/assets/logo.png">
+<link rel="preload" href="/verify/assets/fonts/cinzel-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/verify/assets/style.css">
+</head>
+<body>
+<a class="skip" href="#result">Skip to result</a>
+
+<header class="band">
+  <div class="band-inner">
+    <img class="logo" id="logo" src="/verify/assets/logo.png" alt="" width="52" height="52">
+    <span class="logo-fallback" id="logo-fallback" aria-hidden="true" hidden>B</span>
+    <div>
+      <p class="wordmark">THE BELIEVING ROOM</p>
+      <p class="subtitle">Certificate verification</p>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="result" class="card" aria-live="polite" aria-busy="true" tabindex="-1">
+    <div class="state-loading"><span class="spinner" aria-hidden="true"></span><span class="sr">Checking certificate…</span></div>
+  </section>
+
+  <noscript><p class="card note">This page needs JavaScript to check a certificate.</p></noscript>
+
+  <section class="card lookup" aria-labelledby="lookup-title">
+    <h2 id="lookup-title">Have a certificate number?</h2>
+    <p class="muted">Check that a number was issued. For privacy, no personal details are shown here — scan the QR code on the certificate to see them.</p>
+    <form id="lookup-form" autocomplete="off" novalidate>
+      <label for="cert-no">Certificate number</label>
+      <div class="row">
+        <input id="cert-no" name="cert-no" type="text" inputmode="text" placeholder="TBR / 2026 / S1 / 001" autocapitalize="characters" spellcheck="false">
+        <button type="submit">Check</button>
+      </div>
+    </form>
+    <p id="lookup-result" class="lookup-result" aria-live="polite"></p>
+  </section>
+</main>
+
+<footer class="foot">
+  <p class="tag">Where Opportunity Meets Belief</p>
+  <p class="tag2">Talent. Stage. Opportunity.</p>
+  <p class="site"><a href="https://thebelievingroom.com">thebelievingroom.com</a></p>
+</footer>
+
+<script src="/verify/assets/app.js" defer></script>
+</body>
+</html>
