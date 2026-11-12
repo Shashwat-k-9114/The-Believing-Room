@@ -67,8 +67,12 @@
     bar.appendChild(el("span", null, "Certificate verified"));
 
     var dl = el("dl", "details");
-    [["Programme", rec.programme], ["Event date", rec.event_date], ["Venue", rec.venue],
-     ["Issued on", rec.issued_on], ["Certificate no.", rec.cert_no]].forEach(function (p) {
+    // Records without `type` are candidates (all certificates issued before audience certificates existed).
+    var audience = rec.type === "audience";
+    var rowsData = [["Programme", rec.programme]];
+    if (audience) rowsData.push(["Role", "Audience"]);
+    rowsData.push(["Event date", rec.event_date], ["Venue", rec.venue], ["Issued on", rec.issued_on], ["Certificate no.", rec.cert_no]);
+    rowsData.forEach(function (p) {
       var row = el("div");
       row.appendChild(el("dt", null, p[0]));
       row.appendChild(el("dd", null, p[1]));
@@ -81,7 +85,7 @@
     by.appendChild(site);
 
     show([bar, el("p", "issued", "This certificate was issued to"), el("h1", "name", rec.name),
-          el("p", "kind", "Certificate of participation"), dl, by]);
+          el("p", "kind", audience ? "Certificate of Appreciation" : "Certificate of participation"), dl, by]);
   }
 
   function renderWarn(title, bodyNodes, hint) {
