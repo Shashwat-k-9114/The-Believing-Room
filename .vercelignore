@@ -1,0 +1,5 @@
+# Never upload these when deploying with the Vercel CLI (git deploys already skip them via .gitignore).
+tbr-verify/private
+tbr-verify/out
+tbr-verify/candidates.csv
+private
